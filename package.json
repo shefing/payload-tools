@@ -1,0 +1,48 @@
+{
+  "name": "payload-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "shefing",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "turbo build --filter \"@payload-tools/*\"",
+    "dev": "pnpm --filter test dev",
+    "dev:types": "cd test && pnpm generate:types",
+    "test": "cd test && pnpm test",
+    "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.7",
+    "prettier": "^3.3.2",
+    "prettier-plugin-css-order": "^2.1.2",
+    "turbo": "^1.13.4",
+    "typescript": "^5.5.2",
+    "copyfiles": "^2.4.1",
+    "@next/eslint-plugin-next": "^13.1.6",
+    "@payloadcms/eslint-config": "^1.1.1",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "@typescript-eslint/parser": "^7.6.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "15.0.0-rc.0",
+    "@swc/cli": "^0.1.65",
+    "@swc/core": "^1.6.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "npm:types-react@19.0.0-rc.0",
+      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.0"
+    }
+  },
+  "overrides": {
+    "@types/react": "npm:types-react@19.0.0-rc.0",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.0"
+  },
+  "engines": {
+    "node": "^18.20.2 || >=20.9.0"
+  },
+  "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a"
+}
