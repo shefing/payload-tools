@@ -1,6 +1,6 @@
 {
   "name": "@payload-tools/author-fields",
-  "version": "1.2.2",
+  "version": "1.0.0",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -40,6 +40,7 @@
     "payload": "3.0.0-beta.122"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       ".": {
         "import": "./dist/authorFieldPlugin.js",
