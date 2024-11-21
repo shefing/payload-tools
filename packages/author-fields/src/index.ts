@@ -137,17 +137,27 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
     },
   ];
   if (hasDraft) {
-    authorFields.push({
-      name: 'publishDate',
-      type: 'date',
-      admin: {
-        date: {
-          pickerAppearance: 'dayAndTime',
-          displayFormat: 'd MMM yyy: ,h:mm:ss a',
+    authorFields.push(
+      {
+        name: 'publishDate',
+        type: 'date',
+        admin: {
+          date: {
+            pickerAppearance: 'dayAndTime',
+            displayFormat: 'd MMM yyy: ,h:mm:ss a',
+          },
+          components: { Cell: '@rikifrank/author-fields/client#CreatedAtCell' },
         },
-        components: { Cell: '@rikifrank/author-fields/client#CreatedAtCell' },
       },
-    });
+      {
+        name: 'publisher',
+        label: 'Published By',
+        type: 'text',
+        admin: {
+          readOnly: true,
+        },
+      },
+    );
   }
 
   const authorTab: UnnamedTab = {
