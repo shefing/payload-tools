@@ -1,1 +1,1 @@
-export { CreatedAtCell } from './CreatedAtCell';
+export { CreatedAtCell } from './CreatedAtCell.js';
