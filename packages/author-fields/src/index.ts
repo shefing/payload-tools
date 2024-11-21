@@ -49,7 +49,12 @@ export const addAuthorFields =
             ...currentCollection.hooks,
             beforeChange: [
               ...((currentCollection.hooks && currentCollection.hooks.beforeChange) || []),
-              authorHook(mergedConfig.updator, mergedConfig.creator, mergedConfig.publisher, mergedConfig.publishDate),
+              authorHook(
+                mergedConfig.updator,
+                mergedConfig.creator,
+                mergedConfig.publisher,
+                mergedConfig.publishDate,
+              ),
             ],
           };
         });
@@ -62,7 +67,13 @@ export const addAuthorFields =
             ...globalConfig.hooks,
             beforeChange: [
               ...((globalConfig.hooks && globalConfig.hooks.beforeChange) || []),
-              authorHook(mergedConfig.updator, mergedConfig.creator, mergedConfig.publisher, mergedConfig.publishDate, true),
+              authorHook(
+                mergedConfig.updator,
+                mergedConfig.creator,
+                mergedConfig.publisher,
+                mergedConfig.publishDate,
+                true,
+              ),
             ],
           };
 
@@ -84,7 +95,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
         disableBulkEdit: true,
         hidden: true,
         components: {
-          Cell: '/plugins/author-fields/CreatedAtCell#CreatedAtCell',
+          Cell: '@rikifrank/author-fields/client#CreatedAtCell',
         },
       },
       // The default sort for list view is createdAt. Thus, enabling indexing by default, is a major performance improvement, especially for large or a large amount of collections.
@@ -100,7 +111,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
         disableBulkEdit: true,
         hidden: true,
         components: {
-          Cell: '/plugins/author-fields/CreatedAtCell#CreatedAtCell',
+          Cell: '@rikifrank/author-fields/client#CreatedAtCell',
         },
       },
       label: ({ t }) => t('general:updatedAt'),
@@ -134,7 +145,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
           pickerAppearance: 'dayAndTime',
           displayFormat: 'd MMM yyy: ,h:mm:ss a',
         },
-        components: { Cell: '/plugins/author-fields/CreatedAtCell#CreatedAtCell' },
+        components: { Cell: '@rikifrank/author-fields/client#CreatedAtCell' },
       },
     });
   }
