@@ -12,21 +12,13 @@ export interface PluginConfig {
   excludedCollections?: string[];
   /** Array of global slugs to exclude */
   excludedGlobals?: string[];
-  /** Fileds names for creator, updator, publisher, publishDate*/
-  creator?: string;
-  updator?: string;
-  publisher?: string;
-  publishDate?: string;
+  /** The name of user name field in Users collection */
   usernameField?: string;
 }
 
 const defaultConfig: Required<PluginConfig> = {
   excludedCollections: [],
   excludedGlobals: [],
-  creator: 'creator',
-  updator: 'updator',
-  publisher: 'publisher',
-  publishDate: 'publishDate',
   usernameField: 'name',
 };
 export const addAuthorFields =
@@ -52,10 +44,10 @@ export const addAuthorFields =
             beforeChange: [
               ...((currentCollection.hooks && currentCollection.hooks.beforeChange) || []),
               authorHook(
-                mergedConfig.updator,
-                mergedConfig.creator,
-                mergedConfig.publisher,
-                mergedConfig.publishDate,
+                'updator',
+                'updator',
+                'pubblisher',
+                'publishDate',
                 mergedConfig.usernameField,
               ),
             ],
@@ -71,10 +63,10 @@ export const addAuthorFields =
             beforeChange: [
               ...((globalConfig.hooks && globalConfig.hooks.beforeChange) || []),
               authorHook(
-                mergedConfig.updator,
-                mergedConfig.creator,
-                mergedConfig.publisher,
-                mergedConfig.publishDate,
+                'updator',
+                'updator',
+                'pubblisher',
+                'publishDate',
                 mergedConfig.usernameField,
                 true,
               ),
