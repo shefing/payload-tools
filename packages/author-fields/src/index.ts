@@ -17,6 +17,7 @@ export interface PluginConfig {
   updator?: string;
   publisher?: string;
   publishDate?: string;
+  usernameField?: string;
 }
 
 const defaultConfig: Required<PluginConfig> = {
@@ -26,6 +27,7 @@ const defaultConfig: Required<PluginConfig> = {
   updator: 'updator',
   publisher: 'publisher',
   publishDate: 'publishDate',
+  usernameField: 'name',
 };
 export const addAuthorFields =
   (pluginConfig: PluginConfig = {}) =>
@@ -54,6 +56,7 @@ export const addAuthorFields =
                 mergedConfig.creator,
                 mergedConfig.publisher,
                 mergedConfig.publishDate,
+                mergedConfig.usernameField,
               ),
             ],
           };
@@ -72,6 +75,7 @@ export const addAuthorFields =
                 mergedConfig.creator,
                 mergedConfig.publisher,
                 mergedConfig.publishDate,
+                mergedConfig.usernameField,
                 true,
               ),
             ],
