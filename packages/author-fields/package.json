@@ -1,6 +1,6 @@
 {
   "name": "@rikifrank/author-fields",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -14,9 +14,9 @@
       "require": "./dist/index.cjs"
     },
     "./client": {
-      "import": "./src/client.ts",
-      "types": "./src/client.ts",
-      "default": "./src/client.ts"
+      "import": "./dist/client.ts",
+      "types": "./dist/client.ts",
+      "default": "./dist/client.ts"
     }
   },
   "files": [
@@ -48,9 +48,9 @@
         "types": "./dist/index.d.ts"
       },
       "./client": {
-        "import": "./src/client.ts",
-        "types": "./src/client.ts",
-        "default": "./src/client.ts"
+        "import": "./dist/client.ts",
+        "types": "./dist/client.ts",
+        "default": "./dist/client.ts"
       }
     },
     "main": "./dist/index.js",
