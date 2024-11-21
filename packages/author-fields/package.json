@@ -9,9 +9,9 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./src/authorFieldPlugin.ts",
-      "require": "./src/authorFieldPlugin.ts",
-      "types": "./src/authorFieldPlugin.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
@@ -23,6 +23,8 @@
     "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
     "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png,json}\" dist/",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx src",
     "prepublishOnly": "pnpm clean && pnpm build"
   },
   "devDependencies": {
@@ -43,13 +45,13 @@
     "access": "public",
     "exports": {
       ".": {
-        "import": "./dist/authorFieldPlugin.js",
-        "require": "./dist/authorFieldPlugin.js",
-        "types": "./dist/authorFieldPlugin.d.ts"
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "types": "./dist/index.d.ts"
       }
     },
-    "main": "./dist/authorFieldPlugin.js",
+    "main": "./dist/index.js",
     "registry": "https://registry.npmjs.org/",
-    "types": "./dist/authorFieldPlugin.d.ts"
+    "types": "./dist/index.d.ts"
   }
 }

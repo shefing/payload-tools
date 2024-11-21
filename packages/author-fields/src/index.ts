@@ -1,6 +1,6 @@
 import { CollectionConfig, Config, FieldAffectingData, GlobalConfig } from 'payload';
 import { Field, UnnamedTab } from 'payload';
-import { authorHook } from './authorHook';
+import { authorHook } from './authorHook.js';
 
 export type IncomingCollectionVersions = {
   drafts?: boolean;
@@ -12,11 +12,20 @@ export interface PluginConfig {
   excludedCollections?: string[];
   /** Array of global slugs to exclude */
   excludedGlobals?: string[];
+  /** Fileds names for creator, updator, publisher, publishDate*/
+  creator?: string;
+  updator?: string;
+  publisher?: string;
+  publishDate?: string;
 }
 
 const defaultConfig: Required<PluginConfig> = {
   excludedCollections: [],
   excludedGlobals: [],
+  creator: 'creator',
+  updator: 'updator',
+  publisher: 'publisher',
+  publishDate: 'publishDate',
 };
 export const addAuthorFields =
   (pluginConfig: PluginConfig = {}) =>
@@ -40,7 +49,7 @@ export const addAuthorFields =
             ...currentCollection.hooks,
             beforeChange: [
               ...((currentCollection.hooks && currentCollection.hooks.beforeChange) || []),
-              authorHook('updator', 'creator', 'publishDate'),
+              authorHook(mergedConfig.updator, mergedConfig.creator, mergedConfig.publisher, mergedConfig.publishDate),
             ],
           };
         });
@@ -53,7 +62,7 @@ export const addAuthorFields =
             ...globalConfig.hooks,
             beforeChange: [
               ...((globalConfig.hooks && globalConfig.hooks.beforeChange) || []),
-              authorHook('updator', 'creator', 'publishDate', true),
+              authorHook(mergedConfig.updator, mergedConfig.creator, mergedConfig.publisher, mergedConfig.publishDate, true),
             ],
           };
 

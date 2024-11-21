@@ -6,6 +6,7 @@ interface DataWithUpdatedByField {
 export const authorHook = (
   updatedByFieldName: string,
   createdByFieldName: string,
+  publishedByFieldName: string,
   publishedAtFieldName: string,
   noOp: boolean = false,
 ): ((args: {
@@ -18,8 +19,7 @@ export const authorHook = (
 }) => Promise<DataWithUpdatedByField>) => {
   return async (args) => {
     //For Globals not operation is passed so have it update
-    if (!args?.operation)
-      args.operation = 'update';
+    if (!args?.operation) args.operation = 'update';
     if (args?.operation === 'update' && args.data !== undefined && args.req.user !== undefined) {
       args.data[updatedByFieldName] = args.req.user?.completeName || 'system';
     }
@@ -31,11 +31,13 @@ export const authorHook = (
         case 'create':
           if (args?.data._status === 'published') {
             args.data[publishedAtFieldName] = new Date();
+            args.data[publishedByFieldName] = args.req.user?.completeName || 'system';
           }
           break;
         case 'update':
           if (args?.originalDoc._status === 'draft' && args?.data._status === 'published') {
             args.data[publishedAtFieldName] = new Date();
+            args.data[publishedByFieldName] = args.req.user?.completeName || 'system';
           }
           break;
       }
