@@ -79,6 +79,6 @@ jobs:
 
       - name: Publish to NPM
         shell: bash
-        run: pnpm publish packages/${{ inputs.plugin-name }} --no-git-checks --access public
+        run: pnpm publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
