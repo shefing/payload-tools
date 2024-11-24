@@ -85,4 +85,7 @@ jobs:
       - name: Publish to NPM
         run: pnpm publish --no-git-checks --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_USERCONFIG: "~/.npmrc"
+
+
