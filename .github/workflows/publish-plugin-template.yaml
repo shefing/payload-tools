@@ -77,15 +77,8 @@ jobs:
           pnpm pkg set version="$new_version"
           echo "New version: $new_version"
 
-      - name: Load npm token
-        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Publish to NPM
-        run: pnpm publish --no-git-checks --access public
+        shell: bash
+        run: pnpm publish packages/${{ inputs.plugin-name }} --no-git-checks --access public
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_USERCONFIG: "~/.npmrc"
-
-
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
