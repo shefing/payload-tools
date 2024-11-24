@@ -2,7 +2,7 @@ name: Publish Authors Info Plugin
 on:
   push:
     paths:
-      - 'packages/plugin-name/**'
+      - 'packages/author-info/**'
     branches:
       - main
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
   publish:
     uses: ./.github/workflows/publish-plugin-template.yml
     with:
-      plugin-name: plugin-name
+      plugin-name: author-info
       version-type: ${{ inputs.version-type || 'patch' }}
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
