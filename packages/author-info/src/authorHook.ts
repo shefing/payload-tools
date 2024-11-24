@@ -19,9 +19,6 @@ export const authorHook = (
   operation?: string;
 }) => Promise<DataWithUpdatedByField>) => {
   return async (args) => {
-    console.log('args?.operation', args?.operation);
-    console.log('args.req.user', args.req.user?.[usernameField]);
-    console.log('args?.data._status', args?.data._status);
     //For Globals not operation is passed so have it update
     if (!args?.operation) args.operation = 'update';
     if (args?.operation === 'update' && args.data !== undefined && args.req.user !== undefined) {

@@ -45,8 +45,8 @@ export const addAuthorFields =
               ...((currentCollection.hooks && currentCollection.hooks.beforeChange) || []),
               authorHook(
                 'updator',
-                'updator',
-                'pubblisher',
+                'creator',
+                'publisher',
                 'publishDate',
                 mergedConfig.usernameField,
               ),
@@ -64,8 +64,8 @@ export const addAuthorFields =
               ...((globalConfig.hooks && globalConfig.hooks.beforeChange) || []),
               authorHook(
                 'updator',
-                'updator',
-                'pubblisher',
+                'creator',
+                'publisher',
                 'publishDate',
                 mergedConfig.usernameField,
                 true,
@@ -91,7 +91,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
         disableBulkEdit: true,
         hidden: true,
         components: {
-          Cell: '@rikifrank/author-fields/client#CreatedAtCell',
+          Cell: '@rikifrank/author-info/client#CreatedAtCell',
         },
       },
       // The default sort for list view is createdAt. Thus, enabling indexing by default, is a major performance improvement, especially for large or a large amount of collections.
@@ -107,7 +107,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
         disableBulkEdit: true,
         hidden: true,
         components: {
-          Cell: '@rikifrank/author-fields/client#CreatedAtCell',
+          Cell: '@rikifrank/author-info/client#CreatedAtCell',
         },
       },
       label: ({ t }) => t('general:updatedAt'),
@@ -142,7 +142,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
             pickerAppearance: 'dayAndTime',
             displayFormat: 'd MMM yyy: ,h:mm:ss a',
           },
-          components: { Cell: '@rikifrank/author-fields/client#CreatedAtCell' },
+          components: { Cell: '@rikifrank/author-info/client#CreatedAtCell' },
         },
       },
       {

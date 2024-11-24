@@ -1,0 +1,86 @@
+name: Publish Plugin Template
+
+on:
+  workflow_call:
+    inputs:
+      plugin-name:
+        required: true
+        type: string
+      version-type:
+        required: false
+        type: string
+        default: 'patch'
+        description: 'Version type to bump: patch, minor, or major'
+    secrets:
+      NPM_TOKEN:
+        required: true
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/${{ inputs.plugin-name }}
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: |
+          cd ../..
+          pnpm install
+
+      - name: Build plugin
+        run: pnpm run build
+
+      - name: Bump version
+        run: |
+          echo "Current version: $(pnpm pkg get version)"
+          # Get current version
+          current_version=$(pnpm pkg get version | tr -d '"')
+
+          # Split version into major, minor, patch
+          IFS='.' read -r major minor patch <<< "$current_version"
+
+          # Calculate new version based on type
+          case "${{ inputs.version-type }}" in
+            "major")
+              new_version="$((major + 1)).0.0"
+              ;;
+            "minor")
+              new_version="$major.$((minor + 1)).0"
+              ;;
+            *)  # patch or default
+              new_version="$major.$minor.$((patch + 1))"
+              ;;
+          esac
+
+          # Update package.json
+          pnpm pkg set version="$new_version"
+          echo "New version: $new_version"
+
+      - name: Setup .npmrc
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+
+      - name: Publish to NPM
+        run: pnpm publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
