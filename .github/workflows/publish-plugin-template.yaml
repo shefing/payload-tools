@@ -78,7 +78,9 @@ jobs:
           echo "New version: $new_version"
 
       - name: Publish to NPM
-        shell: bash
-        run: pnpm publish --no-git-checks --access public
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "@{PUT_YOUR_SCOPE_HERE}:registry=https://registry.npmjs.org/" >> ~/.npmrc
+          pnpm publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
