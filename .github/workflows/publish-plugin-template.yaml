@@ -77,9 +77,10 @@ jobs:
           pnpm pkg set version="$new_version"
           echo "New version: $new_version"
 
-      - name: Setup .npmrc
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+      - name: Load npm token
+        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to NPM
         run: pnpm publish --no-git-checks --access public
