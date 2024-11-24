@@ -34,6 +34,7 @@ jobs:
         uses: pnpm/action-setup@v3
         with:
           version: 8
+          run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -43,9 +44,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
-        run: |
-          cd ../..
-          pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build plugin
         run: pnpm run build
