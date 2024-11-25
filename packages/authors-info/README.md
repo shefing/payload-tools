@@ -1,41 +1,34 @@
 ## [Author Info plugin](./src/index.ts)
 
-Automatic adding authors info to collections and globals : creator, updator, publisher and publish-date
-
-Payload is storing the modification and creation date of each document's collections.
-
-We have the need to store also the:
-
-1. User who created or updated the document.
-2. The user who publish the document and publish date (For publishable content)
-
-All this data is computed and rendered for each collection under Author Data Tab
+- Payload 3.0 does not store authors informations, so we created this package to automatically store information about who created, updated and publish content, and this for all collections and globals. The package does add a new tab in the authoring user interface "Author Data".
+- Payload 3.0 is storing the creation and modification date  of each document's collections but does not store publication date. So this package aslo stores the most recent publish date. 
 
 ![img_1.png](./images/img_1.png)
 
-In order to use this plugin please run the following command:
+### Setup
+In order to use this authors-info plugin install it using your prefered node package manager, e.g:
 
-`pnpm add @rikifrank/authors-info`
+`npm add @rikifrank/authors-info` 
 
-In your payload.config.ts add the following:
+In the payload.config.ts add the following:
 
 ```typescript
 plugins: [
     ...plugins,
-    addAuthorFields({
+    addAuthorsFields({
       excludedCollections: [],
       usernameField: 'fullName',
     }),
 ```
 
-configuration options:
+### Configuration 
 
-excludedCollections: array of collections names to exclude
+- `excludedCollections`: array of collections names to exclude
 
-excludedGlobals: array of globals names to exclude
+- `excludedGlobals`: array of globals names to exclude
 
-usernameField: name field to use from Users collection, 'user' by default
+- `usernameField`: name field to use from Users collection, 'user' by default
 
-In addition, on list views dates are presented in moment.js relation format like:
+The dates are presented using moment.js relative format like:
 
 ![img_2.png](./images/img_2.png)
