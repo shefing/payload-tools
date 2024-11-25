@@ -31,4 +31,4 @@ plugins: [
 
 The dates are presented using moment.js relative format like:
 
-![img_2.png](./images/img_2.png)
+![img_3.png](./images/img_3.png)
