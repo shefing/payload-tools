@@ -21,13 +21,13 @@ const defaultConfig: Required<PluginConfig> = {
   excludedGlobals: [],
   usernameField: 'name',
 };
-export const addAuthorFields =
+export const addAuthorsFields =
   (pluginConfig: PluginConfig = {}) =>
   (config: Config): Config => {
     const mergedConfig: Required<PluginConfig> = { ...defaultConfig, ...pluginConfig };
     const usersSlug = config.admin?.user;
     if (usersSlug === undefined) {
-      throw new Error('[addAuthorFields] admin.user field is undefined');
+      throw new Error('[addAuthorsFields] admin.user field is undefined');
     }
     if (config.collections !== undefined) {
       config.collections
