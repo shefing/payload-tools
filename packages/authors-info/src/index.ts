@@ -17,7 +17,7 @@ export interface PluginConfig {
 }
 
 const defaultConfig: Required<PluginConfig> = {
-  excludedCollections: ['users'],
+  excludedCollections: [],
   excludedGlobals: [],
   usernameField: 'name',
 };
