@@ -30,6 +30,6 @@ plugins: [
 
 - `usernameField`: name field to use from Users collection, 'user' by default
 
-The dates are presented using moment.js relative format like:
 
+The dates are presented relatively using moment.js anywhere using CreatedAtCell type 
 ![img_2.png](./images/img_2.png)
