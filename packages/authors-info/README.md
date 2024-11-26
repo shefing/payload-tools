@@ -1,14 +1,15 @@
 ## [Author Info plugin](./src/index.ts)
 
 - Payload 3.0 does not store authors informations, so we created this package to automatically store information about who created, updated and publish content, and this for all collections and globals. The package does add a new tab in the authoring user interface "Author Data".
-- Payload 3.0 is storing the creation and modification date  of each document's collections but does not store publication date. So this package aslo stores the most recent publish date. 
+- Payload 3.0 is storing the creation and modification date of each document's collections but does not store publication date. So this package aslo stores the most recent publish date.
 
 ![img_1.png](./images/img_1.png)
 
 ### Setup
+
 In order to use this authors-info plugin install it using your prefered node package manager, e.g:
 
-`npm add @rikifrank/authors-info` 
+`npm add @rikifrank/authors-info`
 
 In the payload.config.ts add the following:
 
@@ -21,7 +22,7 @@ plugins: [
     }),
 ```
 
-### Configuration 
+### Configuration
 
 - `excludedCollections`: array of collections names to exclude
 
@@ -31,4 +32,4 @@ plugins: [
 
 The dates are presented using moment.js relative format like:
 
-![img_3.png](./images/img_3.png)
+![img_2.png](./images/img_2.png)
