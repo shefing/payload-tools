@@ -3,7 +3,7 @@ interface DataWithUpdatedByField {
   [key: string]: unknown;
   [key: number]: unknown; // Allow numeric keys as well if needed
 }
-export const authorHook = (
+export const setAuthorsData = (
   updatedByFieldName: string,
   createdByFieldName: string,
   publishedByFieldName: string,

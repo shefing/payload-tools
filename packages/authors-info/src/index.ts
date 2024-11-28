@@ -1,30 +1,17 @@
 import { CollectionConfig, Config, FieldAffectingData, GlobalConfig } from 'payload';
 import { Field, UnnamedTab } from 'payload';
-import { authorHook } from './authorHook.js';
+import { setAuthorsData } from './hooks/setAuthorsData.js';
+import { AuthorsInfoPluginConfig, IncomingCollectionVersions } from './types.js';
 
-export type IncomingCollectionVersions = {
-  drafts?: boolean;
-  maxPerDoc?: number;
-};
-
-export interface PluginConfig {
-  /** Array of collection slugs to exclude */
-  excludedCollections?: string[];
-  /** Array of global slugs to exclude */
-  excludedGlobals?: string[];
-  /** The name of user name field in Users collection */
-  usernameField?: string;
-}
-
-const defaultConfig: Required<PluginConfig> = {
+const defaultConfig: Required<AuthorsInfoPluginConfig> = {
   excludedCollections: [],
   excludedGlobals: [],
   usernameField: 'name',
 };
 export const addAuthorsFields =
-  (pluginConfig: PluginConfig = {}) =>
+  (pluginConfig: AuthorsInfoPluginConfig = {}) =>
   (config: Config): Config => {
-    const mergedConfig: Required<PluginConfig> = { ...defaultConfig, ...pluginConfig };
+    const mergedConfig: Required<AuthorsInfoPluginConfig> = { ...defaultConfig, ...pluginConfig };
     const usersSlug = config.admin?.user;
     if (usersSlug === undefined) {
       throw new Error('[addAuthorsFields] admin.user field is undefined');
@@ -45,7 +32,7 @@ export const addAuthorsFields =
             ...currentCollection.hooks,
             beforeChange: [
               ...((currentCollection.hooks && currentCollection.hooks.beforeChange) || []),
-              authorHook(
+              setAuthorsData(
                 'updator',
                 'creator',
                 'publisher',
@@ -64,7 +51,7 @@ export const addAuthorsFields =
             ...globalConfig.hooks,
             beforeChange: [
               ...((globalConfig.hooks && globalConfig.hooks.beforeChange) || []),
-              authorHook(
+              setAuthorsData(
                 'updator',
                 'creator',
                 'publisher',
