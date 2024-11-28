@@ -16,9 +16,7 @@ export const addAuthorsFields =
     if (usersSlug === undefined) {
       throw new Error('[addAuthorsFields] admin.user field is undefined');
     }
-    console.log('mergedConfig.excludedCollections', mergedConfig.excludedCollections);
     if (config.collections !== undefined) {
-      config.collections.forEach((x) => console.log('!!! ', x.slug));
       config.collections
         .filter((x) => !mergedConfig.excludedCollections.includes(x.slug))
         .forEach((currentCollection) => {
