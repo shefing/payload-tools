@@ -1,0 +1,1 @@
+export type {AuthorizationPluginConfig} from '../types.js'
