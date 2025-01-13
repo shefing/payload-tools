@@ -1,0 +1,87 @@
+{
+  "name": "@michalklor/comments",
+  "version": "1.0.29",
+  "private": false,
+  "bugs": "https://github.com/shefing/payload-tools/issues",
+  "repository": "https://github.com/shefing/payload-tools",
+  "license": "MIT",
+  "author": "shefing",
+  "type": "module",
+  "main": "dist/CommentsPlugin.js",
+  "module": "dist/CommentsPlugin.mjs",
+  "types": "dist/CommentsPlugin.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/CommentsPlugin.js",
+      "require": "./dist/CommentsPlugin.js"
+    },
+    "./plugin": {
+      "import": "./dist/CommentsPlugin.js",
+      "require": "./dist/CommentsPlugin.js"
+    },
+    "./feature": {
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.js"
+    },
+    "./server": {
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.js"
+    },
+    "./client": {
+      "import": "./dist/client/index.js",
+      "require": "./dist/client/index.js"
+    },
+    "./providers/CustomContext": {
+      "import": "./dist/providers/CustomContext.js",
+      "require": "./dist/providers/CustomContext.js"
+    }
+  },
+  "scripts": {
+    "build": "pnpm copyfiles && pnpm build:swc && pnpm build:types",
+    "build:swc": "swc ./src -d ./dist --config-file .swcrc",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist",
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
+    "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png,json}\" dist/",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx src",
+    "prepublishOnly": "pnpm clean && pnpm build",
+    "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml && pnpm install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.25",
+    "@types/react": "19.0.1",
+    "@types/react-dom": "^18.2.21",
+    "payload": "3.0.2",
+    "tailwindcss": "^3.4.14",
+    "tsx": "^4.7.1",
+    "typescript": "5.5.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@lexical/headless": "0.20.0",
+    "@lexical/html": "0.20.0",
+    "@lexical/link": "0.20.0",
+    "@lexical/mark": "0.20.0",
+    "@lexical/markdown": "0.20.0",
+    "@lexical/react": "0.20.0",
+    "@lexical/selection": "0.20.0",
+    "@lexical/text": "0.20.0",
+    "@lexical/utils": "0.20.0",
+    "@lexical/yjs": "0.20.0",
+    "@payloadcms/richtext-lexical": "3.0.2",
+    "@payloadcms/ui": "3.0.2",
+    "flowbite-react-icons": "^1.0.8",
+    "lexical": "0.20.0",
+    "moment": "^2.30.1",
+    "next": "15.0.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "typesense": "^1.8.2",
+    "yjs": "^13.6.18"
+  }
+}

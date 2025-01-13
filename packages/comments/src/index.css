@@ -1,0 +1,509 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ *
+ */
+
+.CommentPlugin_AddCommentBox {
+  display: block;
+  position: fixed;
+  z-index: 10;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  background-color: white;
+  width: 40px;
+  height: 60px;
+}
+
+.CommentPlugin_AddCommentBox_button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  border: 0;
+  border-radius: 20px;
+  background: none;
+  width: 40px;
+  height: 60px;
+}
+
+.CommentPlugin_AddCommentBox_button:hover {
+  background-color: #f6f6f6;
+}
+
+i.add-comment {
+  display: inline-block;
+  vertical-align: -10px;
+  background-image: url(./Icons/chat-left-text.svg);
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.CommentPlugin_CommentInputBox {
+  display: block;
+  position: absolute;
+  z-index: 24;
+  animation: show-input-box 0.4s ease;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  background-color: #fff;
+  width: 250px;
+  min-height: 80px;
+}
+
+.CommentPlugin_CommentInputBox::before {
+  position: absolute;
+  top: 0;
+  right: -1em;
+  left: calc(50% + 0.25em);
+  transform: rotate(135deg);
+  transform-origin: 0 0;
+  box-sizing: border-box;
+  margin-left: 0.5em;
+  box-shadow: -3px 3px 3px 0 rgba(0, 0, 0, 0.05);
+  border: 0.5em solid black;
+  border-color: transparent transparent #fff #fff;
+  width: 0;
+  height: 0;
+  content: '';
+}
+
+.CommentAboveText .CommentPlugin_CommentInputBox::before {
+  top: 210px;
+  transform: rotate(315deg);
+}
+
+@keyframes show-input-box {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.CommentPlugin_CommentInputBox_Buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0 10px 10px 10px;
+}
+
+.CommentPlugin_CommentInputBox_Button {
+  flex: 1;
+}
+
+.CommentPlugin_CommentInputBox_Button.primary {
+  background-color: rgb(66, 135, 245);
+  color: #fff;
+  font-weight: bold;
+}
+
+.CommentPlugin_CommentInputBox_Button.primary:hover {
+  background-color: rgb(53, 114, 211);
+}
+
+.CommentPlugin_CommentInputBox_Button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #eee;
+  color: #444;
+  font-weight: normal;
+}
+
+.CommentPlugin_CommentInputBox_Button[disabled]:hover {
+  opacity: 0.5;
+  background-color: #eee;
+}
+
+.CommentPlugin_CommentInputBox_EditorContainer {
+  position: relative;
+  margin: 10px;
+  border-radius: 5px;
+}
+
+.CommentPlugin_CommentInputBox_Editor {
+  display: block;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 9px 10px 10px 9px;
+  min-height: 80px;
+  caret-color: rgb(5, 5, 5);
+  font-size: 15px;
+}
+
+.CommentPlugin_CommentInputBox_Editor:focus {
+  outline: 1px solid rgb(66, 135, 245);
+}
+
+.CommentPlugin_ShowCommentsButton {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  border-radius: 10px;
+  background-color: #ddd;
+}
+
+i.comments {
+  display: inline-block;
+  vertical-align: -10px;
+  opacity: 0.5;
+  transition: opacity 0.2s linear;
+  background-image: url(./Icons/comments.svg);
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .LexicalEditorTheme__mark,
+  .CommentPlugin_CommentsPanel_List_Thread_Quote span,
+  .Modal__title {
+    color: white !important;
+  }
+
+  .CommentPlugin_CommentsPanel_List {
+    box-shadow: 0 2px 2px -1px #0000001a;
+    border: 1px solid #3c3c3c;
+    border-radius: 3px;
+    background-color: #2f2f2f;
+  }
+
+  .CommentPlugin_CommentsPanel_List_Thread.interactive,
+  .CommentPlugin_CommentsPanel_List_Comment p,
+  .CommentPlugin_CommentsPanel_List_Thread_QuoteBox,
+  .CommentPlugin_CommentsPanel_List_Details,
+  .CommentPlugin_CommentsPanel_Heading,
+  .CommentPlugin_CommentsPanel_List_Thread {
+    background-color: #2f2f2f;
+    color: white !important;
+  }
+
+  .CommentPlugin_CommentsPanel_List_Thread.active {
+    border-left: 15px solid #6b6565 !important;
+    background-color: #2f2f2f !important;
+    color: white !important;
+  }
+
+  .CommentPlugin_CommentsPanel_List_Thread.interactive:hover,
+  .CommentPlugin_CommentsPanel_List_Thread.active .CommentPlugin_CommentsPanel_List_Comment:hover,
+  .CommentPlugin_CommentsPanel_Editor,
+  .CommentPlugin_CommentsPanel_List_Thread_Editor,
+  .CommentPlugin_CommentsPanel,
+  .CommentPlugin_CommentsPanel_List_Thread_Comments,
+  .CommentPlugin_CommentsPanel_Editor,
+  .CommentPlugin_CommentInputBox_Editor,
+  .CommentPlugin_CommentInputBox {
+    background-color: #2f2f2f !important;
+  }
+
+  .CommentPlugin_CommentsPanel_SendButton {
+    background-color: #ffffff8b !important;
+  }
+  .CommentPlugin_CommentsPanel_List_Thread_Comments .CommentPlugin_CommentsPanel_List_Comment {
+    border-left: 5px solid #6b6565 !important;
+  }
+
+  .Modal__modal {
+    border-color: #625e5e;
+    background-color: #100f0f !important;
+  }
+  .Modal__closeButton {
+    background-color: #625e5e;
+  }
+}
+
+.CommentPlugin_ShowCommentsButton:hover i.comments {
+  opacity: 1;
+}
+
+.CommentPlugin_ShowCommentsButton.active {
+  background-color: #ccc;
+}
+
+.CommentPlugin_CommentsPanel {
+  position: absolute;
+  top: 185px;
+  right: 1px;
+  z-index: 25;
+  animation: show-comments 0.2s ease;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 10px;
+  background-color: #fff;
+  width: 300px;
+  width: 300px;
+  height: calc(100% - 88px);
+}
+
+@keyframes show-comments {
+  0% {
+    transform: translateX(300px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.CommentPlugin_CommentsPanel_Heading {
+  display: block;
+  border-bottom: 1px solid #eee;
+  padding-left: 7px;
+  width: 100%;
+  height: 34px;
+  overflow: hidden;
+  color: #444;
+  font-size: 20px;
+}
+
+.CommentPlugin_CommentsPanel_Editor {
+  display: block;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 9px 10px 10px 9px;
+  min-height: 20px;
+  caret-color: rgb(5, 5, 5);
+  font-size: 15px;
+}
+.Close_Comments_Icon {
+  position: absolute;
+  top: 5px;
+  right: 0;
+  cursor: pointer;
+}
+
+.CommentPlugin_CommentsPanel_Editor::before {
+  float: right;
+  width: 30px;
+  height: 20px;
+  content: '';
+}
+
+.CommentPlugin_CommentsPanel_SendButton {
+  position: absolute;
+  top: -3px;
+  right: 11px;
+  transition-duration: 0.1s;
+  transition-property: border, color;
+  transition-timing-function: cubic-bezier(0, 0.2, 0.2, 1);
+  cursor: pointer;
+  margin-block: 24px;
+  box-shadow: var(--box-shadow, none);
+  border: 0;
+  border: none;
+  border-radius: 3px;
+  background-color: var(--bg-color, transparent);
+  color: var(--color, inherit);
+  font-weight: 400;
+  font-size: var(--base-body-size);
+  line-height: 24px;
+  text-decoration: none;
+}
+
+.CommentPlugin_CommentsPanel_SendButton:hover {
+  background-color: rgb(249, 245, 245);
+}
+
+i.send {
+  display: inline-block;
+  vertical-align: -10px;
+  opacity: 0.5;
+  transition: opacity 0.2s linear;
+  background-image: url(./Icons/send.svg);
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.CommentPlugin_CommentsPanel_SendButton:hover i.send {
+  opacity: 1;
+  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg) brightness(100%) contrast(92%);
+}
+
+.CommentPlugin_CommentsPanel_SendButton[disabled] i.send {
+  opacity: 0.3;
+}
+
+.CommentPlugin_CommentsPanel_SendButton:hover[disabled] i.send {
+  opacity: 0.3;
+  filter: none;
+}
+
+.CommentPlugin_CommentsPanel_Empty {
+  position: absolute;
+  top: calc(50% - 15px);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  color: #777;
+  font-size: 15px;
+  text-align: center;
+}
+
+.CommentPlugin_CommentsPanel_List {
+  position: absolute;
+  top: 45px;
+  margin: 0;
+  padding: 0;
+  padding: 0;
+  width: 100%;
+  height: calc(100% - 45px);
+  overflow-y: auto;
+  list-style-type: none;
+}
+
+.CommentPlugin_CommentsPanel_List_Comment {
+  position: relative;
+  transition: all 0.2s linear;
+  margin: 0;
+  padding: 15px 0 15px 15px;
+  font-size: 14px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.active .CommentPlugin_CommentsPanel_List_Comment:hover {
+  background-color: inherit;
+}
+
+.CommentPlugin_CommentsPanel_List_Comment p {
+  margin: 0;
+  color: #444;
+}
+
+.CommentPlugin_CommentsPanel_List_Details {
+  vertical-align: top;
+  padding-bottom: 5px;
+  color: #444;
+}
+
+.CommentPlugin_CommentsPanel_List_Comment_Author {
+  padding-right: 5px;
+  font-weight: bold;
+}
+
+.CommentPlugin_CommentsPanel_List_Comment_Time {
+  color: #999;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread {
+  position: relative;
+  transition: all 0.2s linear;
+  margin: 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  border-left: 0 solid #eee;
+  padding: 0 0 0 0;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread:first-child,
+.CommentPlugin_CommentsPanel_List_Thread + .CommentPlugin_CommentsPanel_List_Thread {
+  border-top: none;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.interactive {
+  cursor: pointer;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.interactive:hover {
+  background-color: #fafafa;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.active {
+  cursor: inherit;
+  border-left: 15px solid #eee;
+  background-color: #fafafa;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_QuoteBox {
+  display: block;
+  padding-top: 10px;
+  color: #ccc;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Quote {
+  margin: 0px 10px 0 10px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Quote span {
+  display: inline;
+  background-color: rgba(255, 212, 0, 0.4);
+  padding: 1px;
+  color: #222;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Comments {
+  padding-left: 10px;
+  list-style-type: none;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Comments
+  .CommentPlugin_CommentsPanel_List_Comment:first-child {
+  margin-left: 0;
+  border: none;
+  padding-left: 5px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Comments
+  .CommentPlugin_CommentsPanel_List_Comment:first-child.CommentPlugin_CommentsPanel_List_Comment:last-child {
+  padding-bottom: 5px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Comments .CommentPlugin_CommentsPanel_List_Comment {
+  margin-left: 5px;
+  border-left: 5px solid #eee;
+  padding-left: 10px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Editor {
+  position: relative;
+  padding-top: 1px;
+}
+
+.CommentPlugin_CommentsPanel_List_DeleteButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0;
+  background-color: transparent;
+  width: 30px;
+  height: 30px;
+}
+
+.CommentPlugin_CommentsPanel_DeletedComment,
+.CommentPlugin_CommentsPanel_List_Comment:hover .CommentPlugin_CommentsPanel_List_DeleteButton,
+.CommentPlugin_CommentsPanel_List_Thread_QuoteBox:hover
+  .CommentPlugin_CommentsPanel_List_DeleteButton {
+  opacity: 0.5;
+}
+
+.CommentPlugin_CommentsPanel_List_DeleteButton:hover {
+  opacity: 1;
+  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg) brightness(100%) contrast(92%);
+  background-color: transparent;
+}
+
+.CommentPlugin_CommentsPanel_List_DeleteButton i.delete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  vertical-align: -10px;
+  transition: opacity 0.2s linear;
+  background-image: url(./Icons/trash.svg);
+  background-size: contain;
+  background-color: rgb(249, 245, 245);
+  width: 100%;
+  height: 100%;
+  color: black;
+}
