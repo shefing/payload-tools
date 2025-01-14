@@ -12,7 +12,6 @@ export const addAccess =
     if (!incomingConfig || !incomingConfig.collections) {
       throw new Error('Invalid incoming configuration or collections are missing');
     }
-
     const entities: { label: string; value: string }[] = [];
 
     const createAccess = (slugName: string, labelName?: string) => {
