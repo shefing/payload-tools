@@ -1,0 +1,51 @@
+.rightpanel .doc-header {
+  display: none;
+}
+.doc-drawer__header-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+.right-panel-close {
+  position: absolute;
+  top: 135px;
+  right: 5px;
+  z-index: 100;
+}
+
+.relation-field-container {
+  display: flex;
+  align-items: center;
+}
+
+.relation-field-icon {
+  cursor: pointer;
+  margin-top: 26px;
+  margin-left: 5px;
+}
+.rightpanel {
+  border-left: 1px solid rgb(235, 235, 235);
+  width: 50%;
+  overflow: auto;
+}
+
+.rightpanel.closed {
+  width: 100%;
+}
+.right-panel-edit-view {
+  display: flex;
+  height: calc(100vh - 120px);
+}
+
+.edit-view {
+  display: flex;
+  flex: 1;
+  overflow: auto;
+}
+.relation-field-container {
+  flex-direction: row;
+}
