@@ -1,0 +1,63 @@
+{
+  "name": "@michalklor/right-panel",
+  "version": "1.0.7",
+  "private": false,
+  "bugs": "https://github.com/shefing/payload-tools/issues",
+  "repository": "https://github.com/shefing/payload-tools",
+  "license": "MIT",
+  "author": "shefing",
+  "type": "module",
+  "main": "dist/RightPanelPlugin.js",
+  "module": "dist/index.mjs",
+  "style": "dist/styles/custom.css",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/RightPanelPlugin.js",
+      "require": "./dist/RightPanelPlugin.js"
+    },
+    "./components/RightPanelEditView": {
+      "import": "./dist/components/RightPanelEditView.js",
+      "require": "./dist/components/RightPanelEditView.js"
+    },
+    "./components/RelationInRightPanelField": {
+      "import": "./dist/components/RelationInRightPanelField.js",
+      "require": "./dist/components/RelationInRightPanelField.js"
+    },
+    "./providers/CustomContext": {
+      "import": "./dist/providers/CustomContext.js",
+      "require": "./dist/providers/CustomContext.js"
+    }
+  },
+  "scripts": {
+    "build": "pnpm copyfiles && pnpm build:swc && pnpm build:types",
+    "build:swc": "swc ./src -d ./dist --config-file .swcrc",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist",
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
+    "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png,json}\" dist/",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx src",
+    "prepublishOnly": "pnpm clean && pnpm build",
+    "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
+  },
+  "devDependencies": {
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.1",
+    "autoprefixer": "^10.4.20",
+    "payload": "3.0.2",
+    "postcss": "^8.5.1",
+    "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "@payloadcms/ui": "^3.0.2",
+    "flowbite-react-icons": "^1.0.8",
+    "next": "15.0.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
