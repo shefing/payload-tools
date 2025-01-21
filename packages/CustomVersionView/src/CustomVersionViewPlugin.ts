@@ -13,7 +13,7 @@ const defaultConfig: Required<versionsPluginPConfig> = {
 function ensurePath(obj: any, path: string[]): any {
   return path.reduce((acc, key) => (acc[key] ??= {}), obj);
 }
-const versionsRightPanelPlugin =
+const versionsPlugin =
   (pluginConfig: versionsPluginPConfig = {}) =>
   (config: Config): Config => {
     const mergedConfig: Required<versionsPluginPConfig> = { ...defaultConfig, ...pluginConfig };
@@ -60,4 +60,4 @@ const versionsRightPanelPlugin =
     };
   };
 
-export default versionsRightPanelPlugin;
+export default versionsPlugin;
