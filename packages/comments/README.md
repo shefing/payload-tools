@@ -16,11 +16,29 @@ when clicking on the mark, it open the comments panel on the right side with foc
 
 ![img3.png](./images/img3.png)
 
-# Plugin Installation and Usage
+### Setup
 
-Follow these steps to install and use the plugin in your Payload CMS project.
+In order to use this comments plugin install it using your prefered node package manager, e.g:
 
-## 1. Enable Comments in Your Collection
+`npm install @michalklor/comments`
+
+In the payload.config.ts add the following:
+```javascript
+  CommentsPlugin({
+      excludedCollections: ['posts', 'media'],
+      excludedGlobals: ['aboutus']
+    })
+```
+### Configuration
+
+- `excludedCollections`: array of collections names to exclude
+
+- `excludedGlobals`: array of globals names to exclude
+
+### Collection Configuration
+
+
+#### 1. Enable Comments in Your Collection
 
 In the collection where you want to use the plugin, add the following configuration under the `admin` section:
 
@@ -32,7 +50,7 @@ admin: {
 },
 ```
 
-## 2. Configure the Rich Text Field
+#### 2. Configure the Rich Text Field
 
 For the rich text field where you want the plugin features, include the following editor configuration:
 

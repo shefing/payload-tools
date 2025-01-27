@@ -1,12 +1,14 @@
 ## [Cross Collection config plugin](./src/index.ts)
 
-We created a plugin which will utilize metadata collection to inject behavior.
+We created a plugin which will override the default view of the component, injecting custom behavior based on metadata.
 
-### The plugin does the following:
+### Setup
 
-The plugin overrides the default view of the component, injecting custom behavior based on metadata.
+In order to use this authorization cross collection plugin install it using your prefered node package manager, e.g:
 
-### Plugins Configuration
+`npm add @michalklor/cross-collection`
+
+In the payload.config.ts add the following:
 
 ```javascript
  CrossCollectionConfig({
@@ -16,3 +18,12 @@ The plugin overrides the default view of the component, injecting custom behavio
       excludedCollections: ['users'],
     }),
 ```
+
+### Configuration
+
+- `excludedCollections`: array of collections names to exclude
+
+- `excludedGlobals`: array of globals names to exclude
+
+- `customComponentPaths`:A set of paths to custom components that will be used for editing specific collections or globals.
+ 

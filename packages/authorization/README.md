@@ -1,9 +1,14 @@
 ## [Authorization plugin](./src/index.ts)
 
-We created a plugin which will enable flexibility in setting the roles
-The Admin sets in the Roles collection any roles needed in the organization.
-A role contains permissions, when each permission can contain:
-Multiple globals and collections and the permission types (read /write) the admin allows for them
+We have developed a plugin that offers flexibility in defining roles for your organization.
+
+### Overview
+
+Using this plugin, administrators can configure a Roles collection to define any roles required within the organization. Each role can include a set of permissions. These permissions allow administrators to specify access levels for various globals and collections, including:
+
+-The entities (globals or collections) to which the role applies.
+
+-The types of permissions granted, such as read, write, or publish.
 
 For example:
 
@@ -14,13 +19,31 @@ The Admin can set as many permissions it wants and as many as roles as well.
 Then the Admin assigns each user its roles:
 ![img_1.png](./images/img_1.png)
 
-### The plugin does the following:
+ ### Setup
 
-Collects all collections and globals for the permissions drop down.
+In order to use this authorization plugin install it using your prefered node package manager, e.g:
 
-Gos over all collections in the system and assigns them the access APIs according to the definition done by the Admin.
+`npm add @michalklor/authorization`
 
-Sets the Cell display for createAt and updatedAt fields to use moment.js relation time
+In the payload.config.ts add the following:
+
+```typescript
+plugins: [
+    ...plugins,
+    addAccess({
+      rolesCollection: 'roles',
+      permissionsField: 'permissions',
+      excludedCollections: ['posts', 'media']
+    }),
+```
+
+### Configuration
+
+-`rolesCollection` - the name of the collection where roles are stored.
+
+-`permissionsField` - the name of the field in the roles collection that defines permissions.
+
+-`excludedCollections` - an array of collection slugs to exclude from access management.
 
 ### Fields Configuration
 
@@ -30,33 +53,28 @@ The `roles` collection should have the following fields:
 fields: [
   {
     name: 'name',
-    type: 'text',
-    unique: true, // Ensures role names are unique
+    type: 'text'
   },
   {
     name: 'permissions',
-    saveToJWT: true, // Save this field to JWT so it can be accessed via `req.user`
+    saveToJWT: true, 
     interfaceName: 'RolePermissions',
     type: 'array',
     access: {
-      // Only admins can create or update a value for this field
       create: isAdminFieldLevel,
       update: isAdminFieldLevel,
     },
     fields: [
       {
-        type: 'row', // Group fields in a row layout
+        type: 'row', 
         fields: [
           {
             name: 'entity',
             label: 'Collection or Global',
             type: 'select',
             hasMany: true,
-            options: [], // Populated dynamically with collections and globals
+            options: [], 
             required: true,
-            admin: {
-              width: '70%',
-            },
           },
           {
             name: 'type',
@@ -78,9 +96,6 @@ fields: [
               },
             ],
             required: true,
-            admin: {
-              width: '30%',
-            },
           },
         ],
       },
