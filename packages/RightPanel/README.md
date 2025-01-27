@@ -9,10 +9,20 @@ This was done by adding a custom view to the edit view.
 For example:
 
 ![img1.png](./images/img1.png)
+### Setup
 
-### The plugin does the following:
+In order to use this authorization cross collection plugin install it using your prefered node package manager, e.g:
 
-The RightPanelPlugin adds a custom Right Panel to the Payload admin interface, enabling users to view and edit related documents alongside standard edit forms. The plugin allows configuration to include or exclude specific collections.
+`npm add @michalklor/right-panel`
+
+In the payload.config.ts add the following:
+```javascript
+RightPanelPlugin({})
+```
+
+### Configuration
+
+- `excludedCollections`: array of collections names to exclude
 
 ### collection configuration
 
