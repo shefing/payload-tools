@@ -4,10 +4,10 @@ import { notFound } from 'next/navigation';
 import { isNumber } from 'payload/shared';
 import React from 'react';
 // import { SetDocumentStepNav } from './components/cells/setDocumentStepNav';
-import { SetDocumentStepNav } from './components/setDocumentStepNav';
-import { buildVersionColumns } from './components/buildColumns';
-import { getLatestVersion } from './getLatestVersion';
-import { VersionsViewClient } from './index.client';
+import { SetDocumentStepNav } from './components/setDocumentStepNav/index.jsx';
+import { buildVersionColumns } from './components/buildColumns.jsx';
+import { getLatestVersion } from './getLatestVersion.js';
+import { VersionsViewClient } from './index.client.jsx';
 //import './index.scss' ?
 
 /* eslint-disable */

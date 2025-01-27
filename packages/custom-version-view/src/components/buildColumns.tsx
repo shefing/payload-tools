@@ -10,9 +10,9 @@ import type {
 import { type Column, SortColumn } from '@payloadcms/ui';
 import React from 'react';
 
-import { AutosaveCell } from './cells/AutosaveCell';
-import { CreatedAtCell } from './cells/CreatedAt';
-import { IDCell } from './cells/ID';
+import { AutosaveCell } from './cells/AutosaveCell/index.jsx';
+import { CreatedAtCell } from './cells/CreatedAt/index.jsx';
+import { IDCell } from './cells/ID/index.jsx';
 
 type Updator = {
   creator?: string | null;

@@ -4,7 +4,7 @@ import { useModal } from '@faceless-ui/modal';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-import type { DocumentDrawerProps } from '../types';
+import type { DocumentDrawerProps } from '../types.js';
 import { LoadingOverlay } from '@payloadcms/ui';
 /*
 import { useConfig } from '@payloadcms/ui'
@@ -12,10 +12,10 @@ import { useConfig } from '@payloadcms/ui'
 import { useServerFunctions } from '@payloadcms/ui';
 import { useTranslation } from '@payloadcms/ui';
 import { abortAndIgnore } from '@payloadcms/ui/shared';
-import { DocumentDrawerContextProvider } from './Provider';
+import { DocumentDrawerContextProvider } from './Provider.jsx';
 
-import { useRelatedCollections } from '../useRelatedCollections';
-import { useCustomContext } from '../providers/CustomContext';
+import { useRelatedCollections } from '../useRelatedCollections.js';
+import { useCustomContext } from '../providers/CustomContext.jsx';
 import { useStepNav } from '@payloadcms/ui';
 import { XIcon } from '@payloadcms/ui/icons/X';
 

@@ -1,7 +1,7 @@
 import type { EditViewComponent, PayloadServerReactComponent } from 'payload';
 import { DefaultEditView as EditView } from '@payloadcms/ui';
 import React from 'react';
-import RightPanelDocumentWrapper from './RightPanelDocumentWrapper';
+import RightPanelDocumentWrapper from './RightPanelDocumentWrapper.jsx';
 import '../styles/custom.css';
 const RightPanelEditView: PayloadServerReactComponent<EditViewComponent> = () => {
   const headerHeight = 120;
