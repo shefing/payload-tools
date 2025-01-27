@@ -25,5 +25,5 @@ In the payload.config.ts add the following:
 
 - `excludedGlobals`: array of globals names to exclude
 
-- `customComponentPaths`:A set of paths to custom components that will be used for editing specific collections or globals.
+- `customComponentPaths`: a set of paths to custom components that will be used for editing specific collections or globals.
  

@@ -20,9 +20,9 @@ In the payload.config.ts add the following:
 ```typescript
 plugins: [
     ...plugins,
-    versionsRightPanelPlugin({}),({
-      excludedCollections: [],
-    }),
+    versionsPlugin({
+      excludedCollections: []
+    })
 ```
 The updated by field in versions relies on the authors-info package.
 
