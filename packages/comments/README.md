@@ -55,6 +55,7 @@ admin: {
 For the rich text field where you want the plugin features, include the following editor configuration:
 
 ```javascript
+import  {commentFeature } from '@michalklor/comments/feature'
 fields: [
   {
     name: 'richText',
