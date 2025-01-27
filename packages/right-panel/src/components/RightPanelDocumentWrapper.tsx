@@ -1,9 +1,9 @@
 'use client'; // This directive ensures the component is a client component
 
 import React, { useEffect } from 'react';
-import { DocumentDrawerContent } from './DocumentView.jsx';
+import { DocumentDrawerContent } from './DocumentView.js';
 import { useNav } from '@payloadcms/ui';
-import { useCustomContext } from '../providers/CustomContext.jsx';
+import { useCustomContext } from '../providers/CustomContext.js';
 
 const RightPanelDocumentWrapper: React.FC = () => {
   const { isRightPanelOpen, collection, id, resetRightPanel } = useCustomContext();

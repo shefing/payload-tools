@@ -12,10 +12,10 @@ import { useConfig } from '@payloadcms/ui'
 import { useServerFunctions } from '@payloadcms/ui';
 import { useTranslation } from '@payloadcms/ui';
 import { abortAndIgnore } from '@payloadcms/ui/shared';
-import { DocumentDrawerContextProvider } from './Provider.jsx';
+import { DocumentDrawerContextProvider } from './Provider.js';
 
 import { useRelatedCollections } from '../useRelatedCollections.js';
-import { useCustomContext } from '../providers/CustomContext.jsx';
+import { useCustomContext } from '../providers/CustomContext.js';
 import { useStepNav } from '@payloadcms/ui';
 import { XIcon } from '@payloadcms/ui/icons/X';
 

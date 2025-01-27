@@ -3,7 +3,7 @@ import { RelationshipField, useField, useStepNav } from '@payloadcms/ui';
 import { RelationshipFieldClientProps } from 'payload';
 import { ArrowRightToBracket } from 'flowbite-react-icons/outline';
 import { useRef } from 'react';
-import { useCustomContext } from '../providers/CustomContext.jsx';
+import { useCustomContext } from '../providers/CustomContext.js';
 
 //throw event /context on click
 const RelationInRightPanelField: React.FC<RelationshipFieldClientProps> = (props) => {
