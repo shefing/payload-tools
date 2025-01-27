@@ -1,5 +1,5 @@
 import type { Config } from 'payload';
-import { CrossCollectionPluginConfig } from './types';
+import { CrossCollectionPluginConfig } from './types.js';
 /* eslint-disable */
 
 const defaultConfig: Required<CrossCollectionPluginConfig> = {
