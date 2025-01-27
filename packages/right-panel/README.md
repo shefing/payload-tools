@@ -9,6 +9,7 @@ This was done by adding a custom view to the edit view.
 For example:
 
 ![img1.png](./images/img1.png)
+
 ### Setup
 
 In order to use this authorization cross collection plugin install it using your prefered node package manager, e.g:
@@ -16,8 +17,9 @@ In order to use this authorization cross collection plugin install it using your
 `npm add @michalklor/right-panel`
 
 In the payload.config.ts add the following:
+
 ```javascript
-RightPanelPlugin({})
+RightPanelPlugin({});
 ```
 
 ### Configuration
@@ -44,7 +46,10 @@ In the Relationship field where you want to enable the Right Panel, you need to 
 ```javascript
     admin: {
       components: {
-        Field: RelationInRightPanelField
+        Field: 
+        components: {
+            Field: '@michalklor/right-panel/components/RelationInRightPanelField'
+        }
       }
     },
 ```

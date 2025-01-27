@@ -1,7 +1,7 @@
 import type { Data, FormState } from 'payload';
 import type React from 'react';
 import type { HTMLAttributes } from 'react';
-import type { DocumentDrawerContextProps } from './components/Provider.jsx';
+import type { DocumentDrawerContextProps } from './components/Provider.js';
 
 export type DrawerProps = {
   readonly children: React.ReactNode;

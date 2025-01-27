@@ -12,11 +12,10 @@
 }
 .right-panel-close {
   position: absolute;
-  top: 135px;
+  top: 119px;
   right: 5px;
   z-index: 100;
 }
-
 .relation-field-container {
   display: flex;
   align-items: center;
