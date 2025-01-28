@@ -10,12 +10,12 @@ Users can search for a specific icon by name or select it from the dropdown menu
 
 In order to use this color-picker field  install it using your prefered node package manager, e.g:
 
-` npm install @michalklor/icon-select`
+` npm install @shefing/icon-select`
 
 In the collection  add the following:
 
 ```typescript
-import   { createIconSelectField }  from "@michalklor/icon-select"
+import   { createIconSelectField }  from "@shefing/icon-select"
 
  fields: [ 
  createIconSelectField({ name: 'iconType', label: 'Select Icon' }),

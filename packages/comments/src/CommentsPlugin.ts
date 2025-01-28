@@ -42,7 +42,7 @@ const CommentsPlugin =
       ...components,
       providers: [
         ...(components.providers || []), // Include existing providers
-        '@michalklor/comments/providers/CustomContext#CustomContextProvider',
+        '@shefing/comments/providers/CustomContext#CustomContextProvider',
       ],
     };
     return {

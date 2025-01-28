@@ -13,7 +13,7 @@ For example:
 
 In order to use this Custom -Version- View plugin install it using your prefered node package manager, e.g:
 
-`npm add @michalklor/custom-version-view`
+`npm add @shefing/custom-version-view`
 
 In the payload.config.ts add the following:
 

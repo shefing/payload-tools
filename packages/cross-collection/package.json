@@ -1,6 +1,6 @@
 {
-  "name": "@michalklor/cross-collection",
-  "version": "1.0.1",
+  "name": "@shefing/cross-collection",
+  "version": "1.0.0",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
