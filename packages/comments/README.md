@@ -1,4 +1,4 @@
-### Comments plugin
+### Comments Plugin
 
 We created a plugin that gives the ability to add comments between users over text in a RichText field, using Lexical
 
