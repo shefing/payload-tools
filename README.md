@@ -1,21 +1,19 @@
-# payload-tools
-
+This repo is containing a set of plugins for the [Payload CMS](https://payloadcms.com/) that can be useful for content projects using it.
+Here is the list of the plugins:
 Payload 3.0 plugins
 
-## Packages list:
+1. [Authors-info](packages/authors-info/): a pluging that will automatically add authors information to the authoring interface: creator, updators, publishers and last publish date.
 
-#### 1. [Authors-info](packages/authors-info/) - Automatic adding authors info: creator, updator, publisher and publish-date
+2. [Authorization](packages/authorization/):a plugin implementing a flexible role-based access control of the contents, defining roles based on the read/write/publish primitives per collections and globals, enabling roles assignment to users defining roles with custom permissions.
 
-#### 2. [Authorization](packages/authorization/) - Allows flexible role-based access control by defining roles with custom permissions, assigning roles to users, and enforcing access rules (read/write/publish) across all collections and globals.
+21. [Comments](packages/comments/)- Plugin to enable comments within the Payload authoring interface, so users with access can comment and reply on rich text fields based on Lexical.
 
-#### 3. [Color-picker-field](packages/color-picker/) -Adds a custom field for selecting colors within the Payload CMS interface, using the Flowbite color palette. Simply install it and add the field to your collection to enable color selection by name, hex code, or from a visual palette.
+3. [Color-picker-field](packages/color-picker/): a custom field to add color selection within the authoring interface.
 
-#### 4. [Icon-select](packages/icon-select/) -Adds a custom field for selecting icons within the Payload CMS interface, using the Flowbite icon library and ShadCN UI. Simply install it and add the field to your collection to enable icon selection.
+4. [Icon-select](packages/icon-select/): a custom field for selecting icons within the Payload authoring interface
 
-#### 4. [Comments](packages/comments/)- Allows users to add and reply to comments on selected text in a RichText field, enabling dynamic discussions within the content. The plugin integrates with Lexical .
+5. [Cross-collection-config](packages/CrossCollection/)- Custom component to change the default component of the authoring interface accross all collections and globals, enabling behavior based on metadata, and with the ability to exclude some collections or globals.
 
-#### 5. [Cross-collection-config](packages/CrossCollection/)- Customizes the default component view, enabling behavior based on metadata, with options to exclude collections/globals and set custom paths for editing.
+6. [Custom-version-view](packages/CustomVersionView/)- Custom component to add "Updated at" and "Updated by" fields to the default version view, enabling better version control. It relies on the [Authors-info](packages/authors-info/) package for displaying the author information.
 
-#### 6. [Custom-version-view](packages/CustomVersionView/)- Adds "Updated At" (using relative date) and "Updated By" fields to the version view, helping track changes more effectively way. It integrates with the authors-info package for displaying the author information.
-
-#### 7.[Right-panel](packages/RightPanel/)- Allows relationship fields to be edited in a right panel instead of a pop-up, enabling users to work on both the original and related entities simultaneously. It provides a custom view for the edit interface.
+7.[Right-panel](packages/RightPanel/)- Custom view of the edit UI to display relationship fields side-by-side within a right panel making it easier to edit two related entities
