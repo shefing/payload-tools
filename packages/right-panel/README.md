@@ -12,7 +12,7 @@ For example:
 
 ### Setup
 
-In order to use this authorization cross collection plugin install it using your prefered node package manager, e.g:
+In order to use this right-panel plugin install it using your prefered node package manager, e.g:
 
 `npm add @michalklor/right-panel`
 
