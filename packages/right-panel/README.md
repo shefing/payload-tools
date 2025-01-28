@@ -19,7 +19,10 @@ In order to use this authorization cross collection plugin install it using your
 In the payload.config.ts add the following:
 
 ```javascript
+plugins: [
+...plugins
 RightPanelPlugin({});
+]
 ```
 
 ### Configuration
