@@ -1,4 +1,4 @@
-## [Cross Collection config plugin](./src/index.ts)
+## [Cross-collection config plugin](./src/index.ts)
 
 We created a plugin which will override the default view of the component, injecting custom behavior based on metadata.
 
