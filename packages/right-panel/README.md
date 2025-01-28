@@ -26,7 +26,7 @@ RightPanelPlugin({});
 
 - `excludedCollections`: array of collections names to exclude
 
-### collection configuration
+### Collection Configuration
 
 In the collection where you want to add a Right Panel to a Relationship field, you need to include the following in the collection's admin configuration:
 
