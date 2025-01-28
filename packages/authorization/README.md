@@ -1,4 +1,4 @@
-## [Authorization plugin](./src/index.ts)
+## [Authorization Plugin](./src/index.ts)
 
 We have developed a plugin that offers flexibility in defining roles for your organization.
 
