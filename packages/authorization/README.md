@@ -8,7 +8,7 @@ There is a built-in role named administrator and users assigned to it (aka admin
 
 Note that:
 - write permission on a collection / global includes read permission on this collection / global
-- publish permission on a collection / global includes write and read permission on this collection / global
+- publish permission on a collection / global does not includes write either read permission on this collection / global
 
 Example:
 
@@ -20,9 +20,9 @@ Administrators can set as many permissions he/she wants within a role and as man
 
  ### Setup
 
-In order to use this authorization plugin install it using your prefered node package manager, e.g:
+- Install the [plugin](https://www.npmjs.com/package/@shefing/authorization) using your node package manager, e.g:
 
-`npm add @michalklor/authorization`
+`npm add @shefing/authorization`
 
 In the payload.config.ts add the following:
 
@@ -30,23 +30,15 @@ In the payload.config.ts add the following:
 plugins: [
     ...plugins,
     addAccess({
-      rolesCollection: 'roles',
-      permissionsField: 'permissions',
-      excludedCollections: ['posts', 'media']
+      rolesCollection: 'roles', // name of the collection defining the roles
+      permissionsField: 'permissions', // name of the field within the role collection
+      excludedCollections: ['posts', 'media'] // enable to exclude some collections from permission control 
     }),
 ```
 
-### Configuration
-
--`rolesCollection` - the name of the collection where roles are stored.
-
--`permissionsField` - the name of the field in the roles collection that defines permissions.
-
--`excludedCollections` - an array of collection slugs to exclude from access management.
-
 ### Fields Configuration
 
-The `roles` collection should have the following fields:
+You need to create the `roles` collection and it must have the following fields:
 
 ```javascript
 fields: [
@@ -103,7 +95,7 @@ fields: [
 ];
 ```
 
-The `users` collection should have the following fields:
+The `users` collection must be update to include the following fields:
 
 ```javascript
         {
