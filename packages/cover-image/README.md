@@ -10,7 +10,7 @@ This feature was implemented in the flowing way:
 
 ### 1. Install the Plugin
 ```bash
-npm add @cankan/cover-image
+npm add @shefing/cover-image
 
 ```
 ### 2. Payload Config (`payload.config.ts`)

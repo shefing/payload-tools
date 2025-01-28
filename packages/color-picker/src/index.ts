@@ -14,7 +14,7 @@ export const createColorField = ({
   label,
   admin: {
     components: {
-      Field: '@michalklor/color-picker/CustomTailWindColors#SelectColorFont',
+      Field: '@shefing/color-picker/CustomTailWindColors#SelectColorFont',
     },
   },
 });

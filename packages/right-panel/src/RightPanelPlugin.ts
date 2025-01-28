@@ -30,7 +30,7 @@ const RightPanelPlugin =
           ]);
 
           if (currentCollection?.admin?.custom?.rightPanel) {
-            defaultEdit.Component = '@michalklor/right-panel/components/RightPanelEditView';
+            defaultEdit.Component = '@shefing/right-panel/components/RightPanelEditView';
           }
         });
       const adminConfig = config.admin || {};
@@ -40,7 +40,7 @@ const RightPanelPlugin =
         ...components,
         providers: [
           ...(components.providers || []),
-          '@michalklor/right-panel/providers/CustomContext#CustomContextProvider',
+          '@shefing/right-panel/providers/CustomContext#CustomContextProvider',
         ],
       };
     }

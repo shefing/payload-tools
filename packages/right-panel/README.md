@@ -14,7 +14,7 @@ For example:
 
 In order to use this right-panel plugin install it using your prefered node package manager, e.g:
 
-`npm add @michalklor/right-panel`
+`npm add @shefing/right-panel`
 
 In the payload.config.ts add the following:
 
@@ -49,9 +49,9 @@ In the Relationship field where you want to enable the Right Panel, you need to 
 ```javascript
     admin: {
       components: {
-        Field: 
+        Field:
         components: {
-            Field: '@michalklor/right-panel/components/RelationInRightPanelField'
+            Field: '@shefing/right-panel/components/RelationInRightPanelField'
         }
       }
     },

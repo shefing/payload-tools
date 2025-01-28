@@ -32,7 +32,7 @@ const versionsPlugin =
           ]);
           //@ts-ignore
           if (!currentCollection.admin?.components?.views?.edit?.versions?.Component) {
-            versions.Component = '@michalklor/custom-version-view/index';
+            versions.Component = '@shefing/custom-version-view/index';
           }
         });
     }
@@ -50,7 +50,7 @@ const versionsPlugin =
               'edit',
               'versions',
             ]);
-            versions.Component = '@michalklor/custom-version-view/index';
+            versions.Component = '@shefing/custom-version-view/index';
           }
         });
     }

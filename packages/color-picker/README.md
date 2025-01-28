@@ -10,12 +10,12 @@ This implementation integrates Flowbite with ShadCN UI, combining Flowbite's ext
 
 In order to use this color-picker field install it using your prefered node package manager, e.g:
 
-` npm install @michalklor/color-picker`
+` npm install @shefing/color-picker`
 
 In the collection add the following:
 
 ```typescript
-import { createColorField } from '@michalklor/color-picker';
+import { createColorField } from '@shefing/color-picker';
 
 fields: [createColorField({ name: 'color', label: 'font-color' })];
 ```

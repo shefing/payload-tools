@@ -20,7 +20,7 @@ when clicking on the mark, it open the comments panel on the right side with foc
 
 In order to use this comments plugin install it using your prefered node package manager, e.g:
 
-`npm install @michalklor/comments`
+`npm install @shefing/comments`
 
 In the payload.config.ts add the following:
 ```javascript
@@ -55,7 +55,7 @@ admin: {
 For the rich text field where you want the plugin features, include the following editor configuration:
 
 ```javascript
-import  {commentFeature } from '@michalklor/comments/feature'
+import  {commentFeature } from '@shefing/comments/feature'
 fields: [
   {
     name: 'richText',

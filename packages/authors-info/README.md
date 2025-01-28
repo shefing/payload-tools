@@ -9,7 +9,7 @@
 
 In order to use this authors-info plugin install it using your prefered node package manager, e.g:
 
-`npm add @rikifrank/authors-info`
+`npm add @shefing/authors-info`
 
 In the payload.config.ts add the following:
 

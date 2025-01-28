@@ -17,7 +17,7 @@ export const createIconSelectField = ({
   label,
   admin: {
     components: {
-      Field: '@michalklor/icon-select/selectIcons',
+      Field: '@shefing/icon-select/selectIcons',
     },
   },
 });
