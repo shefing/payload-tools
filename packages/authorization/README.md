@@ -1,22 +1,21 @@
 ## [Authorization Plugin](./src/index.ts)
 
-We have developed a plugin that offers flexibility in defining roles for your organization.
+This plugin enables to define roles based on basic permissions per collection. The roles are assigned to users to control access.
 
-### Overview
+### Usage
 
-Using this plugin, administrators can configure a Roles collection to define any roles required within the organization. Each role can include a set of permissions. These permissions allow administrators to specify access levels for various globals and collections, including:
+There is a built-in role named administrator and users assigned to it (aka administrators) can create a Roles collection to define roles that will control access to the content. Each role contains a set of permissions that are composed of operation: read/write/publish and the collection(s) / global(s) they apply to.
 
--The entities (globals or collections) to which the role applies.
+Note that:
+- write permission on a collection / global includes read permission on this collection / global
+- publish permission on a collection / global includes write and read permission on this collection / global
 
--The types of permissions granted, such as read, write, or publish.
-
-For example:
+Example:
 
 ![img.png](./images/img.png)
 
-The Admin can set as many permissions it wants and as many as roles as well.
+Administrators can set as many permissions he/she wants within a role and as many as roles within a user
 
-Then the Admin assigns each user its roles:
 ![img_1.png](./images/img_1.png)
 
  ### Setup
