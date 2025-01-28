@@ -15,5 +15,5 @@ Payload 3.0 plugins
 5. [Cross-collection-config](packages/CrossCollection/)- Custom component to change the default component of the authoring interface accross all collections and globals, enabling behavior based on metadata, and with the ability to exclude some collections or globals.
 
 6. [Custom-version-view](packages/CustomVersionView/)- Custom component to add "Updated at" and "Updated by" fields to the default version view, enabling better version control. It relies on the [Authors-info](packages/authors-info/) package for displaying the author information.
-
-7.[Right-panel](packages/RightPanel/)- Custom view of the edit UI to display relationship fields side-by-side within a right panel making it easier to edit two related entities
+   
+8. [Right-panel](packages/RightPanel/)- Custom view of the edit UI to display relationship fields side-by-side within a right panel making it easier to edit two related entities
