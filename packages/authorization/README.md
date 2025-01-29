@@ -1,6 +1,7 @@
 ## [Authorization Plugin](./src/index.ts)
  
 This plugin enables to define roles based on basic permissions per collection. The roles are assigned to users to control access.
+
 ### Install 
 
 - Install the [plugin](https://www.npmjs.com/package/@shefing/authorization) using your node package manager, e.g:
