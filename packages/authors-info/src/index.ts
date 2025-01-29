@@ -78,7 +78,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
         disableBulkEdit: true,
         hidden: true,
         components: {
-          Cell: '@rikifrank/authors-info/client#CreatedAtCell',
+          Cell: '@shefing/authors-info/client#CreatedAtCell',
         },
       },
       // The default sort for list view is createdAt. Thus, enabling indexing by default, is a major performance improvement, especially for large or a large amount of collections.
@@ -94,7 +94,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
         disableBulkEdit: true,
         hidden: true,
         components: {
-          Cell: '@rikifrank/authors-info/client#CreatedAtCell',
+          Cell: '@shefing/authors-info/client#CreatedAtCell',
         },
       },
       label: ({ t }) => t('general:updatedAt'),
@@ -129,7 +129,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
             pickerAppearance: 'dayAndTime',
             displayFormat: 'd MMM yyy: ,h:mm:ss a',
           },
-          components: { Cell: '@rikifrank/authors-info/client#CreatedAtCell' },
+          components: { Cell: '@shefing/authors-info/client#CreatedAtCell' },
         },
       },
       {

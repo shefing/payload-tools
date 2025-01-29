@@ -1,10 +1,10 @@
 ## [Cross-collection config plugin](./src/index.ts)
 
-We created a plugin which will override the default view of the component, injecting custom behavior based on metadata.
+This plugin modifies the default view of the component, injecting custom behavior.
 
 ### Setup
 
-In order to use this  cross collection plugin install it using your prefered node package manager, e.g:
+Install the plugin using your node package manager, e.g:
 
 `npm add @shefing/cross-collection`
 
@@ -12,17 +12,11 @@ In the payload.config.ts add the following:
 
 ```javascript
  CrossCollectionConfig({
-      customComponentPaths: {
-        collectionEditComponent: '/rightPanel/RightPanelEditView',
+      customComponentPaths: {// a set of paths to custom components that will be used for editing specific collections or globals
+        collectionEditComponent: '/rightPanel/RightPanelEditView', // path to the custom component.
       },
-      excludedCollections: ['users'],
+      excludedCollections: ['users'],// array of collections names to exclude
+      excludedGlobals:[], // array of globals names to exclude
     }),
 ```
 
-### Configuration
-
-- `excludedCollections`: array of collections names to exclude
-
-- `excludedGlobals`: array of globals names to exclude
-
-- `customComponentPaths`: a set of paths to custom components that will be used for editing specific collections or globals.

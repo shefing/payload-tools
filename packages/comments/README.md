@@ -1,6 +1,6 @@
 ### Comments Plugin
 
-We created a plugin that gives the ability to add comments between users over text in a RichText field, using Lexical
+This plugin allows users to add comments on text within a RichText field using Lexical.
 
 The user can add a comment on selected text to start a discussion about this content:
 
@@ -18,29 +18,24 @@ when clicking on the mark, it open the comments panel on the right side with foc
 
 ### Setup
 
-In order to use this comments plugin install it using your prefered node package manager, e.g:
+Install the plugin using your node package manager, e.g:
 
 `npm install @shefing/comments`
 
 In the payload.config.ts add the following:
+
 ```javascript
-  CommentsPlugin({
-      excludedCollections: ['posts', 'media'],
-      excludedGlobals: ['aboutus']
-    })
+CommentsPlugin({
+  excludedCollections: ['posts', 'media'], //array of collections names to exclude
+  excludedGlobals: ['aboutus'], //array of collections names to exclude
+});
 ```
-### Configuration
-
-- `excludedCollections`: array of collections names to exclude
-
-- `excludedGlobals`: array of globals names to exclude
 
 ### Collection Configuration
 
-
 #### 1. Enable Comments in Your Collection
 
-In the collection where you want to use the plugin, add the following configuration under the `admin` section:
+In the target collection, add this under admin:
 
 ```javascript
 admin: {
@@ -52,10 +47,10 @@ admin: {
 
 #### 2. Configure the Rich Text Field
 
-For the rich text field where you want the plugin features, include the following editor configuration:
+For the rich text field, add this editor configuration:
 
 ```javascript
-import  {commentFeature } from '@shefing/comments/feature'
+import { commentFeature } from '@shefing/comments/feature';
 fields: [
   {
     name: 'richText',
