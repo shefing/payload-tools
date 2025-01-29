@@ -1,7 +1,7 @@
 ## [Authorization Plugin](./src/index.ts)
  
 This plugin enables to define roles based on basic permissions per collection. The roles are assigned to users to control access.
-[📹 Authorization Video](https://github.com/shefing/payload-tools/issues/22)
+
 
 ### Install 
 
