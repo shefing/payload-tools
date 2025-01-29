@@ -1,5 +1,5 @@
 ## [Authorization Plugin](./src/index.ts)
-
+ 
 This plugin enables to define roles based on basic permissions per collection. The roles are assigned to users to control access.
 
 ### Usage
@@ -36,101 +36,23 @@ plugins: [
       excludedCollections: ['posts', 'media'] // enable to exclude some collections from permission control
     }),
 ```
+Install the roles collection (you don't have to use this collection, you can write your own roles).
+```javascript
+  import { Roles } from '@shefing/authorization/roles'
+  collections: [...collection, Roles],
 
+```
 ### Fields Configuration
 
-You need to create the `roles` collection and it must have the following fields:
 
-```javascript
-fields: [
-  {
-    name: 'name',
-    type: 'text',
-  },
-  {
-    name: 'permissions',
-    saveToJWT: true,
-    interfaceName: 'RolePermissions',
-    type: 'array',
-    access: {
-      create: isAdminFieldLevel,
-      update: isAdminFieldLevel,
-    },
-    fields: [
-      {
-        type: 'row',
-        fields: [
-          {
-            name: 'entity',
-            label: 'Collection or Global',
-            type: 'select',
-            hasMany: true,
-            options: [],
-            required: true,
-          },
-          {
-            name: 'type',
-            label: 'Type',
-            type: 'select',
-            hasMany: true,
-            options: [
-              {
-                label: 'Write',
-                value: 'write',
-              },
-              {
-                label: 'Read',
-                value: 'read',
-              },
-              {
-                label: 'Publish',
-                value: 'publish',
-              },
-            ],
-            required: true,
-          },
-        ],
-      },
-    ],
-  },
-];
-```
+
 
 The `users` collection must be update to include the following fields:
 
 ```javascript
-        {
-          name: 'isAdmin',
-          type: 'checkbox',
-          defaultValue: false,
-          saveToJWT: true,
-          access: {
-            // Only admins can create or update a value for this field
-            create: isAdminFieldLevel,
-            update: isAdminFieldLevel,
-          },
-        },
-        {
-          name: 'isGeneratorUser',
-          type: 'checkbox',
-          defaultValue: false,
-          saveToJWT: true,
-          access: {
-            // Only admins can create or update a value for this field
-            create: isAdminFieldLevel,
-            update: isAdminFieldLevel,
-          },
-        },
-        {
-        name: 'userRoles',
-        type: 'relationship',
-        saveToJWT: true,
-        relationTo: 'roles', // Reference the 'roles' collection
-        hasMany: true, // Allow multiple roles per user
-        access: {
-            // Only admins can create or update a value for this field
-            create: isAdminFieldLevel,
-            update: isAdminFieldLevel,
-        },
-        },
-```
+      import userFields from '@shefing/authorization/user-fields'
+
+      fields:[
+        ...fields,
+        ...userFields,
+      ]
