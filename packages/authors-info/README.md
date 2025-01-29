@@ -9,13 +9,15 @@ https://github.com/user-attachments/assets/923aa231-71df-4ac6-bf1e-0f6d0f3623ed
 🔹 **Enhanced Metadata** – While Payload CMS tracks creation and modification dates, it **doesn’t store publication dates**—but this plugin does! Now, you’ll have a clear **record of the most recent publish date** for every entry.  
 🔹 **Integrated Author Data** – A new **"Author Data" tab** is added to the authoring interface, providing a centralized place for all user activity related to the document.  
 
-With this **fully automated** tracking system, you'll always have complete visibility into **who did what and when**—**without any extra effort**.  
+With this **fully automated** tracking system, you'll always have complete visibility into **who did what and when**—**without any extra effort**. 
 
-### Setup
+### Install
 
 Install the plugin using your node package manager, e.g:
 
-`npm add @shefing/authors-info`
+`pnpm add @shefing/authors-info`
+
+### Setup
 
 In the payload.config.ts add the following:
 
