@@ -1,8 +1,12 @@
 ## [Author Info plugin](./src/index.ts)
 
-- This plugin provides an automated solution to track and store details about content creators, editors, and publishers across all collections and globals.
-  It also introduces an "Author Data" tab in the authoring interface.
-- Payload 3.0 is storing the creation and modification date of each document's collections but does not store publication date. So this package aslo stores the most recent publish date.
+Take the guesswork out of tracking **who created, edited, and published content** across your **collections and globals**—**automatically**.  
+
+🔹 **Seamless Author Tracking** – This plugin **automatically captures and stores** key authoring details, so you always know **who created, modified, and published** each document.  
+🔹 **Enhanced Metadata** – While Payload CMS tracks creation and modification dates, it **doesn’t store publication dates**—but this plugin does! Now, you’ll have a clear **record of the most recent publish date** for every entry.  
+🔹 **Integrated Author Data** – A new **"Author Data" tab** is added to the authoring interface, providing a centralized place for all user activity related to the document.  
+
+With this **fully automated** tracking system, you'll always have complete visibility into **who did what and when**—**without any extra effort**.  
 
 ![img_1.png](./images/img_1.png)
 
