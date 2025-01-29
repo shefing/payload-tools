@@ -3,11 +3,6 @@
 This plugin enables to define roles based on basic permissions per collection. The roles are assigned to users to control access.
 
 https://github.com/user-attachments/assets/b10edbb4-6d38-466b-b855-f15d0f4ca350
-### Install 
-
-- Install the [plugin](https://www.npmjs.com/package/@shefing/authorization) using your node package manager, e.g:
-
-`pnpm add @shefing/authorization`
 
 ### Usage
 With this plugin, you're in full control of user roles and permissions in **Payload CMS**. While there is a built-in **Administrator** role, you can go beyond that and **create custom roles** tailored to your needs.  
@@ -22,13 +17,13 @@ Each role you create consists of:
    - **Publish access** includes both **write and read access**.  
 
 With this powerful system, you have complete flexibility in managing access control—ensuring the right people have the right level of control.  
-Example:
-
-![img.png](./images/img.png)
 
 Administrators can set as many permissions he/she wants within a role and as many as roles within a user
+### Install 
 
-![img_1.png](./images/img_1.png)
+- Install the [plugin](https://www.npmjs.com/package/@shefing/authorization) using your node package manager, e.g:
+
+`pnpm add @shefing/authorization`
 
 ### Setup
 
@@ -50,9 +45,6 @@ Install the roles collection (you don't have to use this collection, you can wri
 
 ```
 ### Fields Configuration
-
-
-
 
 The `users` collection must be update to include the following fields:
 
