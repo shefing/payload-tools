@@ -2,7 +2,7 @@
  
 This plugin enables to define roles based on basic permissions per collection. The roles are assigned to users to control access.
 
-https://github.com/user-attachments/assets/2336f7eb-d774-4b35-9dbe-ac9a04f587bb
+https://github.com/user-attachments/assets/b10edbb4-6d38-466b-b855-f15d0f4ca350
 ### Install 
 
 - Install the [plugin](https://www.npmjs.com/package/@shefing/authorization) using your node package manager, e.g:
