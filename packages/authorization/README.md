@@ -1,6 +1,11 @@
 ## [Authorization Plugin](./src/index.ts)
  
 This plugin enables to define roles based on basic permissions per collection. The roles are assigned to users to control access.
+### Install 
+
+- Install the [plugin](https://www.npmjs.com/package/@shefing/authorization) using your node package manager, e.g:
+
+`npm add @shefing/authorization`
 
 ### Usage
 
@@ -20,10 +25,6 @@ Administrators can set as many permissions he/she wants within a role and as man
 ![img_1.png](./images/img_1.png)
 
 ### Setup
-
-- Install the [plugin](https://www.npmjs.com/package/@shefing/authorization) using your node package manager, e.g:
-
-`npm add @shefing/authorization`
 
 In the payload.config.ts add the following:
 
