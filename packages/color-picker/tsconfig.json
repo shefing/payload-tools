@@ -23,7 +23,7 @@
     "target": "ESNext"
   },
   "paths": {
-    "@rikifrank/authors-info/client": ["./packages/authors-info/src/exports/client.ts"]
+    "@shefing/authors-info/client": ["./packages/authors-info/src/exports/client.ts"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "src/**/*.json"],
   "exclude": ["dist", "build", "node_modules"]

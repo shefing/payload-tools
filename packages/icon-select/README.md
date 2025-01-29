@@ -1,18 +1,16 @@
 ## [Icon select field ](./src/index.ts)
 
-In the default Payload CMS, there was no built-in Icon Select field. We've added a custom Icon Select field that allows users to easily choose icons directly within the CMS interface.
-This field uses the Flowbite icon library, bringing in a wide variety of icons for selection.
-Users can search for a specific icon by name or select it from the dropdown menu. To use it, simply search for an icon or scroll through the list, and the selected icon will be applied to your content. This implementation integrates Flowbite with ShadCN UI, combining Flowbite's extensive design system with ShadCN's modern component library for an effective experience
+This plugin adds a custom Icon Select field to Payload CMS, utilizing the tailwind icon library for easy selection. Users can search or scroll through icons in the dropdown, with ShadCN UI integration for a seamless, modern experience.
 
 ![img1.png](./images/img1.png)
 
 ### Setup
 
-In order to use this color-picker field  install it using your prefered node package manager, e.g:
+Install the plugin using your node package manager, e.g:
 
 ` npm install @shefing/icon-select`
 
-In the collection  add the following:
+In the collection add the following:
 
 ```typescript
 import   { createIconSelectField }  from "@shefing/icon-select"

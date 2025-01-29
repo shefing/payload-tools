@@ -1,28 +1,28 @@
 ## [Color Picker Field ](./src/index.ts)
 
-In the default Payload CMS, there was no built-in color picker field. We've added a custom Color Picker field that allows users to easily select colors directly within the CMS interface. This field uses the Flowbite color palette, bringing in all available colors from Flowbite. Users can search for a specific color by name or select it from the palette. To use it, simply select a color from the picker, enter a hex code, or search for the color name, and it will be applied to your content.
+Payload CMS does not include a built-in color picker, so we added a custom field that integrates Tailwind's color palette. Users can select a color, enter a hex code, or search by name directly within the CMS.
 
-This implementation integrates Flowbite with ShadCN UI, combining Flowbite's extensive design system with ShadCN's modern component library for an effective experience
+This integrates Tailwind design system with ShadCN's component library for a seamless experience.
 
 ![img1.png](./images/img1.png)
 
 ### Setup
 
-In order to use this color-picker field install it using your prefered node package manager, e.g:
+Install the field using your node package manager, e.g:
 
-` npm install @shefing/color-picker`
+    ` npm install @shefing/color-picker`
 
-In the collection add the following:
+In the target collection add the following:
 
 ```typescript
 import { createColorField } from '@shefing/color-picker';
 
-fields: [createColorField({ name: 'color', label: 'font-color' })];
+fields: [
+  createColorField({
+    name: 'color', //The name of the field.
+    label: 'font-color', //The label of the field.
+  }),
+];
 ```
 
 To use this package, make sure Tailwind CSS is installed in your project.
-
-### Configuration
-
-- `name`: The name of the field. This is the key used to store and retrieve the field's value.
-- `label`: The label of the field. This is the text displayed in the admin interface to represent the field.

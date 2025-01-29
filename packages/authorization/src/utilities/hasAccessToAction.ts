@@ -1,7 +1,6 @@
 import { Access, User } from 'payload';
 import { canUserAccessAction } from '../access/general.js';
-import { config } from 'process';
-import { AuthorizationPluginConfig } from '../types.js';
+
 
 export const hasAccessToAction =
   (slugName: string, action: string,pluginConfig:any): Access =>
