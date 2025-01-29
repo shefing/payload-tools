@@ -5,17 +5,21 @@ This plugin enables to define roles based on basic permissions per collection. T
 
 - Install the [plugin](https://www.npmjs.com/package/@shefing/authorization) using your node package manager, e.g:
 
-`npm add @shefing/authorization`
+`pnpm add @shefing/authorization`
 
 ### Usage
+With this plugin, you're in full control of user roles and permissions in **Payload CMS**. While there is a built-in **Administrator** role, you can go beyond that and **create custom roles** tailored to your needs.  
 
-There is a built-in role named administrator and users assigned to it (aka administrators) can create a Roles collection to define roles that will control access to the content. Each role contains a set of permissions that are composed of operation: read/write/publish and the collection(s) / global(s) they apply to.
+Define roles with **any combination of permissions**—**read, write, and publish**—and apply them to **any collection or global** within your project.  
 
-Note that:
+### How It Works  
+Each role you create consists of:  
+✅ **Granular Permissions:** Assign **read, write, or publish** permissions to collections and globals.  
+✅ **Hierarchical Access:**  
+   - **Write access** automatically includes **read access**.  
+   - **Publish access** includes both **write and read access**.  
 
-- write permission on a collection / global includes read permission on this collection / global
-- publish permission on a collection / global includes write either read permission on this collection / global
-
+With this powerful system, you have complete flexibility in managing access control—ensuring the right people have the right level of control.  
 Example:
 
 ![img.png](./images/img.png)
