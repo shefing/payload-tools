@@ -4,7 +4,7 @@ Payload CMS does not include a built-in color picker, so we added a custom field
 
 This integrates Tailwind design system with ShadCN's component library for a seamless experience.
 
-![img1.png](./images/img1.png)
+https://github.com/user-attachments/assets/19b898d4-49b4-43d9-8d4e-d3bbb3c6bf8e
 
 ### Setup
 
