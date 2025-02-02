@@ -6,7 +6,7 @@ This plugin modifies the default view of the component, injecting custom behavio
 
 Install the plugin using your node package manager, e.g:
 
-`npm add @shefing/cross-collection`
+`pnpm add @shefing/cross-collection`
 
 In the payload.config.ts add the following:
 
