@@ -55,3 +55,17 @@ The `users` collection must be update to include the following fields:
         ...fields,
         ...userFields,
       ]
+```
+
+### 🔑 `isAdmin` Role  
+
+When `isAdmin` is **enabled**, the user has **full access** to the system, including:  
+
+✅ **Read, write, and publish** across all collections and globals  
+✅ **Manage all content without restrictions**  
+✅ **Access admin-only features**  
+
+This role ensures complete control over the CMS, allowing seamless content management. 
+
+
+
