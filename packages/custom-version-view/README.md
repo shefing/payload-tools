@@ -3,6 +3,7 @@
 This plugin adds some fields to the version view :
 
 Updated At -using relative date
+
 Updated by
 
 https://github.com/user-attachments/assets/f3e79c7d-277c-4ec6-b5b9-c91b0e104286
