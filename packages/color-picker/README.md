@@ -21,13 +21,18 @@ pnpm install @shefing/color-picker
 
 ```typescript
 import { createColorField } from '@shefing/color-picker';
-
+import { createBackgroundColorField } from '@shefing/color-picker'
 fields: [
   createColorField({
     name: 'color',       // 🏷️ The name of the field
     label: 'Font Color', // 🎯 The label displayed in the UI
   }),
+createBackgroundColorField({
+      name: 'backgroundColor', //The name of the field.
+      label: 'background-color', //The label of the field.
+    }),
 ];
+
 ```
 
 3️⃣ **Prerequisite:** Ensure **Tailwind CSS** is installed in your project to take full advantage of the dynamic color palette.
