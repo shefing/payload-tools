@@ -4,7 +4,7 @@ This plugin introduces additional fields to the version view for a more detailed
 
 - **🕒 Updated At**: Displays the **relative date** of the last update, making it easy to track when changes were made (e.g., "3 hours ago").
   
-- **👤 Updated By**: Shows the **user** who made the last update, providing clear attribution for changes.
+- **👤 Updated By**: Shows the **user** who made the last update.
 
 
 https://github.com/user-attachments/assets/f3e79c7d-277c-4ec6-b5b9-c91b0e104286
