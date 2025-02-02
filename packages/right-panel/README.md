@@ -1,20 +1,21 @@
 ## [Right-panel plugin](./src/index.ts)
+ 
 
-This plugin enables opening a relationship field in a right panel, in addition to a pop-up.
+This plugin enhances the **relationship field** experience by allowing you to open it in a **right-side panel**, alongside the traditional pop-up.  
 
-This allows working on both of the entities ,original and relationship, at once.
+✅ **Edit both the original and related entities simultaneously**  
+✅ **Seamlessly switch between records without losing context**  
+✅ **Integrated directly into the edit view for a smooth workflow**  
 
-This was done by adding a custom view to the edit view.
+This is achieved by extending the **default edit view** with a custom panel, making it easier than ever to manage related content efficiently.   
 
-For example:
-
-![img1.png](./images/img1.png)
+https://github.com/user-attachments/assets/cfc0b69d-94f7-424a-9514-17cf9e2fd7c7
 
 ### Setup
 
 Install the plugin using your node package manager, e.g:
 
-`npm add @shefing/right-panel`
+`pnpm add @shefing/right-panel`
 
 In the payload.config.ts add the following:
 
