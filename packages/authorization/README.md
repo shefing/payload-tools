@@ -1,6 +1,7 @@
 ## [Authorization Plugin](./src/index.ts)
 
-This plugin enables to define roles based on basic permissions per collection. The roles are assigned to users to control access.
+**This plugin enables you to define roles** based on **basic permissions per collection**.  
+✨ **Roles are assigned to users** to **control access** and manage permissions efficiently. 🚀
 
 https://github.com/user-attachments/assets/1326d41d-8747-4582-9288-5943ee8615be
 
