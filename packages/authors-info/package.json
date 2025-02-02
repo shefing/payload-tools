@@ -1,31 +1,32 @@
 {
   "name": "@shefing/authors-info",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
   "license": "MIT",
   "author": "shefing",
   "type": "module",
-  "exports": {
-    ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
-    },
-    "./types": {
-      "import": "./src/exports/types.ts",
-      "types": "./src/exports/types.ts",
-      "default": "./src/exports/types.ts"
-    },
-    "./client": {
-      "import": "./src/exports/client.ts",
-      "types": "./src/exports/client.ts",
-      "default": "./src/exports/client.ts"
-    }
-  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./types": {
+      "import": "./dist/exports/types.js",
+      "require": "./dist/exports/types.js"
+    },
+    "./client": {
+      "import": "./dist/exports/client.js",
+      "require": "./dist/exports/client.js"
+    }
+  },
   "scripts": {
     "build": "pnpm copyfiles && pnpm build:swc && pnpm build:types",
     "build:swc": "swc ./src -d ./dist --config-file .swcrc",
@@ -38,39 +39,10 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "payload": "3.0.2",
-    "rimraf": "^6.0.1",
     "typescript": "^5.5.2"
   },
   "publishConfig": {
-    "access": "public",
-    "exports": {
-      ".": {
-        "import": "./dist/index.js",
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "./types": {
-        "import": "./dist/exports/types.js",
-        "types": "./dist/exports/types.d.ts",
-        "default": "./dist/exports/types.js"
-      },
-      "./client": {
-        "import": "./dist/exports/client.js",
-        "types": "./dist/exports/client.d.ts",
-        "default": "./dist/exports/client.js"
-      }
-    },
-    "main": "./dist/index.js",
-    "registry": "https://registry.npmjs.org/",
-    "types": "./dist/index.d.ts"
-  },
-  "dependencies": {
-    "@payloadcms/ui": "^3.0.2",
-    "moment": "^2.30.1",
-    "react": "19.0.0-rc.1",
-    "react-dom": "19.0.0-rc.1"
+    "access": "public"
   }
 }
