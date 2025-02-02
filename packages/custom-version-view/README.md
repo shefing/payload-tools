@@ -8,12 +8,12 @@ Updated by
 
 https://github.com/user-attachments/assets/f3e79c7d-277c-4ec6-b5b9-c91b0e104286
 
-### Setup
+### Install
 
 Install the plugin using your node package manager, e.g:
 
 `pnpm add @shefing/custom-version-view`
-
+### Setup
 In the payload.config.ts add the following:
 
 ```typescript
