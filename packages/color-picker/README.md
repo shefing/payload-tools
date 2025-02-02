@@ -28,8 +28,8 @@ fields: [
     label: 'Font Color', // 🎯 The label displayed in the UI
   }),
 createBackgroundColorField({
-      name: 'backgroundColor', //The name of the field.
-      label: 'background-color', //The label of the field.
+      name: 'backgroundColor', // 🏷️ The name of the field.
+      label: 'background-color', // 🎯 The label of the field.
     }),
 ];
 
