@@ -10,7 +10,7 @@ https://github.com/user-attachments/assets/19b898d4-49b4-43d9-8d4e-d3bbb3c6bf8e
 
 Install the field using your node package manager, e.g:
 
-    ` npm install @shefing/color-picker`
+    ` pnpm install @shefing/color-picker`
 
 In the target collection add the following:
 
