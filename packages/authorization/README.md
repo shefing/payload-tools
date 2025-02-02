@@ -2,7 +2,7 @@
 
 This plugin enables to define roles based on basic permissions per collection. The roles are assigned to users to control access.
 
-https://github.com/user-attachments/assets/b10edbb4-6d38-466b-b855-f15d0f4ca350
+https://github.com/user-attachments/assets/1326d41d-8747-4582-9288-5943ee8615be
 
 ### Usage
 
