@@ -1,6 +1,4 @@
 'use client';
-import '@/app/global.css';
-import '@/app/(payload)/custom.scss';
 import React, { useState } from 'react';
 import { useField } from '@payloadcms/ui';
 import { FieldLabel as Label } from '@payloadcms/ui';
