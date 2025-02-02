@@ -11,11 +11,13 @@ This is achieved by extending the **default edit view** with a custom panel, mak
 
 https://github.com/user-attachments/assets/cfc0b69d-94f7-424a-9514-17cf9e2fd7c7
 
-### Setup
+### Install
 
 Install the plugin using your node package manager, e.g:
 
 `pnpm add @shefing/right-panel`
+
+### Setup
 
 In the payload.config.ts add the following:
 
