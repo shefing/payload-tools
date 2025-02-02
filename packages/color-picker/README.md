@@ -5,7 +5,7 @@ Payload CMS doesn’t come with a built-in color picker, so we’ve created a **
 🌈 **Tailwind + ShadCN Integration**  
 This color picker is powered by **Tailwind’s design system** combined with **ShadCN’s sleek component library**, ensuring a beautiful and consistent user experience.
 
-https://github.com/user-attachments/assets/19b898d4-49b4-43d9-8d4e-d3bbb3c6bf8e
+https://github.com/user-attachments/assets/a8bae019-ac61-4e64-a2b3-221f24324f3a
 
 ---
 
