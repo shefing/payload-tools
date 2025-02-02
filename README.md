@@ -16,16 +16,16 @@ This repository contains a set of powerful plugins designed to enhance your [Pay
 4. **✨ [Icon Select](packages/icon-select/)**  
    A handy **icon picker field** for selecting icons within the Payload UI, making it easy to enhance content with visually appealing icons.
 
-5. **🔗 [Cross-Collection Config](packages/CrossCollection/)**  
+5. **🔗 [Cross-Collection Config](packages/cross-collection/)**  
    Customize the default authoring interface **across all collections and globals**. Modify component behaviors based on metadata, with the flexibility to exclude specific collections when needed.
 
-6. **📝 [Custom Version View](packages/CustomVersionView/)**  
+6. **📝 [Custom Version View](packages/custom-version-view/)**  
    Improve version control with a **custom version view** that displays "**Updated at**" and "**Updated by**" fields. This plugin integrates seamlessly with the [Authors Info](packages/authors-info/) plugin.
 
 7. **👤 [Authors Info](packages/authors-info/)**  
    Automatically display **author information** in the authoring interface, including details like **creator, updaters, publishers**, and the **last publish date**.
 
-8. **📋 [Right Panel](packages/RightPanel/)**  
+8. **📋 [Right Panel](packages/right-panel/)**  
    Enhance the editing experience with a **custom right-side panel**. This view allows you to manage **related entities** side-by-side, improving productivity when working with complex data relationships.
 
 ---
