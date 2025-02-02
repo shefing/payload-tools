@@ -2,7 +2,7 @@
 
 Take the guesswork out of tracking **who created, edited, and published content** across your **collections and globals**—**automatically**.
 
-https://github.com/user-attachments/assets/923aa231-71df-4ac6-bf1e-0f6d0f3623ed
+https://github.com/user-attachments/assets/3a23a502-2867-41a8-bd35-506f911c8b41
 
 ### Usage
 🔹 **Seamless Author Tracking** – This plugin **automatically captures and stores** key authoring details, so you always know **who created, modified, and published** each document.  
