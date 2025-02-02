@@ -2,25 +2,28 @@
 
 This plugin allows users to add comments on text within a RichText field using Lexical.
 
-The user can add a comment on selected text to start a discussion about this content:
+https://github.com/user-attachments/assets/adf970d6-9eb1-4553-ad5a-763f4fa91f12
 
-![img1.png](./images/img1.png)
+### Usage
 
-Comments section is available on the right side of the screen and users can reply or delete comments
+Users can seamlessly add comments to selected text, enabling thoughtful discussions on the content.
 
-![img2.png](./images/img2.png)
+- ✅ **Comments Section**: The comments section is conveniently located on the **right side** of the screen, allowing users to easily **reply** or **delete comments**.
 
-In addition, commented text has a mark
+- ✅ **Marked Text**: When text is commented on, it is **highlighted with a special mark**, making it easy to spot.
 
-when clicking on the mark, it open the comments panel on the right side with focus on the current comment
+- ✅ **Quick Access**: By clicking on the **marked text**, the comments panel on the right will open, with the focus directly on the comment, ensuring a smooth and intuitive interaction.
 
-![img3.png](./images/img3.png)
 
-### Setup
+
+
+### Install
 
 Install the plugin using your node package manager, e.g:
 
 `pnpm install @shefing/comments`
+
+### Setup
 
 In the payload.config.ts add the following:
 
