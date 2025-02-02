@@ -20,7 +20,7 @@ when clicking on the mark, it open the comments panel on the right side with foc
 
 Install the plugin using your node package manager, e.g:
 
-`npm install @shefing/comments`
+`pnpm install @shefing/comments`
 
 In the payload.config.ts add the following:
 
