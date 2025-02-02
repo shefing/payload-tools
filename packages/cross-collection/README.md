@@ -1,22 +1,30 @@
-## [Cross-collection config plugin](./src/index.ts)
+## 🔗 [Cross-Collection Config Plugin](./src/index.ts)
 
-This plugin modifies the default view of the component, injecting custom behavior.
+The **Cross-Collection Config Plugin** empowers you to modify the default view of components in Payload CMS, injecting **custom behaviors** and offering **global configuration capabilities** not natively supported.
 
-### Setup
+🚀 **Key Feature:** Achieve **global configurations** across your project, even for settings not available in Payload’s core configuration.
 
-Install the plugin using your node package manager, e.g:
+### ⚙️ **Setup Instructions**
 
-`pnpm add @shefing/cross-collection`
+1️⃣ **Install the Plugin:**
 
-In the payload.config.ts add the following:
+```bash
+pnpm add @shefing/cross-collection
+```
+
+2️⃣ **Integrate in `payload.config.ts`:**
 
 ```javascript
- CrossCollectionConfig({
-      customComponentPaths: {// a set of paths to custom components that will be used for editing specific collections or globals
-        collectionEditComponent: '/rightPanel/RightPanelEditView', // path to the custom component.
-      },
-      excludedCollections: ['users'],// array of collections names to exclude
-      excludedGlobals:[], // array of globals names to exclude
-    }),
+CrossCollectionConfig({
+  customComponentPaths: { // 🛠️ Paths to custom components for editing collections/globals
+    collectionEditComponent: '/rightPanel/RightPanelEditView', // 📍 Custom component path
+  },
+  excludedCollections: ['users'], // 🚫 Collections to exclude
+  excludedGlobals: [],            // 🌍 Globals to exclude
+});
 ```
+
+---
+
+💡 **Pro Tip:** Use this plugin to **standardize UI components** and **apply consistent behaviors** globally across collections—perfect for complex content management setups.
 
