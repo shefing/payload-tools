@@ -5,15 +5,13 @@ This plugin adds some fields to the version view :
 Updated At -using relative date
 Updated by
 
-For example:
-
-![img.png](./images/img.png)
+https://github.com/user-attachments/assets/f3e79c7d-277c-4ec6-b5b9-c91b0e104286
 
 ### Setup
 
 Install the plugin using your node package manager, e.g:
 
-`npm add @shefing/custom-version-view`
+`pnpm add @shefing/custom-version-view`
 
 In the payload.config.ts add the following:
 
