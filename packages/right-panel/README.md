@@ -1,6 +1,6 @@
-# 🎯 **Right-Panel Plugin for Payload CMS**  
+#  **Right-Panel Plugin for Payload CMS**  
 
-🚀 **Upgrade your relationship fields with a powerful right-side panel!**  
+ **Upgrade your relationship fields with a powerful right-side panel!**  
 
 🔹 **No more context switching!** Edit related entities **side-by-side**  
 🔹 **Effortless navigation** between records without losing progress  
@@ -52,7 +52,7 @@ admin: {
 
 ---
 
-## 🏗️ **Fields Configuration**  
+##  **Fields Configuration**  
 
 Activate the **Right Panel** in the **Relationship field** by adding:  
 
