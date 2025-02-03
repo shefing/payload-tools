@@ -6,7 +6,7 @@ This plugin enhances **Payload CMS** by adding a **custom Icon Select field**, p
 ✅ **Search & Scroll** through icons with ease  
 ✅ **ShadCN UI Integration** for a sleek, modern experience  
 
-🔗 **[View Source](./src/index.ts)**  
+https://github.com/user-attachments/assets/7d61db28-6351-4314-b191-e304c5850962 
 
 ---
 
