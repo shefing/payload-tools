@@ -18,3 +18,16 @@ export const createColorField = ({
     },
   },
 });
+export const createBackgroundColorField = ({
+  name = 'backgroundColor',
+  label = 'Color',
+}: ColorFieldOptions): Field => ({
+  name,
+  type: 'text',
+  label,
+  admin: {
+    components: {
+      Field: '@shefing/color-picker/CustomTailWindColors#SelectColorBackground',
+    },
+  },
+});
