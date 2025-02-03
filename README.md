@@ -15,7 +15,7 @@ This repository contains a set of powerful plugins designed to enhance your [Pay
    You can choose between **font-color** and **background-color** for better preview of end results.
 
 4. **✨ [Icon Select](packages/icon-select/)**  
-   A handy **icon picker field** for selecting icons within the Payload UI, making it easy to enhance content with visually appealing icons.
+   A handy **icon picker field** for selecting icons within the Payload UI from [flowbite-react-icons](https://flowbite.com/icons/), making it easy to enhance content with visually appealing icons.
 
 5. **🔗 [Cross-Collection Config](packages/cross-collection/)**  
    Customize the default authoring interface **across all collections and globals**. Modify component behaviors based on metadata, with the flexibility to exclude specific collections when needed.
