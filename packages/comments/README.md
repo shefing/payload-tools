@@ -1,4 +1,4 @@
-### 🚀 **Comments Plugin**  
+###  **Comments Plugin**  
 
 This plugin allows users to **add comments on text** within a **RichText field** using **Lexical**.  
 
@@ -16,7 +16,7 @@ Users can seamlessly **add comments to selected text**, enabling thoughtful disc
 
 ---
 
-### 📦 **Install**  
+###  **Install**  
 
 Install the plugin using your node package manager:  
 
@@ -26,7 +26,7 @@ pnpm install @shefing/comments
 
 ---
 
-### ⚙️ **Setup**  
+###  **Setup**  
 
 In `payload.config.ts`, add the following:  
 
@@ -39,7 +39,7 @@ CommentsPlugin({
 
 ---
 
-### 🛠 **Collection Configuration**  
+###  **Collection Configuration**  
 
 #### **1️⃣ Enable Comments in Your Collection**  
 
@@ -72,4 +72,4 @@ fields: [
 ];
 ```
 
-🚀 **Now your users can add, reply to, and manage comments directly within the RichText field!** 🎉
+ **Now your users can add, reply to, and manage comments directly within the RichText field!** 🎉
