@@ -1,44 +1,49 @@
-### Comments Plugin
+### 🚀 **Comments Plugin**  
 
-This plugin allows users to add comments on text within a RichText field using Lexical.
+This plugin allows users to **add comments on text** within a **RichText field** using **Lexical**.  
 
-https://github.com/user-attachments/assets/adf970d6-9eb1-4553-ad5a-763f4fa91f12
+https://github.com/user-attachments/assets/adf970d6-9eb1-4553-ad5a-763f4fa91f12  
 
-### Usage
+---
 
-Users can seamlessly add comments to selected text, enabling thoughtful discussions on the content.
+### ✨ **Usage**  
 
-- ✅ **Comments Section**: The comments section is conveniently located on the **right side** of the screen, allowing users to easily **reply** or **delete comments**.
+Users can seamlessly **add comments to selected text**, enabling thoughtful discussions on the content.  
 
-- ✅ **Marked Text**: When text is commented on, it is **highlighted with a special mark**, making it easy to spot.
+- ✅ **Comments Section**: Located on the **right side** of the screen, allowing users to easily **reply** or **delete comments**.  
+- ✅ **Marked Text**: Commented text is **highlighted**, making it easy to spot.  
+- ✅ **Quick Access**: Clicking on **marked text** **opens the comments panel** with focus directly on the comment for an intuitive experience.  
 
-- ✅ **Quick Access**: By clicking on the **marked text**, the comments panel on the right will open, with the focus directly on the comment, ensuring a smooth and intuitive interaction.
+---
 
+### 📦 **Install**  
 
+Install the plugin using your node package manager:  
 
+```sh
+pnpm install @shefing/comments
+```
 
-### Install
+---
 
-Install the plugin using your node package manager, e.g:
+### ⚙️ **Setup**  
 
-`pnpm install @shefing/comments`
-
-### Setup
-
-In the payload.config.ts add the following:
+In `payload.config.ts`, add the following:  
 
 ```javascript
 CommentsPlugin({
-  excludedCollections: ['posts', 'media'], //array of collections names to exclude
-  excludedGlobals: ['aboutus'], //array of collections names to exclude
+  excludedCollections: ['posts', 'media'], // Collections to exclude
+  excludedGlobals: ['aboutus'], // Globals to exclude
 });
 ```
 
-### Collection Configuration
+---
 
-#### 1. Enable Comments in Your Collection
+### 🛠 **Collection Configuration**  
 
-In the target collection, add this under admin:
+#### **1️⃣ Enable Comments in Your Collection**  
+
+In the target **collection**, add this under `admin`:  
 
 ```javascript
 admin: {
@@ -48,12 +53,13 @@ admin: {
 },
 ```
 
-#### 2. Configure the Rich Text Field
+#### **2️⃣ Configure the Rich Text Field**  
 
-For the rich text field, add this editor configuration:
+For the **rich text field**, add this **editor configuration**:  
 
 ```javascript
 import { commentFeature } from '@shefing/comments/feature';
+
 fields: [
   {
     name: 'richText',
@@ -65,3 +71,5 @@ fields: [
   },
 ];
 ```
+
+🚀 **Now your users can add, reply to, and manage comments directly within the RichText field!** 🎉
