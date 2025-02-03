@@ -12,6 +12,7 @@ This repository contains a set of powerful plugins designed to enhance your [Pay
 
 3. **🎨 [Color Picker Field](packages/color-picker/)**  
    Add a **custom color selection tool** to your Payload interface. Simplify content styling by allowing authors to choose colors effortlessly.
+   You can choose between **font-color** and **background-color** for better preview of end results.
 
 4. **✨ [Icon Select](packages/icon-select/)**  
    A handy **icon picker field** for selecting icons within the Payload UI, making it easy to enhance content with visually appealing icons.
