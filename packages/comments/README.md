@@ -2,7 +2,7 @@
 
 This plugin allows users to **add comments on text** within a **RichText field** using **Lexical**.  
 
-https://github.com/user-attachments/assets/adf970d6-9eb1-4553-ad5a-763f4fa91f12  
+https://github.com/user-attachments/assets/3e1e594e-5ee3-43d1-957d-3293424a405f
 
 ---
 
