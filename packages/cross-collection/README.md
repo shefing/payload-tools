@@ -2,7 +2,7 @@
 
 The **Cross-Collection Config Plugin** empowers you to modify the default view of components in Payload CMS, injecting **custom behaviors** and offering **global configuration capabilities** not natively supported.
 
-🚀 **Key Feature:** Achieve **global configurations** across your project, even for settings not available in Payload’s core configuration.
+**Key Feature:** Achieve **global configurations** across your project, even for settings not available in Payload’s core configuration.
 
 ### ⚙️ **Setup Instructions**
 
@@ -16,11 +16,11 @@ pnpm add @shefing/cross-collection
 
 ```javascript
 CrossCollectionConfig({
-  customComponentPaths: { // 🛠️ Paths to custom components for editing collections/globals
-    collectionEditComponent: '/rightPanel/RightPanelEditView', // 📍 Custom component path
+  customComponentPaths: { //  Paths to custom components for editing collections/globals
+    collectionEditComponent: '/rightPanel/RightPanelEditView', //  Custom component path
   },
-  excludedCollections: ['users'], // 🚫 Collections to exclude
-  excludedGlobals: [],            // 🌍 Globals to exclude
+  excludedCollections: ['users'], //  Collections to exclude
+  excludedGlobals: [],            //  Globals to exclude
 });
 ```
 
