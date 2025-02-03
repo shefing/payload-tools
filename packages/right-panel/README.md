@@ -1,59 +1,67 @@
-## [Right-panel plugin](./src/index.ts)
- 
+# 🎯 **Right-Panel Plugin for Payload CMS**  
 
-This plugin enhances the **relationship field** experience by allowing you to open it in a **right-side panel**, alongside the traditional pop-up.  
+🚀 **Upgrade your relationship fields with a powerful right-side panel!**  
 
-✅ **Edit both the original and related entities simultaneously**  
-✅ **Seamlessly switch between records without losing context**  
-✅ **Integrated directly into the edit view for a smooth workflow**  
+🔹 **No more context switching!** Edit related entities **side-by-side**  
+🔹 **Effortless navigation** between records without losing progress  
+🔹 **Fully integrated into the edit view** for a **seamless** workflow  
 
-This is achieved by extending the **default edit view** with a custom panel, making it easier than ever to manage related content efficiently.   
+This plugin **extends the default edit view** with a sleek right-panel interface, making it easier than ever to manage related content **without disrupting your workflow**.  
 
 https://github.com/user-attachments/assets/cfc0b69d-94f7-424a-9514-17cf9e2fd7c7
+ 
 
-### Install
+---
 
-Install the plugin using your node package manager, e.g:
+## 📦 **Installation**  
 
-`pnpm add @shefing/right-panel`
+Install the plugin using your preferred package manager:  
 
-### Setup
+```sh
+pnpm add @shefing/right-panel
+```
 
-In the payload.config.ts add the following:
+---
+
+## ⚙️ **Setup**  
+
+Add the plugin to your `payload.config.ts`:  
 
 ```javascript
 plugins: [
-...plugins
-RightPanelPlugin({
-  excludedCollections: [] //array of collections names to exclude
-});
-]
+  ...plugins,
+  RightPanelPlugin({
+    excludedCollections: [] // Add collections to exclude if needed
+  })
+];
 ```
 
-### Collection Configuration
+---
 
-To add a Right Panel to a Relationship field, include the following in the collection's admin configuration:
+## 🛠️ **Collection Configuration**  
+
+Enable the **Right Panel** in a collection by adding this to its `admin` configuration:  
 
 ```javascript
-  admin: {
-    custom: {
-      rightPanel: true,
-    },
-
+admin: {
+  custom: {
+    rightPanel: true,
   },
+},
 ```
 
-### Fields Configuration
+---
 
-To enable the Right Panel in the Relationship field, add the following lines to the field configuration:
+## 🏗️ **Fields Configuration**  
+
+Activate the **Right Panel** in the **Relationship field** by adding:  
 
 ```javascript
-    admin: {
-      components: {
-        Field:
-        components: {
-            Field: '@shefing/right-panel/components/RelationInRightPanelField'
-        }
-      }
-    },
+admin: {
+  components: {
+    Field: '@shefing/right-panel/components/RelationInRightPanelField'
+  }
+},
 ```
+
+💡 **Now you can edit relationships smoothly, without interruptions!** ✨
