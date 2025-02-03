@@ -4,7 +4,7 @@ The **Cross-Collection Config Plugin** empowers you to modify the default view o
 
 **Key Feature:** Achieve **global configurations** across your project, even for settings not available in Payload’s core configuration.
 
-### ⚙️ **Setup Instructions**
+###  **Setup Instructions**
 
 1️⃣ **Install the Plugin:**
 
