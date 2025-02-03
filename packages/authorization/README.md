@@ -75,8 +75,19 @@ When `isAdmin` is **enabled**, the user has **full access** to the system, inclu
 This role ensures complete control over the CMS, allowing seamless content management. 
 ###  `isGenerator` Role  
 
-When `isGenerator` is **enabled**, the user can only generate static content **without creating dependencies**.  
-
-
-
+When `isGenerator` is **enabled**, the user can only generate static content **without consuming dependencies in the API**.  
+```typescript
+{
+  name: 'belong',
+  label: 'Belongs To',
+  type: 'relationship',
+  hasMany: true,
+  relationTo: 'movies',
+  index: true,
+  access: {
+    // Only non API users can read the field
+    read: isNotGeneratorUserFieldLevel,
+  }
+},
+```
 
