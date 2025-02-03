@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/cfc0b69d-94f7-424a-9514-17cf9e2fd7c7
 
 ---
 
-## 📦 **Installation**  
+##  **Installation**  
 
 Install the plugin using your preferred package manager:  
 
@@ -23,7 +23,7 @@ pnpm add @shefing/right-panel
 
 ---
 
-## ⚙️ **Setup**  
+##  **Setup**  
 
 Add the plugin to your `payload.config.ts`:  
 
@@ -38,7 +38,7 @@ plugins: [
 
 ---
 
-## 🛠️ **Collection Configuration**  
+##  **Collection Configuration**  
 
 Enable the **Right Panel** in a collection by adding this to its `admin` configuration:  
 
