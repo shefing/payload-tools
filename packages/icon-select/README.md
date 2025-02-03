@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/7d61db28-6351-4314-b191-e304c5850962
 ### 📦 **Installation**  
 Install the plugin using your preferred package manager:  
 ```sh
-npm install @shefing/icon-select
+pnpm install @shefing/icon-select
 ```
 
 ---
