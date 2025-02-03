@@ -1,6 +1,6 @@
 ## [Author Info plugin](./src/index.ts)
 
-Take the guesswork out of tracking **who created, edited, and published content** across your **collections and globals**—**automatically**.
+Take the guesswork out of tracking **who created, edited, and published content(and when)** across your **collections and globals**—**automatically**.
 
 https://github.com/user-attachments/assets/3a23a502-2867-41a8-bd35-506f911c8b41
 
