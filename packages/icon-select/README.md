@@ -2,7 +2,7 @@
 
  **Effortlessly choose icons with an intuitive dropdown!**  
 
-This plugin enhances **Payload CMS** by adding a **custom Icon Select field**, powered by **Tailwind Icons**.  
+This plugin enhances **Payload CMS** by adding a **custom Icon Select field**, powered by **[flowbite-react-icons](https://flowbite.com/icons/)**.  
 ✅ **Search & Scroll** through icons with ease  
 ✅ **ShadCN UI Integration** for a sleek, modern experience  
 
