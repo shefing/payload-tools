@@ -34,3 +34,4 @@ import { DynamicFieldOverrides } from '@shefing/dynamic-field-overrides';
 - **Seamless Integration**: Works with existing Payload CMS structures without disrupting data or functionality.
 
 With this plugin, you gain **full control** over how Payload CMS fields behave and appear—without the need for repetitive manual overrides! ✨
+
