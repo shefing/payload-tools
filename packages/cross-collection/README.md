@@ -5,8 +5,6 @@
 
 This plugin allows you to **override** default Payload CMS component views and inject custom behavior.
 
----
-
 ## 📦 Installation
 
 Install the plugin via your package manager:
@@ -32,7 +30,6 @@ CrossCollectionConfig({
 });
 ```
 
----
 
 ## 🔥 Features
 
