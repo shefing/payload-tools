@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import type { Config, Field, Plugin } from 'payload';
-import { FieldsAuthoringConfig } from './types';
+import { FieldsAuthoringConfig } from './types.js';
 
 function findFieldsByType(fields: Field[], fieldType: string): Field[] {
   let results: Field[] = [];
