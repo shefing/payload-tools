@@ -1,22 +1,41 @@
-## [Cross-collection config plugin](./src/index.ts)
 
-This plugin modifies the default view of the component, injecting custom behavior.
+# Cross-Collection Config Plugin
 
-### Setup
+This plugin allows you to **override** default Payload CMS component views and inject custom behavior.
 
-Install the plugin using your node package manager, e.g:
+---
 
-`pnpm add @shefing/cross-collection`
+## 📦 Installation
 
-In the payload.config.ts add the following:
+Install the plugin via your package manager:
+
+```bash
+pnpm add @shefing/cross-collection
+```
+## ⚙️ Setup
+
+To override a component's view in Payload, add the following to your `payload.config.ts`:
 
 ```javascript
- CrossCollectionConfig({
-      customComponentPaths: {// a set of paths to custom components that will be used for editing specific collections or globals
-        collectionEditComponent: '/rightPanel/RightPanelEditView', // path to the custom component.
-      },
-      excludedCollections: ['users'],// array of collections names to exclude
-      excludedGlobals:[], // array of globals names to exclude
-    }),
+import { CrossCollectionConfig } from '@shefing/cross-collection';
+
+CrossCollectionConfig({
+  customOverrides: {
+    // Replace the default edit view
+    'admin.components.views.edit.default': CustomCollectionEdit,
+
+    // Replace the versions edit view
+    'admin.components.views.edit.versions': CustomCollectionEdit,
+  },
+});
 ```
 
+---
+
+## 🔥 Features
+
+- **Full Control**: Override any Payload component view.
+- **Easy Customization**: Replace edit views, list views, and more with custom React components.
+- **Flexible**: Override any default view across the CMS.
+
+With this plugin, you have **full control** over how every component view in Payload CMS appears! ✨

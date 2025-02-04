@@ -1,14 +1,12 @@
 import type { Config } from 'payload';
-import { CrossCollectionPluginConfig } from './types.js';
+import { CrossCollectionPluginConfig } from './types';
+
 /* eslint-disable */
 
 const defaultConfig: Required<CrossCollectionPluginConfig> = {
   excludedCollections: [],
   excludedGlobals: [],
-  customComponentPaths: {
-    collectionEditComponent: '',
-    globalEditComponent: '',
-  },
+  customOverrides: {},
 };
 
 export function ensurePath(obj, path) {
@@ -22,38 +20,30 @@ const CrossCollectionConfig =
       ...defaultConfig,
       ...pluginConfig,
     };
+
     const { collections, globals } = config;
 
     if (collections !== undefined) {
       collections
         .filter((x) => !mergedConfig.excludedCollections.includes(x.slug))
         .forEach((currentCollection) => {
-          if (mergedConfig.customComponentPaths.collectionEditComponent) {
-            const defaultEdit = ensurePath(currentCollection, [
-              'admin',
-              'components',
-              'views',
-              'edit',
-              'default',
-            ]);
-            defaultEdit.Component = mergedConfig.customComponentPaths.collectionEditComponent;
-          }
+          Object.entries(mergedConfig.customOverrides).forEach(([pathString, value]) => {
+            const pathArray = pathString.split('.');
+            const target = ensurePath(currentCollection, pathArray);
+            target.Component = value;
+          });
         });
     }
+
     if (globals !== undefined) {
       globals
         .filter((x) => !mergedConfig.excludedGlobals.includes(x.slug))
         .forEach((currentGlobal) => {
-          if (mergedConfig.customComponentPaths.globalEditComponent) {
-            const defaultEdit = ensurePath(currentGlobal, [
-              'admin',
-              'components',
-              'views',
-              'edit',
-              'default',
-            ]);
-            defaultEdit.Component = mergedConfig.customComponentPaths.globalEditComponent;
-          }
+          Object.entries(mergedConfig.customOverrides).forEach(([pathString, value]) => {
+            const pathArray = pathString.split('.');
+            const target = ensurePath(currentGlobal, pathArray);
+            target.Component = value;
+          });
         });
     }
 
