@@ -15,6 +15,7 @@ pnpm add @shefing/cross-collection
 To override a component's view in Payload, add the following to your `payload.config.ts`:
 
 ```javascript
+```javascript
 import { CrossCollectionConfig } from '@shefing/cross-collection';
 
 CrossCollectionConfig({
@@ -24,8 +25,14 @@ CrossCollectionConfig({
 
     // Replace the versions edit view
     'admin.components.views.edit.versions': CustomCollectionEdit,
+    // enable to exclude some collections from permission control
+    excludedCollections: ['posts', 'media'],
+    // array of globals names to exclude
+    excludedGlobals:[], 
+
   },
 });
+```
 ```
 
 
