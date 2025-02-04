@@ -18,7 +18,7 @@ This repository contains a set of powerful plugins designed to enhance your [Pay
    A handy **icon picker field** for selecting icons within the Payload UI from [flowbite-react-icons](https://flowbite.com/icons/), making it easy to enhance content with visually appealing icons.
 
 5. **🔗 [Cross-Collection Config](packages/cross-collection/)**  
-   The **Cross-Collection Config Plugin** empowers you to modify the default view of components in Payload CMS,
+   The **Cross-Collection Config Plugin** empowers you to modify the  view of components in Payload CMS,
    injecting **custom behaviors** and offering **global configuration capabilities** not natively supported.
 7. **📝 [Custom Version View](packages/custom-version-view/)**  
    Improve version control with a **custom version view** that displays "**Updated at**" and "**Updated by**" fields. This plugin integrates seamlessly with the [Authors Info](packages/authors-info/) plugin.
