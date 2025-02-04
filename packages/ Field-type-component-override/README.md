@@ -7,7 +7,7 @@ This plugin allows you to **dynamically override all fields of a specific type**
 Install the plugin via your package manager:
 
 ```bash
-pnpm add @shefing/dynamic-field-overrides
+pnpm add @shefing/field-type-component-override
 ```
 
 ## ⚙️ Setup
@@ -17,7 +17,7 @@ With this plugin, you can **define a field type once** and override all occurren
 Add the following to your `payload.config.ts`:
 
 ```javascript
-import { DynamicFieldOverrides } from '@shefing/dynamic-field-overrides';
+import { DynamicFieldOverrides } from '@shefing/field-type-component-override';
 
  DynamicFieldOverrides({
       fieldType: 'text',
