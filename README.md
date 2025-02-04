@@ -30,7 +30,7 @@ Improve version control with a **custom version view** that displays "**Updated 
    The **Cross-Collection Config Plugin** empowers you to modify the  view of components in Payload CMS,
    injecting **custom behaviors** and offering **global configuration capabilities** not natively supported.
 
-10. **⚙️ [Field-type Component Override](packages/field-type-component-override/)**  
+10. **⚙️ [Field-type Component Override](packages/field-type-components-override/)**  
    Dynamically override all fields of a specific type in Payload CMS by replacing their default components with **custom ones—seamlessly** and **automatically**. This plugin allows you to define a field type once and apply your custom component globally across your collections.  
 
 
