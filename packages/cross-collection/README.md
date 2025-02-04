@@ -33,7 +33,7 @@ CrossCollectionConfig({
   },
 });
 ```
-```
+
 
 
 ## 🔥 Features
