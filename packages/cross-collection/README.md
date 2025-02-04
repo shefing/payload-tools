@@ -1,30 +1,43 @@
 ## 🔗 [Cross-Collection Config Plugin](./src/index.ts)
 
-The **Cross-Collection Config Plugin** empowers you to modify the default view of components in Payload CMS, injecting **custom behaviors** and offering **global configuration capabilities** not natively supported.
 
-**Key Feature:** Achieve **global configurations** across your project, even for settings not available in Payload’s core configuration.
+# Cross-Collection Config Plugin
 
-###  **Setup Instructions**
+This plugin allows you to **override** default Payload CMS component views and inject custom behavior.
 
-1️⃣ **Install the Plugin:**
+---
+
+## 📦 Installation
+
+Install the plugin via your package manager:
 
 ```bash
 pnpm add @shefing/cross-collection
 ```
+## ⚙️ Setup
 
-2️⃣ **Integrate in `payload.config.ts`:**
+To override a component's view in Payload, add the following to your `payload.config.ts`:
 
 ```javascript
+import { CrossCollectionConfig } from '@shefing/cross-collection';
+
 CrossCollectionConfig({
-  customComponentPaths: { //  Paths to custom components for editing collections/globals
-    collectionEditComponent: '/rightPanel/RightPanelEditView', //  Custom component path
+  customOverrides: {
+    // Replace the default edit view
+    'admin.components.views.edit.default': CustomCollectionEdit,
+
+    // Replace the versions edit view
+    'admin.components.views.edit.versions': CustomCollectionEdit,
   },
-  excludedCollections: ['users'], //  Collections to exclude
-  excludedGlobals: [],            //  Globals to exclude
 });
 ```
 
 ---
 
-💡 **Pro Tip:** Use this plugin to **standardize UI components** and **apply consistent behaviors** globally across collections—perfect for complex content management setups.
+## 🔥 Features
 
+- **Full Control**: Override any Payload component view.
+- **Easy Customization**: Replace edit views, list views, and more with custom React components.
+- **Flexible**: Override any default view across the CMS.
+
+With this plugin, you have **full control** over how every component view in Payload CMS appears! ✨
