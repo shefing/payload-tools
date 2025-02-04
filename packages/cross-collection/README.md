@@ -1,8 +1,6 @@
 ## 🔗 [Cross-Collection Config Plugin](./src/index.ts)
 
 
-# Cross-Collection Config Plugin
-
 This plugin allows you to **override** default Payload CMS component views and inject custom behavior.
 
 ## 📦 Installation
