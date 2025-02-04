@@ -21,7 +21,7 @@ import { DynamicFieldOverrides } from '@shefing/dynamic-field-overrides';
 
  DynamicFieldOverrides({
       fieldType: 'text',
-      componentPath: './component/CustomCollectionEdit',
+      componentPath: './component/CustomText',
     }),
 ```  
 
