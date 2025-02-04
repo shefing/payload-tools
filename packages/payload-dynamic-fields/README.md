@@ -23,7 +23,7 @@ import { DynamicFieldOverrides } from '@shefing/dynamic-field-overrides';
       fieldType: 'text',
       componentPath: './component/CustomText',
        excludedCollections: ['media'],
-       xcludedGlobals:[]
+       excludedGlobals:[]
     }),
 ```
 
