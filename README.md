@@ -19,7 +19,6 @@ Improve version control with a **custom version view** that displays "**Updated 
 9. **📋 [Right Panel](packages/right-panel/)**  
    Enhance the editing experience with a **custom right-side panel**. This view allows you to manage **related entities** side-by-side, improving productivity when working with complex data relationships.
 
-
 4. **🎨 [Color Picker Field](packages/color-picker/)**  
    Add a **custom color selection tool** to your Payload interface. Simplify content styling by allowing authors to choose colors effortlessly.
    You can choose between **font-color** and **background-color** for better preview of end results.
@@ -31,7 +30,8 @@ Improve version control with a **custom version view** that displays "**Updated 
    The **Cross-Collection Config Plugin** empowers you to modify the  view of components in Payload CMS,
    injecting **custom behaviors** and offering **global configuration capabilities** not natively supported.
 
-
+10. **⚙️ [Field-type Component Override](packages/field-type-component-override/)**  
+   Dynamically override all fields of a specific type in Payload CMS by replacing their default components with **custom ones—seamlessly** and **automatically**. This plugin allows you to define a field type once and apply your custom component globally across your collections.  
 
 
 ---
