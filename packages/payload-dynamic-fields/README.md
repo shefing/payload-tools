@@ -19,16 +19,10 @@ Add the following to your `payload.config.ts`:
 ```javascript
 import { DynamicFieldOverrides } from '@shefing/dynamic-field-overrides';
 
-DynamicFieldOverrides({
-    {
-      type: 'upload', // Automatically override ALL 'upload' fields
-      component: CustomMediaComponent, // Custom React component for uploads
-    },
-    {
-      type: 'relationship', // Automatically override ALL 'relationship' fields
-      component: CustomRelationshipComponent,
-    },
-});
+ DynamicFieldOverrides({
+      fieldType: 'text',
+      componentPath: './component/CustomCollectionEdit',
+    }),
 ```  
 
 ## 🔥 Features  
