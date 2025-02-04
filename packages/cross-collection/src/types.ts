@@ -3,8 +3,5 @@ export interface CrossCollectionPluginConfig {
   excludedCollections?: string[];
   /** Array of global slugs to exclude */
   excludedGlobals?: string[];
-  customComponentPaths?: {
-    collectionEditComponent?: any;
-    globalEditComponent?: any;
-  };
+  customOverrides?: Record<string, any>;
 }
