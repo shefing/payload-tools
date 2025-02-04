@@ -46,25 +46,46 @@ const DynamicFieldOverrides =
       throw new Error('Invalid incoming configuration or collections are missing');
     }
 
-    const { collections } = incomingConfig;
-    const { fieldType, componentPath } = options;
+    const { collections, globals } = incomingConfig; // Destructure globals here
+    const { fieldType, componentPath, excludedCollections, excludedGlobals } = options;
 
+    // Process collections and apply changes only if they are not in excludedCollections
     collections.forEach((collection) => {
-      if (collection.fields) {
-        const matchingFields = findFieldsByType(collection.fields, fieldType);
-        matchingFields.forEach((field) => {
-          if (field) {
-            field.admin = field.admin || {};
-            field.admin.components = field.admin.components || {};
-            field.admin.components.Field = componentPath;
-          }
-        });
+      // If the collection is not excluded, apply the overrides
+      if (!excludedCollections?.includes(collection.slug)) {
+        if (collection.fields) {
+          const matchingFields = findFieldsByType(collection.fields, fieldType);
+          matchingFields.forEach((field) => {
+            if (field) {
+              field.admin = field.admin || {};
+              field.admin.components = field.admin.components || {};
+              field.admin.components.Field = componentPath;
+            }
+          });
+        }
+      }
+    });
+
+    // Process globals (if globals exist) and apply overrides only if not excluded
+    globals?.forEach((global) => {
+      if (!excludedGlobals?.includes(global.slug)) {
+        if (global.fields) {
+          const matchingFields = findFieldsByType(global.fields, fieldType);
+          matchingFields.forEach((field) => {
+            if (field) {
+              field.admin = field.admin || {};
+              field.admin.components = field.admin.components || {};
+              field.admin.components.Field = componentPath;
+            }
+          });
+        }
       }
     });
 
     return {
       ...incomingConfig,
-      collections,
+      collections, // Ensure collections are returned unmodified
+      globals, // Ensure globals are returned unmodified
     };
   };
 
