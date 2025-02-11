@@ -1,10 +1,12 @@
-import { Config, Plugin } from 'payload';
-import { Access, CollectionConfig, GlobalConfig } from 'payload';
-
+import { Access, CollectionConfig, Config, GlobalConfig } from 'payload';
 import { hasAccessToAction } from './utilities/hasAccessToAction.js';
 import { ensurePath } from './utilities/ensurePath.js';
 import { populateOptions } from './fields/populateOptions.js';
 import { AuthorizationPluginConfig } from './types.js';
+
+
+export * from "./collection/Roles.js";
+export * from "./fields/userFields.js";
 
 export const addAccess =
   (pluginConfig: AuthorizationPluginConfig) =>

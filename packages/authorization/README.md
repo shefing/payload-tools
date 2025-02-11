@@ -46,7 +46,7 @@ plugins: [
 Install the roles collection (you don't have to use this collection, you can write your own roles).
 
 ```javascript
-  import { Roles } from '@shefing/authorization/roles'
+  import { Roles } from '@shefing/authorization'
   collections: [...collection, Roles],
 
 ```
@@ -56,7 +56,7 @@ Install the roles collection (you don't have to use this collection, you can wri
 The `users` collection must be update to include the following fields:
 
 ```javascript
-      import userFields from '@shefing/authorization/user-fields'
+      import userFields from '@shefing/authorization'
 
       fields:[
         ...fields,

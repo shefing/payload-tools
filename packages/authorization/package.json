@@ -17,14 +17,6 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.js"
-    },
-    "./roles": {
-      "import": "./dist/collection/roles.js",
-      "require": "./dist/collection/roles.js"
-    },
-    "./user-fields": {
-      "import": "./dist/fields/userFields.js",
-      "require": "./dist/fields/userFields.js"
     }
   },
   "scripts": {
