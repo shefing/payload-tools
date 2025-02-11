@@ -56,7 +56,7 @@ Install the roles collection (you don't have to use this collection, you can wri
 The `users` collection must be update to include the following fields:
 
 ```javascript
-      import userFields from '@shefing/authorization'
+      import {userFields} from '@shefing/authorization'
 
       fields:[
         ...fields,
