@@ -1,6 +1,6 @@
 {
   "name": "@shefing/authors-info",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -40,9 +40,24 @@
   },
   "devDependencies": {
     "payload": "3.0.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "@payloadcms/ui": "3.0.2",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "react": "19.0.0-rc-65a56d0e-20241020",
+    "react-dom": "19.0.0-rc-65a56d0e-20241020",
+    "moment": "^2.30.1"
+  },
+  "dependencies": {
+    "moment": "^2.30.1"
   },
   "publishConfig": {
     "access": "public"
+  },
+  
+  "peerDependencies": {
+    "@payloadcms/ui":  "3.0.2",
+    "payload":  "3.0.2",
+    "i18next": "^23.0.0"
   }
 }

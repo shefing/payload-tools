@@ -90,6 +90,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
     fields.push({
       name: 'updatedAt',
       type: 'date',
+      localized: true,
       admin: {
         disableBulkEdit: true,
         hidden: true,
@@ -104,16 +105,24 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
   const authorFields: Field[] = [
     {
       name: 'creator',
-      label: 'Created By',
+      label: {
+        en: 'Created By',
+        he: 'נוצר על ידי',
+      },
       type: 'text',
+      localized: true,
       admin: {
         readOnly: true,
       },
     },
     {
       name: 'updator',
-      label: 'Updated By',
+      label: {
+        en: 'Updated By',
+        he: 'עודכן על ידי',
+      },
       type: 'text',
+      localized: true,
       admin: {
         readOnly: true,
       },
@@ -123,7 +132,12 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
     authorFields.push(
       {
         name: 'publishDate',
+        label:{
+          en: 'Published Date',
+          he: 'תאריך פרסום',
+        },
         type: 'date',
+        localized: true,
         admin: {
           date: {
             pickerAppearance: 'dayAndTime',
@@ -134,7 +148,11 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
       },
       {
         name: 'publisher',
-        label: 'Published By',
+        label: { 
+          en: 'Published By',
+          he: 'פורסם על ידי',
+         },
+        localized: true,
         type: 'text',
         admin: {
           readOnly: true,
@@ -144,7 +162,10 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
   }
 
   const authorTab: UnnamedTab = {
-    label: 'Author Data',
+    label:{
+      en: 'Author Data',
+      he: 'נתוני מחבר',
+    },
     fields: authorFields,
   };
   const hiddenFields = fields.filter(
@@ -154,7 +175,10 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
     fields[0].tabs.push(authorTab);
   } else {
     const contentTab: UnnamedTab = {
-      label: 'Content',
+      label:{
+        en: 'Content',
+        he: 'תוכן',
+      },
       fields: [...fields.filter((field) => (field as FieldAffectingData).admin?.hidden !== true)],
     };
     fields = [
