@@ -1,9 +1,18 @@
 import type { CollectionConfig } from 'payload';
 import { isAdmin, isAdminFieldLevel } from '../access/isAdmin';
 import { isAdminOrSelf } from '../access/isAdminOrSelf';
-
 export const Roles: CollectionConfig = {
   slug: 'roles',
+  labels: {
+    singular: {
+      en: 'Role',
+      he: 'תפקיד',
+    },
+    plural: {
+      en: 'Roles',
+      he: 'תפקידים',
+    },
+  },
   access: {
     // Only admins can create users
     create: isAdmin,
@@ -15,18 +24,40 @@ export const Roles: CollectionConfig = {
     delete: isAdmin,
   },
   admin: {
-    group: 'Admin',
+    group: {
+      en: 'Admin',
+      he: 'ניהול',
+    },
     useAsTitle: 'name',
     defaultColumns: ['name', 'updator', 'creator'],
   },
   fields: [
     {
       name: 'name',
+      label: {
+        en: 'Role Name',
+        he: 'שם התפקיד',
+      },
       type: 'text',
       unique: true,
+      localized: true,
     },
     {
       name: 'permissions',
+      labels: {
+        singular: {
+          en: 'Permission',
+          he: 'הרשאה',
+        },
+        plural: {
+          en: 'Permissions',
+          he: 'הרשאות',
+        },
+      },
+      label: {
+        en: 'Permissions',
+        he: 'הרשאות',
+      },
       // Save this field to JWT so we can use from `req.user`
       saveToJWT: true,
       interfaceName: 'RolePermissions',
@@ -36,13 +67,17 @@ export const Roles: CollectionConfig = {
         create: isAdminFieldLevel,
         update: isAdminFieldLevel,
       },
+      localized: true,
       fields: [
         {
           type: 'row',
           fields: [
             {
               name: 'entity',
-              label: 'Collection or Global',
+              label: {
+                en: 'Collection or Global',
+                he: 'אוסף או גלובלי',
+              },
               type: 'select',
               hasMany: true,
               options: [],
@@ -50,23 +85,36 @@ export const Roles: CollectionConfig = {
               admin: {
                 width: '70%',
               },
+              localized: true,
             },
             {
               name: 'type',
-              label: 'Type',
+              label: {
+                en: 'Type',
+                he: 'סוג',
+              },
               type: 'select',
               hasMany: true,
               options: [
                 {
-                  label: 'Write',
+                  label: {
+                    en: 'Write',
+                    he: 'כתיבה',
+                  },
                   value: 'write',
                 },
                 {
-                  label: 'Read',
+                  label: {
+                    en: 'Read',
+                    he: 'קריאה',
+                  },
                   value: 'read',
                 },
                 {
-                  label: 'Publish',
+                  label: {
+                    en: 'Publish',
+                    he: 'פרסום',
+                  },
                   value: 'publish',
                 },
               ],
@@ -74,6 +122,7 @@ export const Roles: CollectionConfig = {
               admin: {
                 width: '30%',
               },
+              localized: true,
             },
           ],
         },
@@ -81,3 +130,9 @@ export const Roles: CollectionConfig = {
     },
   ],
 };
+
+
+
+
+
+
