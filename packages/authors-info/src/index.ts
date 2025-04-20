@@ -95,10 +95,13 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
         disableBulkEdit: true,
         hidden: true,
         components: {
-          Cell: '@shefing/authors-info/client#CreatedAtCell',
+          Cell: '@shefing/authors-info/client#UpdatedAtCell',
         },
       },
-      label: ({ t }) => t('general:updatedAt'),
+      label: {
+        en: 'updateAt',
+        he: 'עודכן ב',
+      },
     });
   }
 
@@ -132,7 +135,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
     authorFields.push(
       {
         name: 'publishDate',
-        label:{
+        label: {
           en: 'Published Date',
           he: 'תאריך פרסום',
         },
@@ -148,10 +151,10 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
       },
       {
         name: 'publisher',
-        label: { 
+        label: {
           en: 'Published By',
           he: 'פורסם על ידי',
-         },
+        },
         localized: true,
         type: 'text',
         admin: {
@@ -162,7 +165,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
   }
 
   const authorTab: UnnamedTab = {
-    label:{
+    label: {
       en: 'Author Data',
       he: 'נתוני מחבר',
     },
@@ -175,7 +178,7 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
     fields[0].tabs.push(authorTab);
   } else {
     const contentTab: UnnamedTab = {
-      label:{
+      label: {
         en: 'Content',
         he: 'תוכן',
       },
