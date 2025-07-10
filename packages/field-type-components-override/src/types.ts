@@ -1,8 +1,14 @@
+export interface FieldOverride {
+  fieldTypes: string[];
+  relationTo?: string | string[];
+  overrides: {
+    admin?: Record<string, any>;
+    [key: string]: any;
+  };
+}
+
 export interface FieldsAuthoringConfig {
-  fieldType: string;
-  componentPath: string;
-    /** Array of collection slugs to exclude */
-    excludedCollections?: string[];
-    /** Array of global slugs to exclude */
-    excludedGlobals?: string[];
+  overrides: FieldOverride[];
+  excludedCollections?: string[];
+  excludedGlobals?: string[];
 }

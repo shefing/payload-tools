@@ -1,6 +1,6 @@
 {
   "name": "@shefing/field-type-component-override",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -25,8 +25,8 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "payload": "3.0.2",
-    "typescript": "^5.5.2"
+    "payload": "^3.45.0",
+    "typescript": "5.7.3"
   },
   "publishConfig": {
     "access": "public"
