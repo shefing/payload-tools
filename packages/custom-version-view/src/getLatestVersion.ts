@@ -1,19 +1,19 @@
-import type { Payload, Where } from 'payload'
+import type { Payload, Where } from 'payload';
 
 type ReturnType = {
-  id: string
-  updatedAt: string
-} | null
+  id: string;
+  updatedAt: string;
+} | null;
 
 type Args = {
-  parentID?: number | string
-  payload: Payload
-  slug: string
-  status: 'draft' | 'published'
-  type: 'collection' | 'global'
-}
+  parentID?: number | string;
+  payload: Payload;
+  slug: string;
+  status: 'draft' | 'published';
+  type: 'collection' | 'global';
+};
 export async function getLatestVersion(args: Args): Promise<ReturnType> {
-  const { slug, type = 'collection', parentID, payload, status } = args
+  const { slug, type = 'collection', parentID, payload, status } = args;
 
   const and: Where[] = [
     {
@@ -21,14 +21,14 @@ export async function getLatestVersion(args: Args): Promise<ReturnType> {
         equals: status,
       },
     },
-  ]
+  ];
 
   if (type === 'collection' && parentID) {
     and.push({
       parent: {
         equals: parentID,
       },
-    })
+    });
   }
 
   try {
@@ -39,7 +39,7 @@ export async function getLatestVersion(args: Args): Promise<ReturnType> {
       where: {
         and,
       },
-    }
+    };
 
     const response =
       type === 'collection'
@@ -50,18 +50,18 @@ export async function getLatestVersion(args: Args): Promise<ReturnType> {
         : await payload.findGlobalVersions({
             slug,
             ...sharedOptions,
-          })
+          });
 
     if (!response.docs.length) {
-      return null
+      return null;
     }
 
     return {
       id: response.docs[0].id,
       updatedAt: response.docs[0].updatedAt,
-    }
+    };
   } catch (e) {
-    console.error(e)
-    return null
+    console.error(e);
+    return null;
   }
 }
