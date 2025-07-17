@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { CalendarIcon, ChevronDown, X } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { Button } from '../../ui/button';
 
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-
-import { Separator } from '../../ui/separator';
-import { DateFilterValue, DateRange, Locale } from '../types/filters-type';
 import {
   futureDateFilterOptions,
   futureDateFilterOptionsEn,
@@ -16,8 +10,13 @@ import {
   pastDateFilterOptionsEn,
 } from '../constants/date-filter-options';
 import { formatDate, getDateRangeForOption } from '../utils/date-helpers';
-import { Calendar } from '../../ui/calendar';
+import { DateFilterValue, DateRange, Locale } from '../types/filters-type';
+import { Button } from '../../ui/button';
+import { cn } from '../../lib/utils';
 import { Label } from '../../ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
+import { Separator } from '../../ui/separator';
+import { Calendar } from '../../ui/calendar';
 
 interface DateFilterProps {
   label?: string;
@@ -38,6 +37,8 @@ export function DateFilter({
   const [customRange, setCustomRange] = useState<DateRange>({ from: undefined, to: undefined });
   const [showCustom, setShowCustom] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [openFromCalendar, setOpenFromCalendar] = useState(false);
+  const [openToCalendar, setOpenToCalendar] = useState(false);
 
   const isHebrew = locale.code === 'he';
   const pastOptions = isHebrew ? pastDateFilterOptions : pastDateFilterOptionsEn;
@@ -53,8 +54,8 @@ export function DateFilter({
 
   const labels = {
     selectOption: isHebrew ? 'בחר אפשרות' : 'Select Option',
-    from: isHebrew ? 'מתאריך' : 'From Date',
-    to: isHebrew ? 'עד תאריך' : 'To Date',
+    from: isHebrew ? 'מתאריך' : 'From',
+    to: isHebrew ? 'עד תאריך' : 'To',
     selectDate: isHebrew ? 'בחר תאריך' : 'Select Date',
     past: isHebrew ? 'עבר' : 'Past',
     future: isHebrew ? 'עתיד' : 'Future',
@@ -268,7 +269,7 @@ export function DateFilter({
                         >
                           {labels.from}
                         </Label>
-                        <Popover>
+                        <Popover open={openFromCalendar} onOpenChange={setOpenFromCalendar}>
                           <PopoverTrigger asChild className='useTw'>
                             <Button
                               variant='outline'
@@ -289,9 +290,10 @@ export function DateFilter({
                             <Calendar
                               mode='single'
                               selected={customRange.from}
-                              onSelect={(date) =>
-                                handleCustomRangeChange({ ...customRange, from: date })
-                              }
+                              onSelect={(date) => {
+                                handleCustomRangeChange({ ...customRange, from: date });
+                                setOpenFromCalendar(false);
+                              }}
                               initialFocus
                               className='useTw'
                             />
@@ -309,7 +311,7 @@ export function DateFilter({
                         >
                           {labels.to}
                         </Label>
-                        <Popover>
+                        <Popover open={openToCalendar} onOpenChange={setOpenToCalendar}>
                           <PopoverTrigger asChild className='useTw'>
                             <Button
                               variant='outline'
@@ -330,9 +332,10 @@ export function DateFilter({
                             <Calendar
                               mode='single'
                               selected={customRange.to}
-                              onSelect={(date) =>
-                                handleCustomRangeChange({ ...customRange, to: date })
-                              }
+                              onSelect={(date) => {
+                                handleCustomRangeChange({ ...customRange, to: date });
+                                setOpenToCalendar(false);
+                              }}
                               initialFocus
                               className='useTw'
                             />
@@ -366,7 +369,7 @@ export function DateFilter({
         </Popover>
         {hasValue() && (
           <button
-            className='useTw absolute left-8 top-1/2 -translate-y-1/2 h-4 w-4 p-0 hover:bg-muted rounded-sm flex items-center justify-center z-10'
+            className={`useTw absolute ${isHebrew ? 'left-8' : 'right-8'} top-1/2 -translate-y-1/2 h-4 w-4 p-0 hover:bg-muted rounded-sm flex items-center justify-center z-10 `}
             onClick={(e) => {
               e.stopPropagation();
               handleClearAll();

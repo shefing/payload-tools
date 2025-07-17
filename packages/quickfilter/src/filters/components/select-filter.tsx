@@ -2,12 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { Check, ChevronsUpDown, X } from 'lucide-react';
-
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-
+import { Locale, SelectFilterOption, SelectFilterValue } from '../types/filters-type';
 import { Label } from '../../ui/label';
-
 import { cn } from '../../lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { Button } from '../../ui/button';
 import {
   Command,
@@ -17,7 +15,6 @@ import {
   CommandItem,
   CommandList,
 } from '../../ui/command';
-import { Locale, SelectFilterOption, SelectFilterValue } from '../types/filters-type';
 import { Checkbox } from '../../ui/checkbox';
 import { Badge } from '../../ui/badge';
 
@@ -63,6 +60,7 @@ export function SelectFilter({
     search: isHebrew ? 'חפש...' : 'Search...',
     noResults: isHebrew ? 'לא נמצאו תוצאות' : 'No results found',
     selected: isHebrew ? 'נבחרו' : 'selected',
+    selectedOne: isHebrew ? 'נבחר' : 'selected',
   };
 
   const getFilterValue = (values: string[]): SelectFilterValue => {
@@ -119,7 +117,7 @@ export function SelectFilter({
     } else if (selectedValues.length === options.length) {
       return labels.selectAll;
     } else {
-      return `${selectedValues.length} ${labels.selected}`;
+      return `${selectedValues.length} ${selectedValues.length > 1 ? labels.selected : labels.selectedOne} `;
     }
   };
 
@@ -144,7 +142,7 @@ export function SelectFilter({
               <ChevronsUpDown className='h-4 w-4 shrink-0 opacity-50' />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className='w-80 p-0' align='start'>
+          <PopoverContent className='useTw w-80 p-0' align='start'>
             <Command>
               {showSearch && <CommandInput placeholder={labels.search} />}
               <CommandList>

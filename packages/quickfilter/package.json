@@ -1,6 +1,6 @@
 {
   "name": "@shefing/quickfilter",
-  "version": "1.0.0",
+  "version": "1.0.11",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -17,6 +17,10 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.js"
+    },
+    "./QuickFilter": {
+      "import": "./dist/QuickFilter.js",
+      "require": "./dist/QuickFilter.js"
     }
   },
   "scripts": {
@@ -37,10 +41,12 @@
     "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.1",
     "tailwind-merge": "^3.0.1",
+    "tailwindcss": "3.4.17",
     "next": "15.3.3",
     "react": "19.0.0",
     "@types/react": "19.0.7",
-    "@types/react-dom": "19.0.3"
+    "@types/react-dom": "19.0.3",
+    "postcss": "^8.5.2"
   },
   "dependencies": {
     "payload": "^3.47.0",
@@ -61,7 +67,10 @@
     "@radix-ui/react-separator": "^1.1.2",
     "cmdk": "^1.0.4",
     "@radix-ui/react-dialog": "^1.1.6",
-    "@radix-ui/react-checkbox": "^1.1.4"
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-scoped-preflight": "^3.4.10",
+    "tailwindcss": "3.4.17"
   },
   "publishConfig": {
     "access": "public"

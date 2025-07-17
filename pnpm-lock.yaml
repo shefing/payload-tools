@@ -441,9 +441,22 @@ importers:
       tailwind-merge:
         specifier: ^3.0.1
         version: 3.3.1
+      tailwindcss:
+        specifier: 3.4.17
+        version: 3.4.17
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.4.17)
+      tailwindcss-scoped-preflight:
+        specifier: ^3.4.10
+        version: 3.4.10(postcss@8.5.3)(tailwindcss@3.4.17)
       typescript:
         specifier: 5.7.3
         version: 5.7.3
+    devDependencies:
+      postcss:
+        specifier: ^8.5.2
+        version: 8.5.3
 
   packages/right-panel:
     dependencies:

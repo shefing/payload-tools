@@ -3,11 +3,10 @@
 import { useEffect, useState } from 'react';
 
 import { X } from 'lucide-react';
-
+import { Locale, SelectFilterValue } from '../types/filters-type';
+import { Label } from '../../ui/label';
 import { cn } from '../../lib/utils';
 import { Button } from '../../ui/button';
-import { Label } from '../../ui/label';
-import { Locale, SelectFilterValue } from '../types/filters-type';
 
 interface SmallSelectOption {
   value: string;

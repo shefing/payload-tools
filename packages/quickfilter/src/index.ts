@@ -36,7 +36,7 @@ export const CollectionQuickFilterPlugin =
 
         // Add the QuickFilter component
         newCollection.admin.components.beforeListTable.push({
-          path: '/plugins/quickfilter/QuickFilter',
+          path: '@shefing/quickfilter/QuickFilter',
           clientProps: {
             filterList: collection.custom.filterList,
             slug: collection.slug,
