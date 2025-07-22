@@ -421,11 +421,6 @@ Perfect for boolean fields like:
 
 </details>
 
-### ♿ **3. Accessibility First**
-
-<details>
-<summary>Built for everyone</summary>
-
 **🎯 What we support:**
 
 - ⌨️ **Full keyboard navigation**: Tab through all filters
