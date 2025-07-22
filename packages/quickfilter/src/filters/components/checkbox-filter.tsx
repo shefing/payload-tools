@@ -1,19 +1,22 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
-import { CheckboxFilterState, Locale } from '../types/filters-type';
-import { Label } from '../../ui/label';
-import { cn } from '../../lib/utils';
-import { Button } from '../../ui/button';
+import { useEffect, useState } from 'react'
+import { X } from 'lucide-react'
+import { CheckboxFilterState, Locale } from '../types/filters-type'
+import { cn } from '../../lib/utils'
+import { Label } from '../../ui/label'
+import { Button } from '../../ui/button'
+import { getLabel } from '../../labels'
+
 
 interface CheckboxFilterProps {
-  label?: string;
-  checkboxLabel: string;
-  value?: CheckboxFilterState;
-  onChange: (state: CheckboxFilterState) => void;
-  locale?: Locale;
-  className?: string;
+  label?: string
+  checkboxLabel: string
+  value?: CheckboxFilterState
+  onChange: (state: CheckboxFilterState) => void
+  locale?: Locale
+  className?: string
+  style?: React.CSSProperties
 }
 
 export function CheckboxFilter({
@@ -23,37 +26,38 @@ export function CheckboxFilter({
   onChange,
   locale = { code: 'he', direction: 'rtl' },
   className,
+  style
 }: CheckboxFilterProps) {
-  const [internalState, setInternalState] = useState<CheckboxFilterState>(value);
+  const [internalState, setInternalState] = useState<CheckboxFilterState>(value)
 
-  const isHebrew = locale.code === 'he';
+  const isRTL = locale.direction === 'rtl'
 
   // Sync internal state with external value prop
   useEffect(() => {
-    setInternalState(value);
-  }, [value]);
+    setInternalState(value)
+  }, [value])
 
   const handleToggle = (newState: 'checked' | 'unchecked') => {
-    setInternalState(newState);
-    onChange(newState);
-  };
+    setInternalState(newState)
+    onChange(newState)
+  }
 
   const handleClear = () => {
-    setInternalState('indeterminate');
-    onChange('indeterminate');
-  };
+    setInternalState('indeterminate')
+    onChange('indeterminate')
+  }
 
-  const isActive = internalState === 'checked' || internalState === 'unchecked';
+  const isActive = internalState === 'checked' || internalState === 'unchecked'
 
   const labels_toggle = {
-    yes: isHebrew ? 'כן' : 'Yes',
-    no: isHebrew ? 'לא' : 'No',
-  };
+    yes: getLabel('yes', locale.code),
+    no: getLabel('no', locale.code),
+  }
 
   return (
-    <div className={cn('space-y-1', className)} dir={locale.direction}>
+    <div className={cn('space-y-1', className)} dir={locale.direction} style={style}>
       {label && (
-        <Label className={cn('useTw text-sm font-medium', isHebrew && 'text-right block')}>
+        <Label className={cn('useTw text-sm font-medium', isRTL && 'text-right block')}>
           {label}
         </Label>
       )}
@@ -66,11 +70,11 @@ export function CheckboxFilter({
       >
         <div className={cn('flex items-center', locale.direction === 'rtl' && 'order-first')}>
           {/* Two Button Toggle */}
-          <div className='flex rounded-md border overflow-hidden'>
+          <div className="flex rounded-md border overflow-hidden">
             {/* In RTL, YES comes first, in LTR, NO comes first */}
             <Button
               variant={internalState === 'checked' ? 'default' : 'ghost'}
-              size='sm'
+              size="sm"
               className={cn(
                 'useTW px-3 py-1 text-xs rounded-none border-0',
                 internalState === 'checked'
@@ -83,7 +87,7 @@ export function CheckboxFilter({
             </Button>
             <Button
               variant={internalState === 'unchecked' ? 'default' : 'ghost'}
-              size='sm'
+              size="sm"
               className={cn(
                 'useTw px-3 py-1 text-xs rounded-none border-0 border-l',
                 internalState === 'unchecked'
@@ -101,7 +105,7 @@ export function CheckboxFilter({
           <Label
             className={cn(
               'useTw cursor-pointer select-none text-sm',
-              isHebrew && 'text-right',
+              isRTL && 'text-right',
               locale.direction === 'rtl' && 'order-2',
             )}
           >
@@ -111,8 +115,8 @@ export function CheckboxFilter({
 
         {(internalState === 'checked' || internalState === 'unchecked') && (
           <Button
-            variant='ghost'
-            size='sm'
+            variant="ghost"
+            size="sm"
             className={cn(
               'h-5 w-5 p-0 hover:bg-muted rounded-full -mt-1',
               checkboxLabel
@@ -125,10 +129,10 @@ export function CheckboxFilter({
             )}
             onClick={handleClear}
           >
-            <X className='h-3 w-3' />
+            <X className="h-3 w-3" />
           </Button>
         )}
       </div>
     </div>
-  );
+  )
 }

@@ -7,6 +7,7 @@ import { Locale, SelectFilterValue } from '../types/filters-type';
 import { Label } from '../../ui/label';
 import { cn } from '../../lib/utils';
 import { Button } from '../../ui/button';
+import { SupportedLocale } from '../../labels';
 
 interface SmallSelectOption {
   value: string;
@@ -22,6 +23,7 @@ interface SmallSelectFilterProps {
   className?: string;
   multiSelect?: boolean;
   maxOptions?: number;
+  style?: React.CSSProperties;
 }
 
 export function SmallSelectFilter({
@@ -33,12 +35,13 @@ export function SmallSelectFilter({
   className,
   multiSelect = true,
   maxOptions = 3,
+  style,
 }: SmallSelectFilterProps) {
   const [internalValue, setInternalValue] = useState<SelectFilterValue>(
     value || { type: 'none', selectedValues: [] },
   );
 
-  const isHebrew = locale.code === 'he';
+  const isRtl = locale?.direction === 'rtl';
 
   // Limit options to maxOptions
   const limitedOptions = options.slice(0, maxOptions);
@@ -107,9 +110,9 @@ export function SmallSelectFilter({
   };
 
   return (
-    <div className={cn('space-y-2', className)} dir={locale.direction}>
+    <div className={cn('space-y-2', className)} dir={locale.direction} style={style}>
       {label && (
-        <Label className={cn('useTw text-sm font-medium', isHebrew && 'text-right block')}>
+        <Label className={cn('useTw text-sm font-medium', isRtl && 'text-right block')}>
           {label}
         </Label>
       )}

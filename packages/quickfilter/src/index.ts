@@ -1,5 +1,11 @@
 import type { Config } from 'payload';
-import { CollectionFilterPluginConfig } from './types';
+
+export type CollectionFilterPluginConfig = {
+  /**
+   * List of collections to add filters to
+   */
+  disabled?: boolean;
+};
 
 export const CollectionQuickFilterPlugin =
   (pluginOptions: CollectionFilterPluginConfig = {}) =>

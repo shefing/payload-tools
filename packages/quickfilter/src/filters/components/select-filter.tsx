@@ -17,6 +17,7 @@ import {
 } from '../../ui/command';
 import { Checkbox } from '../../ui/checkbox';
 import { Badge } from '../../ui/badge';
+import { SupportedLocale, getLabel } from '../../labels';
 
 interface SelectFilterProps {
   label?: string;
@@ -27,6 +28,7 @@ interface SelectFilterProps {
   locale?: Locale;
   className?: string;
   multiSelect?: boolean;
+  style?: React.CSSProperties;
 }
 
 export function SelectFilter({
@@ -38,11 +40,12 @@ export function SelectFilter({
   locale = { code: 'he', direction: 'rtl' },
   className,
   multiSelect = true,
+  style,
 }: SelectFilterProps) {
   const [open, setOpen] = useState(false);
   const [internalValue, setInternalValue] = useState<SelectFilterValue | undefined>(value);
 
-  const isHebrew = locale.code === 'he';
+  const isRtl = locale?.direction === 'rtl';
   const showSearch = options.length > 10;
   const showSelectAll = multiSelect && options.length > 3;
 
@@ -55,12 +58,12 @@ export function SelectFilter({
   const allSelected = selectedValues.length === options.length;
 
   const labels = {
-    selectAll: isHebrew ? 'בחר הכל' : 'Select All',
-    deselectAll: isHebrew ? 'בטל בחירת הכל' : 'Deselect All',
-    search: isHebrew ? 'חפש...' : 'Search...',
-    noResults: isHebrew ? 'לא נמצאו תוצאות' : 'No results found',
-    selected: isHebrew ? 'נבחרו' : 'selected',
-    selectedOne: isHebrew ? 'נבחר' : 'selected',
+    selectAll: getLabel('all', locale.code),
+    deselectAll: getLabel('all', locale.code),
+    search: getLabel('selectOption', locale.code),
+    noResults: getLabel('custom', locale.code),
+    selected: getLabel('selectOption', locale.code),
+    selectedOne: getLabel('selectOption', locale.code),
   };
 
   const getFilterValue = (values: string[]): SelectFilterValue => {
@@ -113,7 +116,7 @@ export function SelectFilter({
 
   const getDisplayText = () => {
     if (selectedValues.length === 0) {
-      return placeholder || (isHebrew ? 'בחר אפשרויות' : 'Select options');
+      return placeholder || getLabel('selectOption', locale.code);
     } else if (selectedValues.length === options.length) {
       return labels.selectAll;
     } else {
@@ -122,9 +125,9 @@ export function SelectFilter({
   };
 
   return (
-    <div className={cn('space-y-1', className)} dir={locale.direction}>
+    <div className={cn('space-y-1', className)} dir={locale.direction} style={style}>
       {label && (
-        <Label className={cn('useTw text-sm font-medium', isHebrew && 'text-right block')}>
+        <Label className={cn('useTw text-sm font-medium', isRtl && 'text-right block')}>
           {label}
         </Label>
       )}
@@ -153,14 +156,14 @@ export function SelectFilter({
                       <div
                         className={cn(
                           'useTw flex items-center w-full justify-between',
-                          isHebrew && 'flex-row-reverse',
+                          isRtl && 'flex-row-reverse',
                         )}
                       >
                         <Checkbox
                           checked={allSelected}
-                          className={cn(isHebrew ? 'useTw ml-2' : 'useTw mr-2')}
+                          className={cn(isRtl ? 'useTw ml-2' : 'useTw mr-2')}
                         />
-                        <span className={cn(isHebrew && 'useTw text-right flex-1 mr-2')}>
+                        <span className={cn(isRtl && 'useTw text-right flex-1 mr-2')}>
                           {allSelected ? labels.deselectAll : labels.selectAll}
                         </span>
                       </div>
@@ -174,24 +177,24 @@ export function SelectFilter({
                       <div
                         className={cn(
                           'flex items-center w-full justify-between',
-                          isHebrew && 'flex-row-reverse',
+                          isRtl && 'flex-row-reverse',
                         )}
                       >
                         {multiSelect ? (
                           <Checkbox
                             checked={selectedValues.includes(option.value)}
-                            className={cn(isHebrew ? 'useTw ml-2' : 'useTw mx-2')}
+                            className={cn(isRtl ? 'useTw ml-2' : 'useTw mx-2')}
                           />
                         ) : (
                           <Check
                             className={cn(
                               'useTw h-4 w-4',
-                              isHebrew ? 'ml-2' : 'mr-2',
+                              isRtl ? 'ml-2' : 'mr-2',
                               selectedValues.includes(option.value) ? 'opacity-100' : 'opacity-0',
                             )}
                           />
                         )}
-                        <span className={cn(isHebrew && 'text-right flex-1')}>{option.label}</span>
+                        <span className={cn(isRtl && 'text-right flex-1')}>{option.label}</span>
                       </div>
                     </CommandItem>
                   ))}
@@ -202,7 +205,7 @@ export function SelectFilter({
         </Popover>
         {selectedValues.length > 0 && (
           <button
-            className={`useTw absolute ${isHebrew ? 'left-8' : 'right-8'} top-1/2 -translate-y-1/2 h-4 w-4 p-0 hover:bg-muted rounded-sm flex items-center justify-center z-10 `}
+            className={`useTw absolute ${isRtl ? 'left-8' : 'right-8'} top-1/2 -translate-y-1/2 h-4 w-4 p-0 hover:bg-muted rounded-sm flex items-center justify-center z-10 `}
             onClick={(e) => {
               e.stopPropagation();
               handleClearAll();

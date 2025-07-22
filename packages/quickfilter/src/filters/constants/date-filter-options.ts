@@ -1,29 +1,25 @@
+import { getLabel } from '../../labels';
+import type { SupportedLocale } from '../../labels';
 import { DateFilterOption } from '../types/filters-type';
 
-export const pastDateFilterOptions: DateFilterOption[] = [
-  { value: 'yesterday', label: 'אתמול' },
-  { value: 'lastWeek', label: 'שבוע שעבר' },
-  { value: 'lastMonth', label: 'חודש שעבר' },
-  { value: 'allPast', label: 'בעבר' },
-];
+// Define the option keys for past and future date filters
+export const pastOptionKeys = ['yesterday', 'lastWeek', 'lastMonth', 'allPast'] as const;
+export const futureOptionKeys = ['today', 'nextWeek', 'nextMonth', 'allFuture'] as const;
 
-export const futureDateFilterOptions: DateFilterOption[] = [
-  { value: 'today', label: 'היום' },
-  { value: 'nextWeek', label: 'השבוע' },
-  { value: 'nextMonth', label: 'החודש' },
-  { value: 'allFuture', label: 'בעתיד' },
-];
+// Create date filter options dynamically based on locale
+const createDateFilterOptions = (
+  keys: readonly string[],
+  locale: SupportedLocale | string,
+): DateFilterOption[] => {
+  return keys.map((key) => ({
+    value: key,
+    label: getLabel(key as any, locale as SupportedLocale),
+  }));
+};
 
-export const pastDateFilterOptionsEn: DateFilterOption[] = [
-  { value: 'yesterday', label: 'Yesterday' },
-  { value: 'lastWeek', label: 'Last Week' },
-  { value: 'lastMonth', label: 'Last Month' },
-  { value: 'allPast', label: 'All Past' },
-];
-
-export const futureDateFilterOptionsEn: DateFilterOption[] = [
-  { value: 'today', label: 'Today' },
-  { value: 'nextWeek', label: 'This Week' },
-  { value: 'nextMonth', label: 'This Month' },
-  { value: 'allFuture', label: 'All Future' },
-];
+export const getDateFilterOptions = (locale: SupportedLocale | string) => {
+  return {
+    pastOptions: createDateFilterOptions(pastOptionKeys, locale),
+    futureOptions: createDateFilterOptions(futureOptionKeys, locale),
+  };
+};
