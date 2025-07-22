@@ -25,6 +25,14 @@ import {
 } from './filters/constants/date-filter-options';
 import { Button } from './ui/button';
 
+// Helper function to get localized label
+const getLocalizedLabel = (label: any, locale: SupportedLocale): string => {
+  if (typeof label === 'object' && label !== null) {
+    return label[locale] || label['en'] || Object.values(label)[0] || ''
+  }
+  return label || ''
+}
+
 // Recursive function to find fields by name
 function findFieldsByName(fields: ClientField[], fieldNames: string[]): ClientField[] {
   const results: ClientField[] = [];
@@ -466,7 +474,7 @@ const QuickFilter = ({
                 (opt: any) => opt.value === selectValue.selectedValues[0],
               );
               const optionLabel = selectedOption
-                ? selectedOption.label
+                ? getLocalizedLabel(selectedOption.label, locale)
                 : selectValue.selectedValues[0];
               activeFilters.push(`${field.label} (${optionLabel})`);
             } else {
