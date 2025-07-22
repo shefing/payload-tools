@@ -33,7 +33,9 @@ Improve version control with a **custom version view** that displays "**Updated 
 9. **✨ [Icon Select](packages/icon-select/)**  
    A handy **icon picker field** for selecting icons within the Payload UI from [flowbite-react-icons](https://flowbite.com/icons/), making it easy to enhance content with visually appealing icons.
 
+10. **🚀 [Quick Filter](packages/quickfilter/)**  
+   Transform your PayloadCMS admin experience with instant, intuitive filters that appear right where you need them. Say goodbye to clunky filter forms and hello to seamless data exploration!
+
 ---
 
 💡 **Tip:** Each plugin is modular and can be integrated independently based on your project needs. Check out the linked documentation for installation instructions and configuration details.
-

@@ -4,9 +4,6 @@
 
 Transform your PayloadCMS admin experience with instant, intuitive filters that appear right where you need them. Say goodbye to clunky filter forms and hello to seamless data exploration!
 
-![QuickFilter Demo](./screenshots/quickfilter-demo.gif)
-_See QuickFilter in action - filtering happens instantly as you click!_
-
 ## ✨ Features
 
 | Feature                      | Description                                        | Icon                                                                 |
@@ -20,25 +17,37 @@ _See QuickFilter in action - filtering happens instantly as you click!_
 
 ### 🎥 See It In Action
 
-<details>
-<summary>📸 Click to view screenshots</summary>
+[Video placeholder]
 
-#### Collapsed State
+---
 
-![Collapsed Filter](./images/collapsed-state.png)
-_Clean, minimal button that shows active filter count_
+### 📋 Requirements
 
-#### Expanded State
+- ✅ PayloadCMS 3.0+
+- ✅ React 18+
+- ✅ TypeScript (recommended)
+- ✅ Tailwind CSS (for styling)
 
-![Expanded Filters](./images/expanded-state.png)
-_All your filters laid out beautifully in customizable rows_
+> 🚨 **Important**: Make sure your project has Tailwind CSS configured, as the plugin uses Tailwind classes for styling.
+> Add the following path to your tailwind.config.js under the content array:
 
-#### Date Filter Options
+```ts
+// tailwind.config.js
 
-![Date Filter](./images/date-filter.png)
-_Smart date presets + custom range picker_
-
-</details>
+module.exports = {
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}', // your app paths
+    './node_modules/@shefing/quickfilter/**/*.{js,ts,jsx,tsx}', // ✅ required for QuickFilter
+  ],
+  // ...rest of your config
+  // Here we scope the Tailwind not to intefere with the Admin UI  
+    plugins: [
+        scopedPreflightStyles({
+            isolationStrategy: isolateInsideOfContainer(['.useTw']),
+        }),
+    ],
+};
+```
 
 ---
 
@@ -48,7 +57,7 @@ _Smart date presets + custom range picker_
 <summary>📦 Step 1: Install the Package</summary>
 
 ```bash
-npm install @shefing/quickfilter
+pnpm add @shefing/quickfilter
 ```
 
 </details>
@@ -68,31 +77,33 @@ export default buildConfig({
 
 </details>
 
----
+<details>
+<summary>⚙️ Step 3: Configure Collections</summary>
 
-### 📋 Requirements
-
-- ✅ PayloadCMS 2.0+
-- ✅ React 18+
-- ✅ TypeScript (recommended)
-- ✅ Tailwind CSS (for styling)
-
-> 🚨 **Important**: Make sure your project has Tailwind CSS configured, as the plugin uses Tailwind classes for styling.
-> Add the following path to your tailwind.config.js under the content array:
-
-```ts
-// tailwind.config.js
-
-module.exports = {
-  content: [
-    './src/**/*.{js,ts,jsx,tsx}', // your app paths
-    './node_modules/@shefing/quickfilter/**/*.{js,ts,jsx,tsx}', // ✅ required for QuickFilter
-  ],
-  // ...rest of your config
+```typescript
+export const Users: CollectionConfig = {
+  slug: 'users',
+  custom: {
+    filterList: [
+      ['status', 'role'], // First row with two filters
+      ['createdAt'], // Second row with one filter
+      [
+        { name: 'department', width: '300px' }, // Custom width
+        'isActive',
+      ],
+    ],
+  },
+  // ... rest of your collection config
 };
 ```
 
-## ⚙️ Configuration
+</details>
+
+---
+
+
+
+## ⚙️ Collections Configuration
 
 Transform any collection into a filtering powerhouse! Just add a `filterList` to your collection's `custom` property:
 
@@ -279,34 +290,6 @@ The magic happens right above your collection table! Here's what your users will
 
 ### 🎯 Filter Types in Detail
 
-<details>
-<summary>📅 <strong>Date Filter</strong> - Time travel made easy!</summary>
-
-**🚀 Predefined Magic:**
-
-```typescript
-🕐 Past Options:
-├── Yesterday
-├── Last Week
-├── Last Month
-└── All Past
-
-🔮 Future Options:
-├── Today
-├── Next Week
-├── Next Month
-└── All Future
-```
-
-**🎯 Custom Range Power:**
-
-- 📅 **From/To picker**: Select any date range
-- 🌍 **Localized**: Dates display in user's format
-- ⚡ **Smart defaults**: Common ranges are just one click away
-
-![Date Filter Demo](./screenshots/date-filter-demo.gif)
-
-</details>
 
 <details>
 <summary>📋 <strong>Select Filter</strong> - Intelligence that adapts</summary>
@@ -328,14 +311,6 @@ The magic happens right above your collection table! Here's what your users will
 └─────────────────────────┘
 ```
 
-**💪 Multi-select Support:**
-
-```typescript
-{
-  selectedValues: ['published', 'draft'],
-  type: 'some' // Shows items matching ANY selected value
-}
-```
 
 ![Select Filter Types](./screenshots/select-intelligence.png)
 
@@ -363,20 +338,6 @@ Perfect for boolean fields like:
 
 ## 🆚 Why Choose QuickFilter Over Regular PayloadCMS Filters?
 
-<details>
-<summary>🎯 <strong>Side-by-Side Comparison</strong></summary>
-
-| Feature             | 🔥 QuickFilter                    | 😐 Regular Filters             |
-| ------------------- | --------------------------------- | ------------------------------ |
-| **Speed**           | ⚡ Instant filtering              | 🐌 Page reload required        |
-| **UX**              | 🎨 Beautiful, intuitive UI        | 📝 Complex form interface      |
-| **Persistence**     | 💾 Remembers your filters         | 🔄 Resets on refresh           |
-| **Visual Feedback** | 👀 Clear active filter indicators | ❓ Hard to see what's filtered |
-| **Mobile**          | 📱 Fully responsive               | 📱 Limited mobile support      |
-| **Accessibility**   | ♿ Full keyboard + screen reader  | ⚠️ Basic accessibility         |
-
-</details>
-
 ### 🚀 **1. User Experience Revolution**
 
 <details>
@@ -389,37 +350,11 @@ Perfect for boolean fields like:
 | **💾 Memory**     | Filters persist across sessions             | Start over every time                      |
 | **🎯 Simplicity** | Click and filter                            | Navigate to filter page, fill form, submit |
 
-![UX Comparison](./screenshots/ux-comparison.png)
 
 </details>
 
 ### ⚡ **2. Performance That Scales**
 
-<details>
-<summary>Technical performance benefits</summary>
-
-```typescript
-// 🔥 QuickFilter generates optimized queries
-{
-  and: [
-    { status: { in: ['published', 'draft'] } },
-    { createdAt: { greater_than_equal: '2024-01-01' } },
-  ];
-}
-
-// 😐 vs manual filter complexity
-// Users struggle with query syntax
-// Multiple server round-trips
-// No client-side optimization
-```
-
-**📊 Performance Metrics:**
-
-- 🚀 **90% faster** filter application
-- 💾 **50% fewer** server requests
-- 🧠 **Zero learning curve** for end users
-
-</details>
 
 **🎯 What we support:**
 
@@ -429,77 +364,9 @@ Perfect for boolean fields like:
 - 🎨 **High contrast**: Works with accessibility themes
 - 📱 **Touch friendly**: Perfect for mobile and tablet users
 
-**🏆 Compliance:**
-
-- ✅ WCAG 2.1 AA compliant
-- ✅ Section 508 compliant
-- ✅ Keyboard-only navigation
-- ✅ Screen reader tested
-
 </details>
 
-### 👨‍💻 **4. Developer Experience**
 
-<details>
-<summary>Built by developers, for developers</summary>
-
-**🔥 What you'll love:**
-
-```typescript
-// ✨ Simple configuration
-custom: {
-  filterList: [
-    ['status', 'role'], // That's it!
-  ];
-}
-
-// 🚀 vs complex filter setup
-// No custom components needed
-// No backend modifications
-// Full TypeScript support
-// Zero learning curve
-```
-
-**🛠️ Developer Benefits:**
-
-- 📝 **5-minute setup**: Copy, paste, configure
-- 🔧 **Zero maintenance**: Works with existing fields
-- 🎯 **Type safe**: Full TypeScript integration
-- 🔌 **Extensible**: Easy to add custom filter types
-
-</details>
-
-### 🌟 **5. Advanced Features**
-
-<details>
-<summary>Features that make the difference</summary>
-
-**🌍 Multi-language Support:**
-
-```typescript
-// Built-in translations for 6 languages
-'en' | 'ar' | 'fr' | 'es' | 'zh' | 'he';
-// RTL support for Arabic and Hebrew
-```
-
-**🎨 Custom Layouts:**
-
-```typescript
-// Flexible row-based arrangement
-filterList: [
-  ['status', 'role', 'department'], // 3 in a row
-  [{ name: 'tags', width: '400px' }], // Custom width
-  ['isActive', 'isVerified'], // Side by side
-];
-```
-
-**🔗 URL Integration:**
-
-- 📋 **Bookmarkable**: Share filtered views via URL
-- 🔄 **Browser history**: Back/forward button support
-- 🔗 **Deep linking**: Direct links to filtered data
-
-</details>
 
 ## 🌍 Internationalization
 
@@ -520,6 +387,7 @@ The plugin speaks your users' language! Full translations included for:
 
 <details>
 <summary>🌐 <strong>Extend language support</strong></summary>
+PRs are welcomed
 
 ```typescript
 // In labels.ts, add your language
@@ -544,30 +412,8 @@ export const PLUGIN_LABELS = {
 };
 ```
 
-**🎯 Pro Tips:**
-
-- 🔄 **Auto-detection**: Plugin automatically uses user's browser language
-- 🛡️ **Fallback**: Falls back to English if translation missing
-- 🎨 **RTL Support**: Add `rtlLanguages` array for right-to-left languages
-
 </details>
 
-### 🎨 RTL Language Demo
-
-<details>
-<summary>📸 See RTL support in action</summary>
-
-![RTL Support](./screenshots/rtl-demo.png)
-_Arabic and Hebrew interfaces with proper right-to-left layout_
-
-**✨ RTL Features:**
-
-- 🔄 **Auto-detection**: Automatically switches to RTL layout
-- 🎯 **Proper alignment**: Text, buttons, and dropdowns align correctly
-- 📱 **Mobile optimized**: RTL works perfectly on mobile devices
-- 🎨 **Icon positioning**: Icons flip to match reading direction
-
-</details>
 
 ## 🔧 Advanced Configuration
 
@@ -629,40 +475,6 @@ CollectionQuickFilterPlugin({
 
 </details>
 
-### 🎨 Custom Styling
-
-<details>
-<summary>🎨 <strong>Make it match your brand</strong></summary>
-
-```css
-/* Override default styles in your CSS */
-.filter-container {
-  --filter-bg: #f8f9fa;
-  --filter-border: #e9ecef;
-  --filter-text: #495057;
-  --filter-active: #007bff;
-}
-
-/* Custom button styles */
-.filter-container .useTw button {
-  border-radius: 8px;
-  font-weight: 500;
-}
-
-/* Active filter highlighting */
-.filter-container .fill-current {
-  color: var(--filter-active);
-}
-```
-
-**🎨 Customization Options:**
-
-- 🎨 **Colors**: Match your admin theme
-- 📐 **Spacing**: Adjust padding and margins
-- 🔤 **Typography**: Custom fonts and sizes
-- 🎯 **Animations**: Add hover effects
-
-</details>
 
 
 ## Contributing
@@ -676,4 +488,4 @@ The plugin is designed to be extensible. To add new filter types:
 
 ## License
 
-This plugin is part of your PayloadCMS project and follows the same licensing terms.
+This plugin is licensed under the Apache License, Version 2.0.
