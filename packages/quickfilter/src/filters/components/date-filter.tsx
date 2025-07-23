@@ -202,6 +202,23 @@ export function DateFilter({
           <PopoverContent className='useTw w-80 p-0'>
             <div className='p-4'>
               <div className='grid grid-cols-2 gap-4'>
+
+                {/* Past Options - Right column */}
+                <div className='space-y-1'>
+                  <div
+                      className={cn(
+                          'text-sm font-semibold text-muted-foreground mb-2',
+                          isRTL && 'text-right',
+                      )}
+                  >
+                    {labels.past}
+                  </div>
+                  <div className='space-y-0.5'>
+                    {pastOptions.map((option) => (
+                        <div key={option.value}>{renderOptionWithDate(option)}</div>
+                    ))}
+                  </div>
+                </div>
                 {/* Future Options - Left column */}
                 <div className='space-y-1'>
                   <div
@@ -219,22 +236,6 @@ export function DateFilter({
                   </div>
                 </div>
 
-                {/* Past Options - Right column */}
-                <div className='space-y-1'>
-                  <div
-                    className={cn(
-                      'text-sm font-semibold text-muted-foreground mb-2',
-                      isRTL && 'text-right',
-                    )}
-                  >
-                    {labels.past}
-                  </div>
-                  <div className='space-y-0.5'>
-                    {pastOptions.map((option) => (
-                      <div key={option.value}>{renderOptionWithDate(option)}</div>
-                    ))}
-                  </div>
-                </div>
               </div>
 
               <Separator className='my-4' />
