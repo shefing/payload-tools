@@ -58,6 +58,7 @@ export function DateFilter({
     selectDate: getLabel('selectDate', localeCode),
     past: getLabel('past', localeCode),
     future: getLabel('future', localeCode),
+    presentFuture: getLabel('presentFuture', localeCode),
     custom: getLabel('customRange', localeCode),
     apply: getLabel('apply', localeCode),
     cancel: getLabel('cancel', localeCode),
@@ -209,7 +210,7 @@ export function DateFilter({
                       isRTL && 'text-right',
                     )}
                   >
-                    {labels.future}
+                    {labels.presentFuture}
                   </div>
                   <div className='space-y-0.5'>
                     {futureOptions.map((option) => (
