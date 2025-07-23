@@ -126,6 +126,22 @@ export function getDateRangeForOption(
         description: `(${formatDate(lastMonthStart, 'MM/yyyy')})`,
       };
 
+    case 'last7Days':
+      const last7DaysStart = startOfDay(subDays(now, 6));
+      return {
+        from: last7DaysStart,
+        to: endOfDay(now),
+        description: `(${formatDate(last7DaysStart, 'dd/MM')} - ${formatDate(now, 'dd/MM/yyyy')})`,
+      };
+
+    case 'last30Days':
+      const last30DaysStart = startOfDay(subDays(now, 29));
+      return {
+        from: last30DaysStart,
+        to: endOfDay(now),
+        description: `(${formatDate(last30DaysStart, 'dd/MM')} - ${formatDate(now, 'dd/MM/yyyy')})`,
+      };
+
     case 'allPast': {
       const yesterday = subDays(now, 1);
       return {
@@ -142,7 +158,7 @@ export function getDateRangeForOption(
         description: `(${formatDate(now, 'dd/MM/yyyy')})`,
       };
 
-    case 'nextWeek':
+    case 'thisWeek':
       const thisWeekStart = startOfWeek(now, { weekStartsOn: 0 });
       const thisWeekEnd = endOfWeek(now, { weekStartsOn: 0 });
       return {
@@ -151,13 +167,29 @@ export function getDateRangeForOption(
         description: `(${formatDate(thisWeekStart, 'dd/MM')} - ${formatDate(thisWeekEnd, 'dd/MM/yyyy')})`,
       };
 
-    case 'nextMonth':
+    case 'thisMonth':
       const thisMonthStart = startOfMonth(now);
       const thisMonthEnd = endOfMonth(now);
       return {
         from: thisMonthStart,
         to: thisMonthEnd,
         description: `(${formatDate(thisMonthStart, 'MM/yyyy')})`,
+      };
+
+    case 'next7Days':
+      const next7DaysEnd = endOfDay(addDays(now, 6));
+      return {
+        from: startOfDay(now),
+        to: next7DaysEnd,
+        description: `(${formatDate(now, 'dd/MM')} - ${formatDate(next7DaysEnd, 'dd/MM/yyyy')})`,
+      };
+
+    case 'next30Days':
+      const next30DaysEnd = endOfDay(addDays(now, 29));
+      return {
+        from: startOfDay(now),
+        to: next30DaysEnd,
+        description: `(${formatDate(now, 'dd/MM')} - ${formatDate(next30DaysEnd, 'dd/MM/yyyy')})`,
       };
 
     case 'allFuture':

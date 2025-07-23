@@ -39,3 +39,36 @@ Improve version control with a **custom version view** that displays "**Updated 
 ---
 
 💡 **Tip:** Each plugin is modular and can be integrated independently based on your project needs. Check out the linked documentation for installation instructions and configuration details.
+
+---
+
+## 🛠️ Development Notes
+
+### NPM Rate Limiting
+
+This repository includes an `.npmrc` configuration to handle npm rate limiting issues. If you encounter "Too Many Requests" errors when running npm commands (like `npm login`), the configuration provides:
+
+- Retry logic with exponential backoff
+- Network timeout settings
+- Connection limits to avoid hitting rate limits
+
+The `.npmrc` file is located at the root of the repository and applies to all npm operations.
+
+### Publishing Packages to NPM
+
+This repository includes a GitHub Action that allows you to publish any package to NPM:
+
+1. Go to the "Actions" tab in the GitHub repository
+2. Select the "Publish Package to NPM" workflow
+3. Click "Run workflow"
+4. Select the package you want to publish from the dropdown
+5. Choose the version type (patch, minor, major) to determine how the version number will be incremented
+6. Click "Run workflow" to start the publishing process
+
+The workflow will:
+- Validate that the selected package exists
+- Build the package
+- Bump the version according to your selection
+- Publish the package to NPM with public access
+
+**Note:** This action requires an NPM access token stored as a GitHub secret named `NPM_TOKEN`. Contact a repository administrator if you need to publish a package but don't have access to this secret.
