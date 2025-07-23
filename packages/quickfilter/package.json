@@ -70,7 +70,11 @@
     "@radix-ui/react-checkbox": "^1.1.4",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-scoped-preflight": "^3.4.10",
-    "tailwindcss": "3.4.17"
+    "tailwindcss": "3.4.17",
+    "lodash": "^4.17.21",
+    "@types/lodash": "^4.14.202",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.6.0"
   },
   "publishConfig": {
     "access": "public"
