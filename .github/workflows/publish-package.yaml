@@ -1,0 +1,60 @@
+name: Publish Package to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      package-name:
+        description: 'Package to publish'
+        required: true
+        type: choice
+        options:
+          - authorization
+          - authors-info
+          - color-picker
+          - comments
+          - cover-image
+          - cross-collection
+          - custom-version-view
+          - field-type-components-override
+          - icon-select
+          - quickfilter
+          - right-panel
+      version-type:
+        description: 'Version to bump (patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate package exists
+        run: |
+          if [ ! -d "packages/${{ inputs.package-name }}" ]; then
+            echo "Error: Package ${{ inputs.package-name }} does not exist"
+            exit 1
+          fi
+
+          if [ ! -f "packages/${{ inputs.package-name }}/package.json" ]; then
+            echo "Error: package.json not found in packages/${{ inputs.package-name }}"
+            exit 1
+          fi
+
+          echo "Package ${{ inputs.package-name }} validated successfully"
+
+  publish:
+    needs: validate
+    uses: ./.github/workflows/publish-plugin-template.yaml
+    with:
+      plugin-name: ${{ inputs.package-name }}
+      version-type: ${{ inputs.version-type }}
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
