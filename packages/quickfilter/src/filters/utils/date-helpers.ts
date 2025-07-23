@@ -114,7 +114,7 @@ export function getDateRangeForOption(
       return {
         from: lastWeekStart,
         to: lastWeekEnd,
-        description: `(${formatDate(lastWeekStart, 'dd/MM')} - ${formatDate(lastWeekEnd, 'dd/MM/yyyy')})`,
+        description: `(${formatDate(lastWeekStart, 'dd/MM')}-${formatDate(lastWeekEnd, 'dd/MM/yyyy')})`,
       };
 
     case 'lastMonth':
@@ -131,7 +131,7 @@ export function getDateRangeForOption(
       return {
         from: last7DaysStart,
         to: endOfDay(now),
-        description: `(${formatDate(last7DaysStart, 'dd/MM')} - ${formatDate(now, 'dd/MM/yyyy')})`,
+        description: `(${formatDate(last7DaysStart, 'dd/MM')}-${formatDate(now, 'dd/MM/yyyy')})`,
       };
 
     case 'last30Days':
@@ -139,7 +139,7 @@ export function getDateRangeForOption(
       return {
         from: last30DaysStart,
         to: endOfDay(now),
-        description: `(${formatDate(last30DaysStart, 'dd/MM')} - ${formatDate(now, 'dd/MM/yyyy')})`,
+        description: `(${formatDate(last30DaysStart, 'dd/MM')}-${formatDate(now, 'dd/MM/yyyy')})`,
       };
 
     case 'allPast': {
@@ -164,7 +164,7 @@ export function getDateRangeForOption(
       return {
         from: thisWeekStart,
         to: thisWeekEnd,
-        description: `(${formatDate(thisWeekStart, 'dd/MM')} - ${formatDate(thisWeekEnd, 'dd/MM/yyyy')})`,
+        description: `(${formatDate(thisWeekStart, 'dd/MM')}-${formatDate(thisWeekEnd, 'dd/MM/yyyy')})`,
       };
 
     case 'thisMonth':
@@ -181,7 +181,7 @@ export function getDateRangeForOption(
       return {
         from: startOfDay(now),
         to: next7DaysEnd,
-        description: `(${formatDate(now, 'dd/MM')} - ${formatDate(next7DaysEnd, 'dd/MM/yyyy')})`,
+        description: `(${formatDate(now, 'dd/MM')}-${formatDate(next7DaysEnd, 'dd/MM/yyyy')})`,
       };
 
     case 'next30Days':
@@ -189,7 +189,7 @@ export function getDateRangeForOption(
       return {
         from: startOfDay(now),
         to: next30DaysEnd,
-        description: `(${formatDate(now, 'dd/MM')} - ${formatDate(next30DaysEnd, 'dd/MM/yyyy')})`,
+        description: `(${formatDate(now, 'dd/MM')}-${formatDate(next30DaysEnd, 'dd/MM/yyyy')})`,
       };
 
     case 'allFuture':
