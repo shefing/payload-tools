@@ -124,9 +124,9 @@ export function DateFilter({
       if (from && to) {
         return `${formatDate(from, 'dd/MM/yyyy')}-${formatDate(to, 'dd/MM/yyyy')}`;
       } else if (from) {
-        return `${labels.from}: ${formatDate(from, 'dd/MM/yyyy')}`;
+        return `${labels.from}:${formatDate(from, 'dd/MM/yyyy')}`;
       } else if (to) {
-        return `${labels.to}: ${formatDate(to, 'dd/MM/yyyy')}`;
+        return `${labels.to}:${formatDate(to, 'dd/MM/yyyy')}`;
       }
       return labels.custom;
     }
@@ -135,7 +135,7 @@ export function DateFilter({
       const allOptions = [...pastOptions, ...futureOptions];
       const option = allOptions.find((opt) => opt.value === internalValue.predefinedValue);
       const dateRange = getDateRangeForOption(internalValue.predefinedValue, locale.code);
-      return `${option?.label || internalValue.predefinedValue} ${dateRange.description}`;
+      return `${option?.label || internalValue.predefinedValue}${dateRange.description}`;
     }
 
     return labels.selectOption;
@@ -193,7 +193,7 @@ export function DateFilter({
               variant='outline'
               role='combobox'
               aria-expanded={isOpen}
-              className='useTw w-full justify-between bg-background relative min-w-70'
+              className='useTw w-full justify-between bg-background relative min-w-70 px-2'
             >
               <span className={`useTw truncate ${isRTL && 'text-right'}`}>{getDisplayValue()}</span>
               <ChevronDown className='useTw h-4 w-4 shrink-0 opacity-50' />
