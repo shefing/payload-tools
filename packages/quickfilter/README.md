@@ -1,6 +1,6 @@
 # 🚀 QuickFilter Plugin for PayloadCMS
 
-> ⚡ **Lightning-fast filtering that your users will love!**
+⚡ **Lightning-fast filtering that your users will love!**
 
 Transform your PayloadCMS admin experience with instant, intuitive filters that appear right where you need them. Say goodbye to clunky filter forms and hello to seamless data exploration!
 
