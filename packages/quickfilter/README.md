@@ -1,8 +1,8 @@
 # 🚀 QuickFilter Plugin for PayloadCMS
 
-⚡ **Lightning-fast filtering that your users will love!**
+⚡ **Lightning-fast and intuitive filtering that your users will love!**
 
-Transform your PayloadCMS admin experience with instant, intuitive filters that appear right where you need them. Say goodbye to clunky filter forms and hello to seamless data exploration!
+Transform your PayloadCMS admin experience with instant, intuitive filters that appear right where you need them. Say goodbye to clunky filter forms and welcome to seamless data exploration!
 
 ## ✨ Features
 
@@ -184,7 +184,7 @@ filterList: [
 
 **✨ What you get:**
 
-- 🕐 **Predefined ranges**: Yesterday, Last Week, Last Month, All Past
+- 🕐 **Predefined time ranges**: Yesterday, Last Week, Last Month, All Past
 - 🔮 **Future options**: Today, Next Week, Next Month, All Future
 - 🎯 **Custom range**: Pick any from/to dates
 - 🌍 **Localized**: Date formats adapt to user's language
@@ -233,7 +233,7 @@ filterList: [
 
 - ✅ **Checked**: Show only `true` values
 - ❌ **Unchecked**: Show only `false` values
-- ➖ **Indeterminate**: Show all (default)
+- ➖ **Undefined**: Show all (default)
 
 Perfect for boolean fields like active/inactive, published/unpublished, etc.
 
@@ -325,7 +325,7 @@ The magic happens right above your collection table! Here's what your users will
 | -------------------- | ------ | ------------------------ | -------------------------- |
 | ✅ **Checked**       | `[✓]`  | Show only `true` values  | "Show only active users"   |
 | ❌ **Unchecked**     | `[ ]`  | Show only `false` values | "Show only inactive users" |
-| ➖ **Indeterminate** | `[-]`  | Show all values          | "Show everyone" (default)  |
+| ➖ **Undefined** | `[-]`  | Show all values          | "Show everyone" (default)  |
 
 Perfect for boolean fields like:
 
@@ -345,10 +345,10 @@ Perfect for boolean fields like:
 
 | Aspect            | QuickFilter Experience                      | Regular Filter Experience                  |
 | ----------------- | ------------------------------------------- | ------------------------------------------ |
+| **🎯 Simplicity** | Click and filter                            | Navigate to filter page, fill form, submit |
 | **⚡ Speed**      | Instant results as you click                | Wait for page reload every time            |
 | **👀 Clarity**    | `🔍 3 Active filters: Status • Role • Date` | Guess what filters are active              |
-| **💾 Memory**     | Filters persist across sessions             | Start over every time                      |
-| **🎯 Simplicity** | Click and filter                            | Navigate to filter page, fill form, submit |
+| **💾 Persistent**     | Filters persist across sessions             | Start over every time                      |
 
 
 </details>
@@ -377,11 +377,11 @@ The plugin speaks your users' language! Full translations included for:
 | Language       | Code | RTL Support | Status      |
 | -------------- | ---- | ----------- | ----------- |
 | 🇺🇸 **English** | `en` | -           | ✅ Complete |
+| 🇮🇱 **Hebrew**  | `he` | ✅ Yes      | ✅ Complete |
 | 🇸🇦 **Arabic**  | `ar` | ✅ Yes      | ✅ Complete |
 | 🇫🇷 **French**  | `fr` | -           | ✅ Complete |
 | 🇪🇸 **Spanish** | `es` | -           | ✅ Complete |
 | 🇨🇳 **Chinese** | `zh` | -           | ✅ Complete |
-| 🇮🇱 **Hebrew**  | `he` | ✅ Yes      | ✅ Complete |
 
 ### 🔧 Adding Custom Languages
 
