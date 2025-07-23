@@ -46,7 +46,11 @@
     "react": "19.0.0",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
-    "postcss": "^8.5.2"
+    "postcss": "^8.5.2",
+    "rimraf": "^5.0.5",
+    "copyfiles": "^2.4.1",
+    "@swc/cli": "^0.1.65",
+    "@swc/core": "^1.6.3"
   },
   "dependencies": {
     "payload": "^3.47.0",

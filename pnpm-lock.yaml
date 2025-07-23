@@ -466,9 +466,21 @@ importers:
         specifier: 5.7.3
         version: 5.7.3
     devDependencies:
+      '@swc/cli':
+        specifier: ^0.1.65
+        version: 0.1.65(@swc/core@1.11.8(@swc/helpers@0.5.15))(chokidar@3.6.0)
+      '@swc/core':
+        specifier: ^1.6.3
+        version: 1.11.8(@swc/helpers@0.5.15)
+      copyfiles:
+        specifier: ^2.4.1
+        version: 2.4.1
       postcss:
         specifier: ^8.5.2
         version: 8.5.3
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.10
 
   packages/right-panel:
     dependencies:
