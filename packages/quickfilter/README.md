@@ -17,7 +17,11 @@ Transform your PayloadCMS admin experience with instant, intuitive filters that 
 
 ### 🎥 See It In Action
 
-[Video placeholder]
+
+
+https://github.com/user-attachments/assets/e609ca50-26fc-46c3-98fe-1651d2bacc7b
+
+
 
 ---
 
