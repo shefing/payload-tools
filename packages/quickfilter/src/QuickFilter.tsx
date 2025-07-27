@@ -401,7 +401,7 @@ const QuickFilter = ({
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterValues, fields, i18n.language, refineListData]);
+  }, [filterValues, fields, i18n.language]);
   // Effect for persisting to localStorage
   useEffect(() => {
     try {
