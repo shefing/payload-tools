@@ -394,11 +394,13 @@ const QuickFilter = ({
 
     // Only update if the query has actually changed to avoid unnecessary updates
     if (!isEqual(newWhere, query.where)) {
-      refineListData({
-        columns: parseColumns(query.columns),
-        where: newWhere,
-        page: '1',
-      });
+      if(newWhere){
+        refineListData({
+          columns: parseColumns(query.columns),
+          where: newWhere,
+          page: '1',
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterValues, fields, i18n.language, refineListData]);
