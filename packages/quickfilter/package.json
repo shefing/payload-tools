@@ -1,6 +1,6 @@
 {
   "name": "@shefing/quickfilter",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -35,7 +35,7 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "payload": "^3.47.0",
+    "payload": "^3.49.0",
     "typescript": "5.7.3",
     "lucide-react": "^0.475.0",
     "@radix-ui/react-slot": "^1.2.3",
@@ -53,7 +53,7 @@
     "@swc/core": "^1.6.3"
   },
   "dependencies": {
-    "payload": "^3.47.0",
+    "payload": "^3.49.0",
     "typescript": "5.7.3",
     "lucide-react": "^0.475.0",
     "@radix-ui/react-slot": "^1.2.3",
@@ -63,8 +63,8 @@
     "react": "19.0.0",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
-    "@payloadcms/translations": "^3.47.0",
-    "@payloadcms/ui": "^3.47.0",
+    "@payloadcms/translations": "^3.49.0",
+    "@payloadcms/ui": "^3.49.0",
     "@radix-ui/react-label": "^2.1.2",
     "react-day-picker": "^9.8.0",
     "@radix-ui/react-popover": "^1.1.6",
