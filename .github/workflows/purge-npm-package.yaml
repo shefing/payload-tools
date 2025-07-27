@@ -1,0 +1,153 @@
+name: Purge Package from NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      package-name:
+        description: 'Package to purge from NPM'
+        required: true
+        type: choice
+        options:
+          - authorization
+          - authors-info
+          - color-picker
+          - comments
+          - cover-image
+          - cross-collection
+          - custom-version-view
+          - field-type-components-override
+          - icon-select
+          - quickfilter
+          - right-panel
+      confirm-purge:
+        description: 'Type "PURGE" to confirm (this action is irreversible)'
+        required: true
+        type: string
+      dry-run:
+        description: 'Dry run (no actual unpublishing)'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate package exists
+        run: |
+          if [ ! -d "packages/${{ inputs.package-name }}" ]; then
+            echo "Error: Package ${{ inputs.package-name }} does not exist"
+            exit 1
+          fi
+
+          if [ ! -f "packages/${{ inputs.package-name }}/package.json" ]; then
+            echo "Error: package.json not found in packages/${{ inputs.package-name }}"
+            exit 1
+          fi
+
+          if [ "${{ inputs.confirm-purge }}" != "PURGE" ]; then
+            echo "Error: You must type 'PURGE' to confirm this action"
+            exit 1
+          fi
+
+          echo "Package ${{ inputs.package-name }} validated successfully"
+
+  purge:
+    needs: validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/${{ inputs.package-name }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Configure NPM authentication
+        shell: bash
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          echo "@shefing:registry=https://registry.npmjs.org/" >> ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Get package info
+        id: package-info
+        shell: bash
+        run: |
+          PACKAGE_NAME=$(pnpm pkg get name | tr -d '"')
+          echo "Package name: $PACKAGE_NAME"
+          echo "package_name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+
+      - name: List all versions
+        id: list-versions
+        shell: bash
+        run: |
+          echo "Fetching all versions of ${{ steps.package-info.outputs.package_name }}..."
+          # Use npm view to get versions and ensure it's a valid JSON array
+          VERSIONS=$(npm view ${{ steps.package-info.outputs.package_name }} versions --json 2>/dev/null || echo "[]")
+          echo "Available versions: $VERSIONS"
+          # Store the versions as a properly escaped JSON string
+          echo "versions<<EOF" >> $GITHUB_OUTPUT
+          echo "$VERSIONS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Purge all versions
+        if: inputs.dry-run == 'false'
+        shell: bash
+        run: |
+          # Parse the JSON array of versions
+          readarray -t VERSION_ARRAY < <(echo '${{ steps.list-versions.outputs.versions }}' | jq -r '.[]')
+
+          if [ ${#VERSION_ARRAY[@]} -eq 0 ]; then
+            echo "No versions found to unpublish"
+            exit 0
+          fi
+
+          for VERSION in "${VERSION_ARRAY[@]}"; do
+            echo "Unpublishing ${{ steps.package-info.outputs.package_name }}@$VERSION..."
+            npm unpublish ${{ steps.package-info.outputs.package_name }}@$VERSION --force
+
+            # Add a small delay to avoid rate limiting
+            sleep 2
+          done
+
+          echo "All versions of ${{ steps.package-info.outputs.package_name }} have been unpublished"
+
+      - name: Dry run - List versions that would be purged
+        if: inputs.dry-run == 'true'
+        shell: bash
+        run: |
+          # Parse the JSON array of versions
+          readarray -t VERSION_ARRAY < <(echo '${{ steps.list-versions.outputs.versions }}' | jq -r '.[]')
+
+          if [ ${#VERSION_ARRAY[@]} -eq 0 ]; then
+            echo "No versions found to unpublish"
+            exit 0
+          fi
+
+          echo "DRY RUN - The following versions would be unpublished:"
+          for VERSION in "${VERSION_ARRAY[@]}"; do
+            echo "- ${{ steps.package-info.outputs.package_name }}@$VERSION"
+          done
+
+          echo "To actually unpublish these versions, set 'dry-run' to 'false'"
