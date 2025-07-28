@@ -1,10 +1,12 @@
-import type { Config } from 'payload';
+import type { CollectionSlug, Config } from 'payload';
 
 export type CollectionFilterPluginConfig = {
   /**
    * List of collections to add filters to
    */
   disabled?: boolean;
+  excludedCollections?: CollectionSlug[];
+  includedCollections?: CollectionSlug[];
 };
 
 export const CollectionQuickFilterPlugin =
@@ -16,9 +18,16 @@ export const CollectionQuickFilterPlugin =
 
     // Process each collection to add the QuickFilter component
     config.collections = config.collections.map((collection) => {
+      // Check if this collection should be processed based on includedCollections/excludedCollections
+      const shouldProcessCollection = pluginOptions.includedCollections 
+        ? pluginOptions.includedCollections.includes(collection.slug) 
+        : pluginOptions.excludedCollections 
+          ? !pluginOptions.excludedCollections.includes(collection.slug) 
+          : true;
+
       // Check if the collection has a filterList configuration
       // or if it's specified in the plugin options
-      if (collection.custom?.filterList && Array.isArray(collection.custom.filterList)) {
+      if (shouldProcessCollection && collection.custom?.filterList && Array.isArray(collection.custom.filterList)) {
         // Clone the collection to avoid mutating the original
         const newCollection = { ...collection };
 

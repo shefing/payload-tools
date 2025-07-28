@@ -41,7 +41,11 @@ export const addAccess =
       ...incomingConfig,
       collections: incomingConfig.collections?.map((collection) => ({
         ...collection,
-        ...(!pluginConfig.excludedCollections?.includes(collection.slug) && {
+        ...((pluginConfig.includedCollections 
+            ? pluginConfig.includedCollections.includes(collection.slug) 
+            : pluginConfig.excludedCollections 
+              ? !pluginConfig.excludedCollections.includes(collection.slug) 
+              : true) && {
           access: collection.labels
             ? createAccessCollection(
                 collection.slug,

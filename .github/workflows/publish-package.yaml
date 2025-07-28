@@ -19,6 +19,7 @@ on:
           - icon-select
           - quickfilter
           - right-panel
+          - reset-list-view
       version-type:
         description: 'Version to bump (patch, minor, major)'
         required: true

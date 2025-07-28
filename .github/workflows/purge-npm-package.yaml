@@ -19,6 +19,7 @@ on:
           - icon-select
           - quickfilter
           - right-panel
+          - reset-list-view
       confirm-purge:
         description: 'Type "PURGE" to confirm (this action is irreversible)'
         required: true

@@ -4,4 +4,5 @@ export type AuthorizationPluginConfig = {
   rolesCollection?: string;
   permissionsField?: string;
   excludedCollections?: CollectionSlug[];
+  includedCollections?: CollectionSlug[];
 };
