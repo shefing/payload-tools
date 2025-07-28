@@ -57,7 +57,7 @@ export const CollectionResetPreferencesPlugin =
           clientProps: {
             slug: collection.slug,
           },
-          path: '@shefing/reset-list-view/client',
+          path: '@shefing/reset-list-view/ResetListViewButton',
         })
 
         return newCollection

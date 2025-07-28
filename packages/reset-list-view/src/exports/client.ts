@@ -1,1 +1,1 @@
-export * from '../components/ResetListViewButton.js'
+export * from '../ResetListViewButton.js'

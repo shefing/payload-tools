@@ -1,6 +1,6 @@
 {
   "name": "@shefing/reset-list-view",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Reset List View Preferences",
   "license": "MIT",
   "author": "shefing",
@@ -16,9 +16,9 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
-    "./QuickFilter": {
-      "import": "./dist/ResetListView.js",
-      "require": "./dist/ResetListView.js"
+    "./ResetListViewButton": {
+      "import": "./dist/ResetListViewButton.js",
+      "require": "./dist/ResetListViewButton.js"
     }
   },
   "scripts": {
