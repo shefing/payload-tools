@@ -36,9 +36,48 @@ Improve version control with a **custom version view** that displays "**Updated 
 10. **🚀 [Quick Filter](packages/quickfilter/)**  
    Transform your PayloadCMS admin experience with instant, intuitive filters that appear right where you need them. Say goodbye to clunky filter forms and hello to seamless data exploration!
 
+11. **🔄 [Reset List View](packages/reset-list-view/)**  
+   Add a "Reset Preferences" button to collection list views, allowing users to quickly reset their list view preferences (columns, filters, pagination, etc.) to the default state.
+
 ---
 
 💡 **Tip:** Each plugin is modular and can be integrated independently based on your project needs. Check out the linked documentation for installation instructions and configuration details.
 
 ---
 
+## 🛠️ Development Notes
+
+### NPM Package Management
+
+#### Publishing Packages to NPM
+
+This repository includes a GitHub Action that allows you to publish any package to NPM:
+
+1. Go to the "Actions" tab in the GitHub repository
+2. Select the "Publish Package to NPM" workflow
+3. Click "Run workflow"
+4. Select the package you want to publish from the dropdown
+5. Choose the version type (patch, minor, major) to determine how the version number will be incremented
+6. Click "Run workflow" to start the publishing process
+
+**Note:** This action requires an NPM access token stored as a GitHub secret named `NPM_TOKEN`.
+
+#### Purging Packages from NPM
+
+For maintenance purposes, you can purge all versions of a package from NPM using the "Purge Package from NPM" workflow:
+
+1. Go to the "Actions" tab in the GitHub repository
+2. Select the "Purge Package from NPM" workflow
+3. Click "Run workflow"
+4. Select the package you want to purge from the dropdown
+5. Type "PURGE" in the confirmation field (this is required to prevent accidental purges)
+6. Leave "Dry run" set to "true" to preview what would be unpublished without actually doing it
+7. Click "Run workflow" to start the process
+
+When you're ready to actually purge the package:
+1. Follow the same steps, but set "Dry run" to "false"
+2. The workflow will unpublish all versions of the package from NPM
+
+**Warning:** Purging packages is irreversible and may affect users who depend on your package. Use with caution.
+
+---
