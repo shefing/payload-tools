@@ -392,22 +392,20 @@ const QuickFilter = ({
       newWhere = allConditions[0];
     }
 
-    // Only update if the query has actually changed to avoid unnecessary updates
-    if (!isEqual(newWhere, query.where)) {
-      if(newWhere && Object.keys(newWhere).length > 0){
-        const refinedData = {
-          where: newWhere,
-          page: 1,
-        } as ListQuery;
+        // Only update if the query has actually changed to avoid unnecessary updates
+    if (!isEqual(newWhere, query.where) && query.where) {
+      const refinedData = {
+        where: newWhere,
+        page: 1,
+      } as ListQuery
 
-        if (query.columns) {
-          refinedData.columns = parseColumns(query.columns);
-        }
-
-        refineListData(refinedData).then(r => {
-          console.log("Query refreshed",refinedData)
-        });
+      if (query.columns) {
+        refinedData.columns = parseColumns(query.columns)
       }
+
+      refineListData(refinedData).then((r) => {
+        console.log('Query refreshed', refinedData)
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterValues, fields, i18n.language]);
