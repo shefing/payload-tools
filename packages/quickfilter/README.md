@@ -1,7 +1,5 @@
 # 🚀 QuickFilter Plugin for PayloadCMS
 
-#!!! Payload 3.49 breaks the plugin - https://github.com/payloadcms/payload/pull/13200 We are working to fix that
-
 ⚡ **Lightning-fast and intuitive filtering that your users will love!**
 
 Transform your PayloadCMS admin experience with instant, intuitive filters that appear right where you need them. Say goodbye to clunky filter forms and welcome to seamless data exploration!
