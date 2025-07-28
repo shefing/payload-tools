@@ -14,7 +14,7 @@ import type {
   SelectFilterValue,
 } from './filters/types/filters-type';
 import { groupFiltersByRow, parseColumns } from './filters/utils/layout-helpers';
-import { ChevronDown, ChevronUp, Filter, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Filter, RefreshCw, X } from 'lucide-react';
 
 import { getDateRangeForOption } from './filters/utils/date-helpers';
 import { isEqual } from 'lodash';
@@ -508,6 +508,10 @@ const QuickFilter = ({
     setFilterValues({});
   };
 
+  const refreshFilters = () => {
+    refineListData(query)
+  }
+
   const memoizedFilterRows = useMemo(() => {
     return filterRows.map((row) => (
         <div key={row.rowNumber}>
@@ -564,6 +568,15 @@ const QuickFilter = ({
                       className='ml-1 p-0.5 hover:bg-muted rounded-sm transition-colors flex-shrink-0'
                   >
                 <X className='h-3 w-3 text-gray-500' />
+              </span>
+              <span
+                onClick={(e) => {
+                  e.stopPropagation()
+                  refreshFilters()
+                }}
+                className="ml-1 p-0.5 hover:bg-muted rounded-sm transition-colors flex-shrink-0"
+              >
+                <RefreshCw className="h-3 w-3 text-gray-500" />
               </span>
                 </>
             ) : (
