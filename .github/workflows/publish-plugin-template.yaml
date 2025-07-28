@@ -10,7 +10,7 @@ on:
         required: false
         type: string
         default: 'patch'
-        description: 'Version type to bump: patch, minor, or major'
+        description: 'Version type to bump: patch (1.0.0 -> 1.0.1), minor (1.0.0 -> 1.1.0), major (1.0.0 -> 2.0.0)'
     secrets:
       NPM_TOKEN:
         required: true

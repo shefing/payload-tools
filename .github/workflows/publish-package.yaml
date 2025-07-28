@@ -21,7 +21,7 @@ on:
           - right-panel
           - reset-list-view
       version-type:
-        description: 'Version to bump (patch, minor, major)'
+        description: 'Version to bump: patch (1.0.0 -> 1.0.1), minor (1.0.0 -> 1.1.0), major (1.0.0 -> 2.0.0)'
         required: true
         default: 'patch'
         type: choice

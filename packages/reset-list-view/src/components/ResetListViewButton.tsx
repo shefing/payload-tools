@@ -49,3 +49,4 @@ export const ResetListViewButton: React.FC<Props> = ({ slug }) => {
     {t('general:resetPreferences')}
   </Button>
 }
+ export default ResetListViewButton
