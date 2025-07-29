@@ -218,10 +218,10 @@ export function SelectFilter({
 
       {multiSelect && selectedValues.length > 0 && selectedValues.length < options.length && (
         <div className='flex flex-wrap gap-1 mt-2'>
-          {selectedValues.map((value) => {
+          {selectedValues.map((value, index) => {
             const option = options.find((opt) => opt.value === value);
             return (
-              <Badge key={value} variant='secondary' className='text-xs bg-background border'>
+              <Badge key={value+index} variant='secondary' className='text-xs bg-background border'>
                 {option?.label || value}
                 <button
                   className='ml-1 hover:bg-muted rounded-full'
