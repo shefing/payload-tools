@@ -1,6 +1,6 @@
 {
   "name": "@shefing/reset-list-view",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Reset List View Preferences",
   "license": "MIT",
   "author": "shefing",
@@ -16,9 +16,9 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
-    "./QuickFilter": {
-      "import": "./dist/ResetListView.js",
-      "require": "./dist/ResetListView.js"
+    "./ResetListViewButton": {
+      "import": "./dist/ResetListViewButton.js",
+      "require": "./dist/ResetListViewButton.js"
     }
   },
   "scripts": {
@@ -49,6 +49,7 @@
     "@payloadcms/next": "3.49.0",
     "@payloadcms/richtext-lexical": "3.49.0",
     "@payloadcms/ui": "3.49.0",
+    "@payloadcms/translations": "^3.49.0",
     "@playwright/test": "^1.52.0",
     "@swc-node/register": "1.10.9",
     "@swc/cli": "0.6.0",
@@ -84,5 +85,5 @@
   },
   "publishConfig": {
     "access": "public"
-      }
+  }
 }

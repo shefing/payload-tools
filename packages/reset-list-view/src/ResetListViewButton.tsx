@@ -1,5 +1,6 @@
 'use client'
-import {Button, useConfig, useTranslation } from '@payloadcms/ui'
+import { getTranslation } from '@payloadcms/translations'
+import {PopupList, useConfig, useTranslation } from '@payloadcms/ui'
 import { useAuth } from '@payloadcms/ui/providers/Auth'
 import { stringify } from 'qs-esm'
 
@@ -8,9 +9,10 @@ type Props = {
 }
 
 export const ResetListViewButton: React.FC<Props> = ({ slug }) => {
-  const { config } = useConfig()
+  const { config ,getEntityConfig} = useConfig()
   const { user } = useAuth()
-  const {  t } = useTranslation()
+  const {  i18n ,t} = useTranslation()
+  const currentCollectionConfig = getEntityConfig({ collectionSlug:slug })
 
   const {
     routes: { api },
@@ -44,9 +46,9 @@ export const ResetListViewButton: React.FC<Props> = ({ slug }) => {
       console.error('Error resetting list view preferences:', error)
     }
   }
-
-  return <Button onClick={handleReset} size="small">
-    {t('general:resetPreferences')}
-  </Button>
+  return (
+      <PopupList.Button onClick={handleReset}>
+        {t('general:resetPreferences')+"-"+getTranslation(currentCollectionConfig.labels.plural, i18n)}
+      </PopupList.Button>)
 }
  export default ResetListViewButton
