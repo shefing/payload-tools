@@ -354,7 +354,7 @@ const QuickFilter = ({
         locale,
     );
 
-    if (!isEqual(valuesFromQuery, filterValues)) {
+   if (!(isEqual(valuesFromQuery, filterValues) || !valuesFromQuery)) {
       // Lock to prevent feedback loop when internal state changes
       isSyncingFromQuery.current = true;
       setFilterValues(valuesFromQuery);
@@ -393,15 +393,11 @@ const QuickFilter = ({
     }
 
         // Only update if the query has actually changed to avoid unnecessary updates
-    if (!isEqual(newWhere, query.where) && query.where) {
+    if (!(isEqual(newWhere, query.where) || (Object.keys(newWhere).length == 0 && !query.where))) {
       const refinedData = {
         where: newWhere,
         page: 1,
       } as ListQuery
-
-      if (query.columns) {
-        refinedData.columns = parseColumns(query.columns)
-      }
 
       refineListData(refinedData).then((r) => {
         console.log('Query refreshed', refinedData)
@@ -511,7 +507,6 @@ const QuickFilter = ({
   const refreshFilters = () => {
     refineListData(query)
   }
-
   const memoizedFilterRows = useMemo(() => {
     return filterRows.map((row) => (
         <div key={row.rowNumber}>
