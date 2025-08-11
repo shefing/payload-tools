@@ -86,7 +86,7 @@ export const parseWhereClauseToFilterValues = (
         if (fieldDef && condition && typeof condition === 'object') {
           if ('equals' in condition) {
             if (fieldDef.type === 'checkbox') {
-              values[fieldName] = condition.equals == 'true' ? 'checked' : 'unchecked'
+              values[fieldName] = (condition.equals == 'true'  || condition.equals === true) ? 'checked' : 'unchecked'
             } else if (fieldDef.type === 'select') {
               values[fieldName] = { selectedValues: [condition.equals] }
             }
