@@ -1,6 +1,5 @@
 import type { CollectionSlug, Config } from 'payload';
 
-export * from './nav/index';
 
 export type CollectionFilterPluginConfig = {
   /**
