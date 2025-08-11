@@ -7,7 +7,6 @@ import { getTranslation } from '@payloadcms/translations'
 import FilterField from './FilterField'
 import { getLabel, SupportedLocale } from './labels'
 import type {
-  CheckboxFilterState,
   DateFilterValue,
   FilterDetaild,
   FilterRow,
@@ -15,15 +14,13 @@ import type {
 } from './filters/types/filters-type'
 import { groupFiltersByRow } from './filters/utils/layout-helpers'
 import { ChevronDown, ChevronUp, Filter, RefreshCw, X } from 'lucide-react'
-
-import { getDateRangeForOption } from './filters/utils/date-helpers'
 import { isEqual } from 'lodash'
-import {
-  futureOptionKeys,
-  getDateFilterOptions,
-  pastOptionKeys,
-} from './filters/constants/date-filter-options'
+import { getDateFilterOptions } from './filters/constants/date-filter-options'
 import { Button } from './ui/button'
+import {
+  buildQuickFilterConditions,
+  parseWhereClauseToFilterValues,
+} from './lib/utils'
 
 // Helper function to get localized label
 const getLocalizedLabel = (label: any, locale: SupportedLocale): string => {
@@ -67,74 +64,6 @@ function findFieldsByName(fields: ClientField[], fieldNames: string[]): ClientFi
   return results
 }
 
-// Builds an array of condition objects from the quick filter values
-const buildQuickFilterConditions = (
-  values: Record<string, any>,
-  fieldDefs: FilterDetaild[],
-  locale: SupportedLocale,
-): Record<string, any>[] => {
-  const conditions: Record<string, any>[] = []
-
-  Object.entries(values).forEach(([fieldName, value]) => {
-    if (!value) return
-    const fieldDef = fieldDefs.find((f) => f.name === fieldName)
-    if (!fieldDef) return
-
-    let condition: Record<string, any> | null = null
-
-    switch (fieldDef.type) {
-      case 'date': {
-        const dateValue = value as DateFilterValue
-        let from: Date | undefined
-        let to: Date | undefined
-
-        if (dateValue.predefinedValue) {
-          const range = getDateRangeForOption(dateValue.predefinedValue, locale)
-          from = range.from
-          to = range.to
-        } else if (dateValue.customRange) {
-          if (dateValue.customRange.from) from = new Date(dateValue.customRange.from)
-          if (dateValue.customRange.to) to = new Date(dateValue.customRange.to)
-        }
-
-        if (from || to) {
-          const dateQuery: any = {}
-          if (from) dateQuery.greater_than_equal = from
-          if (to) dateQuery.less_than_equal = to
-          if (Object.keys(dateQuery).length > 0) {
-            condition = { [fieldName]: dateQuery }
-          }
-        }
-        break
-      }
-      case 'select': {
-        const selectValue = value as SelectFilterValue
-        if (selectValue.selectedValues && selectValue.selectedValues.length > 0) {
-          if (selectValue.selectedValues.length === 1) {
-            condition = { [fieldName]: { equals: selectValue.selectedValues[0] } }
-          } else {
-            condition = { [fieldName]: { in: selectValue.selectedValues } }
-          }
-        }
-        break
-      }
-      case 'checkbox': {
-        const checkboxState = value as CheckboxFilterState
-        if (checkboxState === 'checked') {
-          condition = { [fieldName]: { equals: 'true' } }
-        } else if (checkboxState === 'unchecked') {
-          condition = { [fieldName]: { equals: 'false' } }
-        }
-        break
-      }
-    }
-    if (condition) {
-      conditions.push(condition)
-    }
-  })
-  return conditions
-}
-
 // Helper function to remove quick filter conditions from a 'where' clause
 const cleanWhereClause = (clause: any, fieldsToClean: Set<string>): any => {
   if (!clause || typeof clause !== 'object' || Array.isArray(clause)) {
@@ -169,102 +98,6 @@ const cleanWhereClause = (clause: any, fieldsToClean: Set<string>): any => {
   }
 
   return newClause
-}
-
-// Translates URL query conditions to the quick filter's internal state
-const parseWhereClauseToFilterValues = (
-  where: any,
-  fields: FilterDetaild[],
-  locale: SupportedLocale,
-): Record<string, any> => {
-  const values: Record<string, any> = {}
-  const fieldNames = new Set(fields.map((f) => f.name))
-
-  const recursiveParse = (clause: any) => {
-    if (!clause || typeof clause !== 'object') return
-
-    if (clause.and) {
-      clause.and.forEach(recursiveParse)
-      return
-    }
-    if (clause.or) {
-      if (clause.or.length > 1) {
-        return
-      }
-      clause.or.forEach(recursiveParse)
-      return
-    }
-    for (const fieldName in clause) {
-      if (fieldNames.has(fieldName)) {
-        const fieldDef = fields.find((f) => f.name === fieldName)
-        const condition = clause[fieldName]
-
-        if (fieldDef && condition && typeof condition === 'object') {
-          if ('equals' in condition) {
-            if (fieldDef.type === 'checkbox') {
-              values[fieldName] = condition.equals == 'true' ? 'checked' : 'unchecked'
-            } else if (fieldDef.type === 'select') {
-              values[fieldName] = { selectedValues: [condition.equals] }
-            }
-          } else if ('in' in condition && Array.isArray(condition.in)) {
-            if (fieldDef.type === 'select') {
-              values[fieldName] = { selectedValues: condition.in }
-            }
-          } else if ('greater_than_equal' in condition || 'less_than_equal' in condition) {
-            if (fieldDef.type === 'date') {
-              const fromDate = condition.greater_than_equal
-                ? new Date(condition.greater_than_equal)
-                : null
-              const toDate = condition.less_than_equal ? new Date(condition.less_than_equal) : null
-              const allDateOptions = [...pastOptionKeys, ...futureOptionKeys]
-              let matchedOption = null
-
-              for (const option of allDateOptions) {
-                const range = getDateRangeForOption(option, locale)
-                let isFromMatch
-                if (fromDate) {
-                  isFromMatch = range.from?.toDateString() === fromDate.toDateString()
-                } else if (fromDate == null && range.to == undefined) {
-                  // all future: fromDate == null & range.to == undefined
-                  isFromMatch = true
-                }
-                let isToMatch
-                if (toDate) {
-                  isToMatch = range.to?.toDateString() === toDate.toDateString()
-                } else if (toDate == null && range.to == undefined) {
-                  // all future: fromDate == null & range.to == undefined
-                  isToMatch = true
-                }
-
-                if (isFromMatch && isToMatch) {
-                  matchedOption = option
-                  break
-                }
-              }
-
-              if (matchedOption) {
-                values[fieldName] = {
-                  type: 'predefined',
-                  predefinedValue: matchedOption,
-                }
-              } else {
-                values[fieldName] = {
-                  type: 'custom',
-                  customRange: {
-                    from: fromDate,
-                    to: toDate,
-                  },
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  recursiveParse(where)
-  return values
 }
 
 const QuickFilter = ({

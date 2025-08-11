@@ -1,5 +1,7 @@
 import type { CollectionSlug, Config } from 'payload';
 
+export * from './nav/index';
+
 export type CollectionFilterPluginConfig = {
   /**
    * List of collections to add filters to
@@ -20,9 +22,9 @@ export const CollectionQuickFilterPlugin =
     config.collections = config.collections.map((collection) => {
       // Check if this collection should be processed based on includedCollections/excludedCollections
       const shouldProcessCollection = pluginOptions.includedCollections 
-        ? pluginOptions.includedCollections.includes(collection.slug) 
+        ? pluginOptions.includedCollections.includes(collection.slug as CollectionSlug)
         : pluginOptions.excludedCollections 
-          ? !pluginOptions.excludedCollections.includes(collection.slug) 
+          ? !pluginOptions.excludedCollections.includes(collection.slug as CollectionSlug)
           : true;
 
       // Check if the collection has a filterList configuration

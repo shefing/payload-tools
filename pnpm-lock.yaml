@@ -138,7 +138,7 @@ importers:
         version: 1.0.7(tailwindcss@3.4.17)
       tailwindcss-scoped-preflight:
         specifier: ^3.2.8
-        version: 3.4.10(postcss@8.5.3)(tailwindcss@3.4.17)
+        version: 3.4.10(postcss@8.5.6)(tailwindcss@3.4.17)
     devDependencies:
       '@types/react':
         specifier: npm:types-react@19.0.0-rc.0
@@ -444,6 +444,9 @@ importers:
       payload:
         specifier: ^3.49.0
         version: 3.49.0(graphql@16.10.0)(typescript@5.7.3)
+      qs-esm:
+        specifier: 7.0.2
+        version: 7.0.2
       react:
         specifier: 19.0.0
         version: 19.0.0

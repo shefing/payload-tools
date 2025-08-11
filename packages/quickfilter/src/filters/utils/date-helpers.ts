@@ -142,6 +142,26 @@ export function getDateRangeForOption(
         description: `(${formatDate(last30DaysStart, 'dd/MM')}-${formatDate(now, 'dd/MM/yyyy')})`,
       };
 
+    case 'lastYear': {
+      const lastYearStart = new Date(now.getFullYear() - 1, 0, 1); // Jan 1 of last year
+      const lastYearEnd = new Date(now.getFullYear() - 1, 11, 31, 23, 59, 59, 999); // Dec 31 of last year
+      return {
+        from: lastYearStart,
+        to: lastYearEnd,
+        description: `(${formatDate(lastYearStart, 'yyyy')})`,
+      };
+    }
+
+    case 'last2Years': {
+      const twoYearsAgoStart = new Date(now.getFullYear() - 2, 0, 1); // Jan 1 of two years ago
+      const lastYearEnd = new Date(now.getFullYear() - 1, 11, 31, 23, 59, 59, 999); // Dec 31 of last year
+      return {
+        from: twoYearsAgoStart,
+        to: lastYearEnd,
+        description: `(${formatDate(twoYearsAgoStart, 'yyyy')}-${formatDate(lastYearEnd, 'yyyy')})`,
+      };
+    }
+
     case 'allPast': {
       const yesterday = subDays(now, 1);
       return {
@@ -190,6 +210,13 @@ export function getDateRangeForOption(
         from: startOfDay(now),
         to: next30DaysEnd,
         description: `(${formatDate(now, 'dd/MM')}-${formatDate(next30DaysEnd, 'dd/MM/yyyy')})`,
+      };
+
+    case 'todayAndFuture':
+      return {
+        from: startOfDay(now),
+        to: undefined,
+        description: `(${getLabel('presentFuture', locale)})`,
       };
 
     case 'allFuture':

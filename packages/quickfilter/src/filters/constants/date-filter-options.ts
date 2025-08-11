@@ -4,14 +4,17 @@ import { DateFilterOption } from '../types/filters-type'; // Define the option k
 
 // Define the option keys for past and future date filters
 export const pastOptionKeys = [
+  'allPast',
   'yesterday',
   'lastWeek',
   'lastMonth',
   'last7Days',
   'last30Days',
-  'allPast',
+  'lastYear',
+  'last2Years',
 ] as const;
 export const futureOptionKeys = [
+  'todayAndFuture',
   'today',
   'thisWeek',
   'thisMonth',

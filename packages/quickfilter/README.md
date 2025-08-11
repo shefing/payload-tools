@@ -12,7 +12,6 @@ Transform your PayloadCMS admin experience with instant, intuitive filters that 
 | **🎛️ Multiple Filter Types** | Date, select, checkbox, and small select filters   | ![Types](https://img.shields.io/badge/Types-4-blue)                  |
 | **📱 Responsive Layout**     | Configurable row-based layout with custom widths   | ![Responsive](https://img.shields.io/badge/Layout-Responsive-orange) |
 | **🌍 Internationalization**  | Full i18n support with RTL language compatibility  | ![i18n](https://img.shields.io/badge/Languages-6-purple)             |
-| **💾 Persistent State**      | Filters persist in localStorage and URL parameters | ![Persistent](https://img.shields.io/badge/State-Persistent-yellow)  |
 | **📅 Smart Date Filtering**  | Predefined ranges + custom date picker             | ![Dates](https://img.shields.io/badge/Dates-Smart-red)               |
 
 ### 🎥 See It In Action
@@ -188,8 +187,8 @@ filterList: [
 
 **✨ What you get:**
 
-- 🕐 **Predefined time ranges**: Yesterday, Last Week, Last Month, All Past
-- 🔮 **Future options**: Today, Next Week, Next Month, All Future
+- 🕐 **Predefined time ranges**: Yesterday, Last Week, Last Month, Last 7 Days, Last 30 Days, Last Year, Last 2 Years, All Past
+- 🔮 **Future options**: Today, This Week, This Month, Next 7 Days, Next 30 Days, Today And Future, All Future
 - 🎯 **Custom range**: Pick any from/to dates
 - 🌍 **Localized**: Date formats adapt to user's language
 
@@ -352,7 +351,6 @@ Perfect for boolean fields like:
 | **🎯 Simplicity** | Click and filter                            | Navigate to filter page, fill form, submit |
 | **⚡ Speed**      | Instant results as you click                | Wait for page reload every time            |
 | **👀 Clarity**    | `🔍 3 Active filters: Status • Role • Date` | Guess what filters are active              |
-| **💾 Persistent**     | Filters persist across sessions             | Start over every time                      |
 
 
 </details>
@@ -476,6 +474,66 @@ CollectionQuickFilterPlugin({
 - 🧪 **Testing**: Disable during development
 - 🚀 **Gradual rollout**: Enable for specific environments
 - 🎚️ **Feature flags**: Toggle via environment variables
+
+</details>
+
+### 🧭 NavDefaultFilter Component
+
+<details>
+<summary>⚙️ <strong>Using NavDefaultFilter in your admin UI</strong></summary>
+
+The NavDefaultFilter component allows you to apply default filters to collection views directly from the navigation menu. This means users will see filtered data immediately when they click on a collection.
+
+```typescript
+// payload.config.ts
+export default buildConfig({
+  admin: {
+    components: {
+      Nav: '@shefing/quickfilter/nav',
+    },
+  },
+  // ... rest of your config
+});
+```
+
+**🎯 Collection Configuration Examples:**
+
+1. Filter to show only today's and future meetings:
+
+```typescript
+export const Meetings: CollectionConfig = {
+  slug: 'meetings',
+  custom: {
+    defaultFilter: {
+      'meetingDate': 'todayAndFuture'
+    },
+  },
+  // ... rest of your collection config
+};
+```
+
+2. Filter to show only unhandled items:
+
+```typescript
+export const Tasks: CollectionConfig = {
+  slug: 'tasks',
+  custom: {
+    filterList: [['type', 'createdAt', 'meetingDate', 'holdingsLimit', 'handled', 'acquireTask']],
+    defaultFilter: {
+      'handled': {
+        equals: false
+      }
+    }
+  },
+  // ... rest of your collection config
+};
+```
+
+**✨ Benefits:**
+
+- 🎯 **Context-aware navigation**: Users see the most relevant data immediately
+- ⏱️ **Time-saving**: No need to manually apply filters after navigation
+- 🧠 **Smart defaults**: Configure different default views for different collections
 
 </details>
 
