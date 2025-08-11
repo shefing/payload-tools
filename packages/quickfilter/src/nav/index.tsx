@@ -153,10 +153,9 @@ export const NavDefaultFilter: React.FC<NavProps> = async (props) => {
 
           // Get the fields from the collection for parsing the where clause
           const fields: FilterDetaild[] =
-            collection.custom.filterList
+            Object.keys(collection.custom.defaultFilter)
               ?.flat()
-              .map((field: { name: string; width: string | undefined }) => {
-                const fieldName = field.name
+              .map((fieldName: string) => {
                 const fieldConfig = findFieldByName(collection.fields, fieldName)
                 return {
                   name: fieldName,
@@ -164,7 +163,6 @@ export const NavDefaultFilter: React.FC<NavProps> = async (props) => {
                   options: (fieldConfig as  SelectField )?.options,
                   label: (fieldConfig as UIField)?.label || fieldName,
                   row: 0,
-                  width: typeof field === 'object' && 'width' in field ? field.width : undefined,
                 } as FilterDetaild
               })
               .filter(Boolean) || []
