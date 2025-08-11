@@ -21,7 +21,15 @@ import { stringify } from 'qs-esm'
 
 import { NavHamburger } from './NavHamburger'
 import { NavWrapper } from './NavWrapper'
-import './index.scss'
+// Import SCSS only in browser environment
+// This prevents Node.js from trying to import SCSS directly
+// which causes ERR_UNKNOWN_FILE_EXTENSION error
+if (typeof window !== 'undefined') {
+  // @ts-ignore
+  import('./index.scss').catch(err => {
+    console.warn('Failed to load SCSS file:', err);
+  });
+}
 
 const baseClass = 'nav'
 
