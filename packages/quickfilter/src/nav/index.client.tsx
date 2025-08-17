@@ -1,15 +1,7 @@
 'use client'
 
 import type { groupNavItems } from '@payloadcms/ui/shared'
-import type { NavPreferences, StaticLabel } from 'payload'
-
-// Extend the Entity type to include the href property
-type EntityWithHref = {
-    label: StaticLabel;
-    slug: string;
-    type: EntityType;
-    href?: string;
-};
+import type { NavPreferences } from 'payload'
 
 
 import { getTranslation } from '@payloadcms/translations'
@@ -18,6 +10,7 @@ import { EntityType } from '@payloadcms/ui/shared'
 import { usePathname } from 'next/navigation.js'
 import { formatAdminURL } from 'payload/shared'
 import React, { Fragment } from 'react'
+import {EntityWithHref} from "../types";
 
 const baseClass = 'nav'
 

@@ -1,6 +1,6 @@
 {
   "name": "@shefing/quickfilter",
-  "version": "1.0.37",
+  "version": "1.0.38",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -25,6 +25,10 @@
     "./nav": {
       "import": "./dist/nav/index.js",
       "require": "./dist/nav/index.js"
+    },
+    "./dasboard": {
+      "import": "./dist/Dashboard/index.js",
+      "require": "./dist/Dashboard/index.js"
     }
   },
   "scripts": {
@@ -58,6 +62,7 @@
   },
   "dependencies": {
     "@payloadcms/translations": "^3.49.0",
+    "@payloadcms/next": "^3.49.0",
     "@payloadcms/ui": "^3.49.0",
     "@radix-ui/react-checkbox": "^1.1.4",
     "@radix-ui/react-dialog": "^1.1.6",

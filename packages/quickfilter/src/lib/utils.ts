@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import type {
   CheckboxFilterState,
   DateFilterValue,
@@ -13,34 +13,13 @@ import {
   pastOptionKeys,
 } from '../filters/constants/date-filter-options'
 import { getDateRangeForOption } from '../filters/utils/date-helpers'
+import type {Field, FieldAffectingData, SelectField,  UIField} from 'payload'
+import { formatAdminURL } from 'payload/shared'
+import { stringify } from 'qs-esm'
+import { EntityType } from '@payloadcms/ui/shared'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
-}
-
-export function handleNavigation(
-  href: string,
-  e: React.MouseEvent,
-  pathname: string,
-  router: AppRouterInstance,
-) {
-  // Check if we're on holdings page and there's a navigation handler
-  if (
-    pathname === '/holdings' &&
-    typeof window !== 'undefined' &&
-    (window as unknown as Record<string, unknown>).holdingsNavigationHandler
-  ) {
-    const canNavigate = (
-      (window as unknown as Record<string, unknown>).holdingsNavigationHandler as (
-        href: string,
-      ) => boolean
-    )(href)
-    if (!canNavigate) {
-      e.preventDefault()
-      return
-    }
-  }
-  router.push(href)
 }
 
 // Translates URL query conditions to the quick filter's internal state
@@ -105,14 +84,14 @@ export const parseWhereClauseToFilterValues = (
 
               for (const option of allDateOptions) {
                 const range = getDateRangeForOption(option, locale)
-                let isFromMatch
+                let isFromMatch : boolean
                 if (fromDate) {
                   isFromMatch = range.from?.toDateString() === fromDate.toDateString()
                 } else if (fromDate == null && range.to == undefined) {
                   // all future: fromDate == null & range.to == undefined
                   isFromMatch = true
                 }
-                let isToMatch
+                let isToMatch: boolean
                 if (toDate) {
                   isToMatch = range.to?.toDateString() === toDate.toDateString()
                 } else if (toDate == null && range.to == undefined) {
@@ -216,4 +195,117 @@ export const buildQuickFilterConditions = (
     }
   })
   return conditions
+}
+
+// Recursive function to find a field by name
+export function findFieldByName(fields: Field[], fieldName: string): Field {
+  // First check at the current level
+  const directMatch = fields.find(
+    (f) => (f as FieldAffectingData).name === fieldName,
+  )
+  if (directMatch) return directMatch
+
+  // If not found, search recursively in nested structures
+  for (const item of fields) {
+    // Check in array, row, or collapsible fields
+    if (
+      (item.type === 'array' || item.type === 'row' || item.type === 'collapsible') &&
+      'fields' in item &&
+      Array.isArray(item.fields)
+    ) {
+      const nestedMatch = findFieldByName(item.fields, fieldName)
+      if (nestedMatch) return nestedMatch
+    } 
+    // Check in tabs
+    else if (item.type === 'tabs' && Array.isArray(item.tabs)) {
+      for (const tab of item.tabs) {
+        if ('fields' in tab && Array.isArray(tab.fields)) {
+          const tabMatch = findFieldByName(tab.fields, fieldName)
+          if (tabMatch) return tabMatch
+        }
+      }
+    } 
+    // Check in blocks
+    else if (item.type === 'blocks' && Array.isArray(item.blocks)) {
+      for (const block of item.blocks) {
+        if ('fields' in block && Array.isArray(block.fields)) {
+          const blockMatch = findFieldByName(block.fields, fieldName)
+          if (blockMatch) return blockMatch
+        }
+      }
+    }
+  }
+
+  return null
+}
+
+// Process nav groups to add href with defaultFilter query parameters
+export function processNavGroups(
+  groups: any[], 
+  collections: any[], 
+  payload: any, 
+  i18n: any
+): any[] {
+  return groups.map(group => {
+    const processedEntities = group.entities.map(entity => {
+      if (entity.type === EntityType.collection) {
+        const collection = collections.find(c => c.slug === entity.slug);
+
+        // Check if collection has defaultFilter in custom props
+        if (collection?.custom?.defaultFilter) {
+          // Base URL without query parameters
+          const baseHref = formatAdminURL({ 
+            adminRoute: payload.config.routes.admin, 
+            path: `/collections/${entity.slug}` 
+          });
+
+          // Get the fields from the collection for parsing the where clause
+          const fields: FilterDetaild[] =
+            Object.keys(collection.custom.defaultFilter)
+              ?.flat()
+              .map((fieldName: string) => {
+                const fieldConfig = findFieldByName(collection.fields, fieldName)
+                return {
+                  name: fieldName,
+                  type: fieldConfig?.type,
+                  options: (fieldConfig as SelectField)?.options,
+                  label: (fieldConfig as UIField)?.label || fieldName,
+                  row: 0,
+                } as FilterDetaild
+              })
+              .filter(Boolean) || []
+
+          // If we have fields and a defaultFilter, calculate the URL with where clause
+          if (fields.length > 0) {
+            // Parse the defaultFilter to get filter values
+            const filterValues = parseWhereClauseToFilterValues(
+              collection.custom.defaultFilter,
+              fields,
+              i18n.language as SupportedLocale
+            );
+            // If we have filter values, add them to the URL
+            if (Object.keys(filterValues).length > 0) {
+              const quickFilterConditions = buildQuickFilterConditions(filterValues, fields, i18n.language as SupportedLocale)
+
+              const whereCondition = quickFilterConditions.length === 1 ? quickFilterConditions[0] : { and: quickFilterConditions };
+              const query = {
+                where: whereCondition,
+              };
+              const stringifiedQuery = stringify(query, { addQueryPrefix: true });
+              return {
+                ...entity,
+                href: `${baseHref}${stringifiedQuery}`
+              };
+            }
+          }
+        }
+      }
+      return entity;
+    });
+
+    return {
+      ...group,
+      entities: processedEntities
+    };
+  });
 }
