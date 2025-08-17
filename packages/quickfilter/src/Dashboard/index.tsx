@@ -12,6 +12,12 @@ import type { DashboardViewClientProps, DashboardViewServerPropsOnly } from './D
 import { DefaultDashboard } from './Default'
 
 export async function Dashboard({ initPageResult, params, searchParams }: AdminViewServerProps) {
+  // Check if initPageResult is undefined
+  if (!initPageResult) {
+    console.error('initPageResult is undefined in Dashboard component');
+    return null;
+  }
+
   const {
     locale,
     permissions,
