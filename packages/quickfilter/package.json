@@ -1,6 +1,6 @@
 {
   "name": "@shefing/quickfilter",
-  "version": "1.0.38",
+  "version": "1.0.39",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -26,7 +26,7 @@
       "import": "./dist/nav/index.js",
       "require": "./dist/nav/index.js"
     },
-    "./dasboard": {
+    "./Dashboard": {
       "import": "./dist/Dashboard/index.js",
       "require": "./dist/Dashboard/index.js"
     }

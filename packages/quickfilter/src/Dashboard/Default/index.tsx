@@ -8,7 +8,6 @@ import { EntityType } from '@payloadcms/ui/shared'
 import { formatAdminURL } from 'payload/shared'
 import React, { Fragment } from 'react'
 
-import './index.scss'
 import {EntityWithHref} from "../../types";
 
 const baseClass = 'dashboard'
