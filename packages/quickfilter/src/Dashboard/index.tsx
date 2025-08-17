@@ -7,7 +7,7 @@ import { EntityType, groupNavItems } from '@payloadcms/ui/shared'
 import React, { Fragment } from 'react'
 import { processNavGroups } from '../lib/utils'
 
-import type { DashboardViewClientProps, DashboardViewServerPropsOnly } from './Default/index'
+import type { DashboardViewClientProps, DashboardViewServerPropsOnly } from './Default'
 
 import { DefaultDashboard } from './Default'
 

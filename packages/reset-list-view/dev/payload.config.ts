@@ -59,10 +59,6 @@ const buildConfigWithMemoryDB = async () => {
     },
     plugins: [
       CollectionResetPreferencesPlugin({
-        collections: {
-          posts: true,
-          users: true
-        },
       }),
     ],
     secret: process.env.PAYLOAD_SECRET || 'test-secret_key',
