@@ -477,12 +477,13 @@ CollectionQuickFilterPlugin({
 
 </details>
 
-### 🧭 NavDefaultFilter Component
+### 🧭 Default Filter from navigation in both Navigator and Dashboard
 
 <details>
-<summary>⚙️ <strong>Using NavDefaultFilter in your admin UI</strong></summary>
+<summary>⚙️ <strong>Using Default Filter in your admin UI</strong></summary>
 
-The NavDefaultFilter component allows you to apply default filters to collection views directly from the navigation menu. This means users will see filtered data immediately when they click on a collection.
+The NavDefaultFilter/DashBoard component allows you to apply default filters to collection views directly from the navigation menu or the dashboard. 
+This means users will see filtered data immediately when they click on a collection.
 
 ```typescript
 // payload.config.ts
@@ -490,6 +491,11 @@ export default buildConfig({
   admin: {
     components: {
       Nav: '@shefing/quickfilter/nav',
+      views: {
+        dashboard: {
+          Component: '@shefing/quickfilter/Dashboard',
+        },
+      },
     },
   },
   // ... rest of your config
@@ -534,6 +540,7 @@ export const Tasks: CollectionConfig = {
 - 🎯 **Context-aware navigation**: Users see the most relevant data immediately
 - ⏱️ **Time-saving**: No need to manually apply filters after navigation
 - 🧠 **Smart defaults**: Configure different default views for different collections
+- 🔄 **Consistent experience**: Both Nav and Dashboard components are aligned with default filters for all collections
 
 </details>
 
