@@ -37,7 +37,12 @@ export const ResetListViewButton: React.FC<Props> = ({ slug }) => {
       })
 
       if (response.ok) {
-        window.location.reload()
+        // Parse the current URL
+        const url = new URL(window.location.href)
+        // Remove the columns parameter
+        url.searchParams.delete('columns')
+        // Navigate to the new URL
+        window.location.href = url.toString()
       } else {
         console.error('Failed to reset list view preferences')
       }
