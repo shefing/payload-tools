@@ -9,6 +9,7 @@ import { formatAdminURL } from 'payload/shared'
 import React, { Fragment } from 'react'
 
 import {EntityWithHref} from "../../types";
+import { processNavGroups } from '../../lib/utils';
 
 const baseClass = 'dashboard'
 
@@ -33,13 +34,14 @@ export type DashboardViewServerPropsOnly = {
 
 export type DashboardViewServerProps = DashboardViewClientProps & DashboardViewServerPropsOnly
 
+
 export function DefaultDashboard(props: DashboardViewServerProps) {
   const {
     globalData,
     i18n,
     i18n: { t },
     locale,
-    navGroups,
+    navGroups: originalNavGroups,
     params,
     payload: {
       config: {
@@ -47,6 +49,7 @@ export function DefaultDashboard(props: DashboardViewServerProps) {
           components: { afterDashboard, beforeDashboard },
         },
         routes: { admin: adminRoute },
+        collections,
       },
     },
     payload,
@@ -54,6 +57,9 @@ export function DefaultDashboard(props: DashboardViewServerProps) {
     searchParams,
     user,
   } = props
+
+  // Process navGroups to calculate href values
+  const navGroups = originalNavGroups ? processNavGroups(originalNavGroups, collections, payload, i18n) : []
 
   return (
     <div className={baseClass}>
@@ -194,3 +200,5 @@ export function DefaultDashboard(props: DashboardViewServerProps) {
     </div>
   )
 }
+
+export default DefaultDashboard
