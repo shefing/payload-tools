@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload';
-import { isAdmin, isAdminFieldLevel } from '../access/isAdmin';
-import { isAdminOrSelf } from '../access/isAdminOrSelf';
+import { isAdmin, isAdminFieldLevel } from '../access/isAdmin.js';
+import { isAdminOrSelf } from '../access/isAdminOrSelf.js';
+
 export const Roles: CollectionConfig = {
   slug: 'roles',
   labels: {
