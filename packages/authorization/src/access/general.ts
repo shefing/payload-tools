@@ -7,12 +7,14 @@ const PERMISSION_HIERARCHY: Record<string, string[]> = {
   read: ['read'],
 };
 
+// Returns true if user has action access to the collection, and (if fieldName provided) to the field
 export const canUserAccessAction = async (
   user: User | null | undefined,
   slugName: string,
   action: string,
   payload: Payload,
   config: AuthorizationPluginConfig,
+  fieldName?: string
 ): Promise<boolean> => {
   if (!user) return false;
 
@@ -29,18 +31,32 @@ export const canUserAccessAction = async (
 
   if (!roles.docs || roles.docs.length === 0) return false;
 
-  const userAllowedActions = new Set<string>();
+  let hasCollectionAccess = false;
+  let hasFieldAccess = !fieldName; // If no fieldName, default to true
 
   for (const role of roles.docs) {
     const permissions = role[config.permissionsField];
     if (permissions) {
       for (const permission of permissions) {
         if (permission.entity.includes(slugName)) {
-          userAllowedActions.add(permission.type);
-          PERMISSION_HIERARCHY[permission.type]?.forEach((perm) => userAllowedActions.add(perm));
+          // Check action
+          if (
+            (Array.isArray(permission.type) && permission.type.includes(action)) ||
+            permission.type === action
+          ) {
+            hasCollectionAccess = true;
+            // Field-level check
+            if (fieldName) {
+              if (!permission.fields || permission.fields.length === 0) {
+                hasFieldAccess = true; // No fields specified = all fields allowed
+              } else if (permission.fields.includes(fieldName)) {
+                hasFieldAccess = true;
+              }
+            }
+          }
         }
       }
     }
   }
-  return userAllowedActions.has(action);
+  return hasCollectionAccess && hasFieldAccess;
 };

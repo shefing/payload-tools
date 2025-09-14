@@ -84,7 +84,7 @@ export const Roles: CollectionConfig = {
               options: [],
               required: true,
               admin: {
-                width: '70%',
+                width: '40%',
               },
               localized: true,
             },
@@ -122,6 +122,20 @@ export const Roles: CollectionConfig = {
               required: true,
               admin: {
                 width: '30%',
+              },
+              localized: true,
+            },
+            {
+              name: 'fields',
+              label: {
+                en: 'Fields (optional)',
+                he: 'שדות (אופציונלי)',
+              },
+              type: 'text',
+              hasMany: true,
+              admin: {
+                width: '30%',
+                description: 'Restrict this permission to specific fields (leave empty for all fields)',
               },
               localized: true,
             },
