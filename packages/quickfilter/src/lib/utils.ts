@@ -141,6 +141,9 @@ export const buildQuickFilterConditions = (
     if (!value) return
     const fieldDef = fieldDefs.find((f) => f.name === fieldName)
     if (!fieldDef) return
+    if (typeof fieldDef.virtual == 'string'){
+      fieldName = fieldDef.virtual
+    }
 
     let condition: Record<string, any> | null = null
 
@@ -271,6 +274,7 @@ export function processNavGroups(
                   options: (fieldConfig as SelectField)?.options,
                   label: (fieldConfig as UIField)?.label || fieldName,
                   row: 0,
+                  virtual: 'virtual' in fieldConfig && fieldConfig.virtual
                 } as FilterDetaild
               })
               .filter(Boolean) || []

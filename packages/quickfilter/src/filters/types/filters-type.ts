@@ -118,6 +118,7 @@ export type FilterDetaild = {
   options?: Array<any>; // Replace `any` with a more specific type if known
   row?: number | undefined;
   width?: string;
+  virtual?: string | boolean;
 };
 
 export interface FilterRow {
