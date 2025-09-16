@@ -110,7 +110,7 @@ export function SmallSelectFilter({
   };
 
   return (
-    <div className={cn('space-y-2', className)} dir={locale.direction} style={style}>
+    <div className={cn('space-y-1', className)} dir={locale.direction} style={style}>
       {label && (
         <Label className={cn('useTw text-sm font-medium', isRtl && 'text-right block')}>
           {label}
