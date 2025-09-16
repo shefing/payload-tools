@@ -144,7 +144,7 @@ const QuickFilter = ({
         type: field.type,
         options: (field as SelectField).options as OptionObject[],
         row: fieldConfig ? fieldConfig.rowIndex : 0,
-        virtual: 'virtual' in field && field.virtual,
+        virtual: 'virtual' in field ? (field.virtual as string | boolean) : undefined,
         width:
           typeof fieldConfig?.field === 'object' && 'width' in fieldConfig.field
             ? fieldConfig.field.width
