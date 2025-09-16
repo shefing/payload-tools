@@ -29,8 +29,14 @@ export const parseWhereClauseToFilterValues = (
   locale: SupportedLocale,
 ): Record<string, any> => {
   const values: Record<string, any> = {}
-  const fieldNames = new Set(fields.map((f) => f.name))
-
+  const fieldNames = new Set(fields.map((f) => {
+    let fieldName = f.name;
+    if (typeof f.virtual === 'string') {
+      fieldName = f.virtual;
+    }
+    return fieldName;
+  }))
+  
   const recursiveParse = (clause: any) => {
     if (!clause || typeof clause !== 'object') return
 
