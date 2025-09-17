@@ -189,7 +189,15 @@ const QuickFilter = ({
       return
     }
     const quickFilterConditions = buildQuickFilterConditions(filterValues, fields, locale)
-    const quickFilterFieldNames = new Set(fields.map((f) => f.name))
+    const quickFilterFieldNames = new Set(
+      fields.map((f) => {
+        let name = f.name
+        if (typeof f.virtual === 'string') {
+          name = f.virtual
+        }
+        return name
+      }),
+    )
     const otherFilters = cleanWhereClause(query.where, quickFilterFieldNames)
 
     const allConditions = [...quickFilterConditions]
@@ -316,14 +324,20 @@ const QuickFilter = ({
     return filterRows.map((row) => (
       <div key={row.rowNumber}>
         <div className="flex flex-wrap gap-6 mb-4">
-          {row.filters.map((field) => (
-            <FilterField
-              key={field.name}
-              field={field}
-              onFilterChange={handleFilterChange}
-              value={filterValues[field.name]}
-            />
-          ))}
+          {row.filters.map((field) => {
+            let fieldName = field.name
+            if (typeof field.virtual === 'string') {
+              fieldName = field.virtual
+            }
+            return (
+              <FilterField
+                key={field.name}
+                field={field}
+                onFilterChange={handleFilterChange}
+                value={filterValues[fieldName]}
+              />
+            )
+          })}
         </div>
       </div>
     ))
