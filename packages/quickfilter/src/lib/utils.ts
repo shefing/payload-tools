@@ -29,14 +29,14 @@ export const parseWhereClauseToFilterValues = (
   locale: SupportedLocale,
 ): Record<string, any> => {
   const values: Record<string, any> = {}
-  const fieldNames = new Set(fields.map((f) => {
-    let fieldName = f.name;
-    if (typeof f.virtual === 'string') {
-      fieldName = f.virtual;
-    }
-    return fieldName;
-  }))
-  
+  const fieldNames = new Set(
+    fields.flatMap((f) => {
+      if (typeof f.virtual === 'string') {
+        return [f.virtual, f.name]
+      }
+      return [f.name]
+    }),
+  )
   const recursiveParse = (clause: any) => {
     if (!clause || typeof clause !== 'object') return
 
@@ -53,7 +53,13 @@ export const parseWhereClauseToFilterValues = (
     }
     for (const fieldName in clause) {
       if (fieldNames.has(fieldName)) {
-        const fieldDef = fields.find((f) => f.name === fieldName)
+        const fieldDef = fields.find((f) => {
+          let name = f.name
+          if (typeof f.virtual === 'string') {
+            name = f.virtual
+          }
+          return name === fieldName
+        })
         const condition = clause[fieldName]
 
         // Handle string values for date fields (e.g., 'todayAndFuture')
@@ -145,11 +151,14 @@ export const buildQuickFilterConditions = (
 
   Object.entries(values).forEach(([fieldName, value]) => {
     if (!value) return
-    const fieldDef = fieldDefs.find((f) => f.name === fieldName)
+    const fieldDef = fieldDefs.find((f) => {
+      let name = f.name
+      if (typeof f.virtual === 'string') {
+        name = f.virtual
+      }
+      return name === fieldName
+    })
     if (!fieldDef) return
-    if (typeof fieldDef.virtual == 'string'){
-      fieldName = fieldDef.virtual
-    }
 
     let condition: Record<string, any> | null = null
 
@@ -280,7 +289,7 @@ export function processNavGroups(
                   options: (fieldConfig as SelectField)?.options,
                   label: (fieldConfig as UIField)?.label || fieldName,
                   row: 0,
-                  virtual: 'virtual' in fieldConfig && fieldConfig.virtual
+                  virtual: 'virtual' in fieldConfig && fieldConfig.virtual,
                 } as FilterDetaild
               })
               .filter(Boolean) || []
@@ -291,31 +300,38 @@ export function processNavGroups(
             const filterValues = parseWhereClauseToFilterValues(
               collection.custom.defaultFilter,
               fields,
-              i18n.language as SupportedLocale
-            );
+              i18n.language as SupportedLocale,
+            )
             // If we have filter values, add them to the URL
             if (Object.keys(filterValues).length > 0) {
-              const quickFilterConditions = buildQuickFilterConditions(filterValues, fields, i18n.language as SupportedLocale)
+              const quickFilterConditions = buildQuickFilterConditions(
+                filterValues,
+                fields,
+                i18n.language as SupportedLocale,
+              )
 
-              const whereCondition = quickFilterConditions.length === 1 ? quickFilterConditions[0] : { and: quickFilterConditions };
+              const whereCondition =
+                quickFilterConditions.length === 1
+                  ? quickFilterConditions[0]
+                  : { and: quickFilterConditions }
               const query = {
                 where: whereCondition,
-              };
-              const stringifiedQuery = stringify(query, { addQueryPrefix: true });
+              }
+              const stringifiedQuery = stringify(query, { addQueryPrefix: true })
               return {
                 ...entity,
-                href: `${baseHref}${stringifiedQuery}`
-              };
+                href: `${baseHref}${stringifiedQuery}`,
+              }
             }
           }
         }
       }
-      return entity;
-    });
+      return entity
+    })
 
     return {
       ...group,
-      entities: processedEntities
-    };
-  });
+      entities: processedEntities,
+    }
+  })
 }
