@@ -1,5 +1,3 @@
-// FilterField.tsx (הקובץ המתוקן)
-
 'use client';
 import React, { useCallback } from 'react';
 import { useTranslation } from '@payloadcms/ui';
@@ -27,23 +25,35 @@ const FilterField = ({
 
   const handleDateFilterChange = useCallback(
     (value: any) => {
-      onFilterChange(field.name, value);
+      let fieldName = field.name;
+      if (typeof field.virtual === 'string') {
+        fieldName = field.virtual;
+      }
+      onFilterChange(fieldName, value);
     },
-    [onFilterChange, field.name],
+    [onFilterChange, field.name, field.virtual],
   );
 
   const handleSelectFilterChange = useCallback(
     (value: any) => {
-      onFilterChange(field.name, value);
+      let fieldName = field.name;
+      if (typeof field.virtual === 'string') {
+        fieldName = field.virtual;
+      }
+      onFilterChange(fieldName, value);
     },
-    [onFilterChange, field.name],
+    [onFilterChange, field.name, field.virtual],
   );
 
   const handleCheckboxFilterChange = useCallback(
     (state: any) => {
-      onFilterChange(field.name, state);
+      let fieldName = field.name;
+      if (typeof field.virtual === 'string') {
+        fieldName = field.virtual;
+      }
+      onFilterChange(fieldName, state);
     },
-    [onFilterChange, field.name],
+    [onFilterChange, field.name, field.virtual],
   );
 
   switch (field.type) {
