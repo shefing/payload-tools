@@ -253,7 +253,13 @@ const QuickFilter = ({
     const activeFilters: string[] = []
     const locale = i18n.language as SupportedLocale
     Object.entries(filterValues).forEach(([fieldName, value]) => {
-      const field = fields.find((f) => f.name === fieldName)
+      const field = fields.find((f) => {
+        let name = f.name
+        if (typeof f.virtual === 'string') {
+          name = f.virtual
+        }
+        return name === fieldName
+      })
       if (!field) return
 
       switch (field.type) {
