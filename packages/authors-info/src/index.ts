@@ -130,6 +130,18 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
         readOnly: true,
       },
     },
+    {
+      name: 'process',
+      label: {
+        en: 'Process',
+        he: 'תהליך',
+      },
+      type: 'text',
+      localized: true,
+      admin: {
+        readOnly: true,
+      },
+    },
   ];
   if (hasDraft) {
     authorFields.push(

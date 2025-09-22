@@ -21,6 +21,10 @@ export const setAuthorsData = (
   return async (args) => {
     //For Globals not operation is passed so have it update
     if (!args?.operation) args.operation = 'update';
+    // Set process from request context, defaulting to null
+    if (args?.data !== undefined) {
+      args.data['process'] = (args.req as any)?.context?.process ?? null;
+    }
     if (args?.operation === 'update' && args.data !== undefined && args.req.user !== undefined) {
       args.data[updatedByFieldName] = args.req.user?.[usernameField] || 'system';
     }
