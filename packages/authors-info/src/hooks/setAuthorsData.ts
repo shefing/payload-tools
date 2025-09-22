@@ -23,7 +23,7 @@ export const setAuthorsData = (
     if (!args?.operation) args.operation = 'update';
     // Set process from request context, defaulting to null
     if (args?.data !== undefined) {
-      args.data['process'] = (args.req as any)?.context?.process ?? null;
+      args.data['process'] = (args.req as PayloadRequest)?.context?.process ?? null;
     }
     if (args?.operation === 'update' && args.data !== undefined && args.req.user !== undefined) {
       args.data[updatedByFieldName] = args.req.user?.[usernameField] || 'system';
