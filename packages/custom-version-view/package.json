@@ -44,7 +44,8 @@
     "@payloadcms/translations": "3.56.0",
     "moment": "^2.30.1",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "next": "15.3.3"
   },
   "publishConfig": {
     "access": "public"
