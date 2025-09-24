@@ -75,3 +75,4 @@ export const VersionsViewClient: React.FC<{
     </React.Fragment>
   )
 }
+export default VersionsViewClient

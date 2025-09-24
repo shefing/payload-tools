@@ -11,7 +11,7 @@ import { VersionsViewClient } from './index.client'
 
 const baseClass = 'versions'
 
-export async function VersionsView(props: DocumentViewServerProps) {
+export default async function VersionsView(props: DocumentViewServerProps) {
   const {
     hasPublishedDoc,
     initPageResult: {
@@ -177,4 +177,4 @@ export async function VersionsView(props: DocumentViewServerProps) {
   )
 }
 
-export default VersionsView
+export { VersionsView }
