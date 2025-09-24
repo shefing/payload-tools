@@ -49,7 +49,7 @@ export const SetDocumentStepNav: React.FC<{
     if (!isInitializing) {
       if (collectionSlug) {
         nav.push({
-          label: getTranslation(pluralLabel, i18n),
+          label: getTranslation(pluralLabel as string, i18n) as string,
           url: isVisible
             ? formatAdminURL({
                 adminRoute,

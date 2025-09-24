@@ -1,22 +1,23 @@
-import type { I18n } from '@payloadcms/translations';
+import type { I18n } from '@payloadcms/translations'
 import type {
+  Column,
   PaginatedDocs,
   SanitizedCollectionConfig,
-  SanitizedConfig,
   SanitizedGlobalConfig,
   TypeWithVersion,
-} from 'payload';
+} from 'payload'
 
-import { type Column, SortColumn } from '@payloadcms/ui';
-import React from 'react';
+import { SortColumn } from '@payloadcms/ui'
+import React from 'react'
 
-import { AutosaveCell } from './cells/AutosaveCell/index.js';
-import { CreatedAtCell } from './cells/CreatedAt/index.js';
-import { IDCell } from './cells/ID/index.js';
+import { AutosaveCell } from './cells/AutosaveCell'
+import { CreatedAtCell, type CreatedAtCellProps } from './cells/CreatedAt'
+import { IDCell } from './cells/ID'
 
 type Updator = {
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   createdAt: string;
   updatedAt: string;
   autosave?: boolean | undefined;
@@ -25,25 +26,36 @@ type Updator = {
 } & TypeWithVersion<string>;
 
 export const buildVersionColumns = ({
-  collectionConfig,
-  docID,
-  docs,
-  globalConfig,
-  i18n: { t },
-  latestDraftVersion,
-  latestPublishedVersion,
-}: {
-  collectionConfig?: SanitizedCollectionConfig;
-  config: SanitizedConfig;
-  docID?: number | string;
-  ///* eslint-disable @typescript-eslint/ban-ts-comment */@typescript-eslint/no-explicit-any
-  docs: PaginatedDocs<Updator>['docs'];
-  globalConfig?: SanitizedGlobalConfig;
-  i18n: I18n;
-  latestDraftVersion?: string;
-  latestPublishedVersion?: string;
+                                      collectionConfig,
+                                      CreatedAtCellOverride,
+                                      currentlyPublishedVersion,
+                                      docID,
+                                      docs,
+                                      globalConfig,
+                                      i18n: { t },
+                                      isTrashed,
+                                      latestDraftVersion,
+                                    }: {
+  collectionConfig?: SanitizedCollectionConfig
+  CreatedAtCellOverride?: React.ComponentType<CreatedAtCellProps>
+  currentlyPublishedVersion?: {
+    id: number | string
+    updatedAt: string
+  }
+  docID?: number | string
+  docs: PaginatedDocs<TypeWithVersion<never>>['docs']
+  globalConfig?: SanitizedGlobalConfig
+  i18n: I18n
+  isTrashed?: boolean
+  latestDraftVersion?: {
+    id: number | string
+    updatedAt: string
+  }
 }): Column[] => {
-  const entityConfig = collectionConfig || globalConfig;
+  const entityConfig = collectionConfig || globalConfig
+
+  const CreatedAtCellComponent = CreatedAtCellOverride ?? CreatedAtCell
+
   const columns: Column[] = [
     {
       accessor: 'updatedAt',
@@ -52,21 +64,21 @@ export const buildVersionColumns = ({
         name: '',
         type: 'date',
       },
-      Heading: <SortColumn Label={t('general:updatedAt')} name='updatedAt' />,
-
+      Heading: <SortColumn Label={t('general:updatedAt')} name="updatedAt" />,
       renderedCells: docs.map((doc, i) => {
         return (
-          <CreatedAtCell
+          <CreatedAtCellComponent
             collectionSlug={collectionConfig?.slug}
             docID={docID}
             globalSlug={globalConfig?.slug}
+            isTrashed={isTrashed}
             key={i}
             rowData={{
               id: doc.id,
               updatedAt: doc.updatedAt,
             }}
           />
-        );
+        )
       }),
     },
     {
@@ -76,9 +88,9 @@ export const buildVersionColumns = ({
         name: '',
         type: 'text',
       },
-      Heading: <SortColumn disable Label={t('version:versionID')} name='id' />,
+      Heading: <SortColumn disable Label={t('version:versionID')} name="id" />,
       renderedCells: docs.map((doc, i) => {
-        return <IDCell id={doc.id} key={i} />;
+        return <IDCell id={doc.id} key={i} />
       }),
     },
   ];
@@ -91,35 +103,46 @@ export const buildVersionColumns = ({
       type: 'text',
     },
     Heading: <SortColumn Label={'Updated by'} disable name='updator' />,
-    renderedCells: docs.map((doc, i) => {
+    renderedCells: docs.map((doc:Updator, i) => {
       return <IDCell id={doc.updator as string} key={i} />;
     }),
   });
-
+  columns.splice(1, 0, {
+    accessor: 'updator',
+    active: true,
+    field: {
+      name: '',
+      type: 'text',
+    },
+    Heading: <SortColumn Label={'Updated by'} disable name='updator' />,
+    renderedCells: docs.map((doc:Updator, i) => {
+      return <IDCell id={doc.process as string} key={i} />;
+    }),
+  });
   if (
     entityConfig?.versions?.drafts ||
     (entityConfig?.versions?.drafts && entityConfig.versions.drafts?.autosave)
   ) {
-    columns.splice(2, 0, {
+    columns.push({
       accessor: '_status',
       active: true,
       field: {
         name: '',
         type: 'checkbox',
       },
-      Heading: <SortColumn disable Label={t('version:status')} name='status' />,
+      Heading: <SortColumn disable Label={t('version:status')} name="status" />,
       renderedCells: docs.map((doc, i) => {
         return (
           <AutosaveCell
+            currentlyPublishedVersion={currentlyPublishedVersion}
             key={i}
             latestDraftVersion={latestDraftVersion}
-            latestPublishedVersion={latestPublishedVersion}
             rowData={doc}
           />
-        );
+        )
       }),
-    });
+    })
   }
 
-  return columns;
-};
+  return columns
+}

@@ -41,7 +41,6 @@ const versionsPlugin =
         .filter((x) => !mergedConfig.excludedGlobals.includes(x.slug))
         .forEach((currentGlobal) => {
           //Custom Versions View
-          //@ts-expect-error payload
           if (!currentGlobal.admin?.components?.views?.edit?.versions?.Component) {
             const versions = ensurePath(currentGlobal, [
               'admin',

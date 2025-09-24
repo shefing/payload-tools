@@ -1,6 +1,6 @@
 {
   "name": "@shefing/custom-version-view",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -34,18 +34,17 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "payload": "3.0.2",
+    "payload": "3.56.0",
     "typescript": "^5.5.2",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1"
   },
   "dependencies": {
-    "@payloadcms/ui": "^3.0.2",
-    "@payloadcms/translations": "3.0.2",
+    "@payloadcms/ui": "3.56.0",
+    "@payloadcms/translations": "3.56.0",
     "moment": "^2.30.1",
     "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "next": "15.0.4"
+    "react-dom": "19.0.0"
   },
   "publishConfig": {
     "access": "public"

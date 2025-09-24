@@ -46,12 +46,12 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",
     "autoprefixer": "^10.4.20",
-    "payload": "3.0.2",
+    "payload": "3.56.0",
     "postcss": "^8.5.1",
     "typescript": "^5.5.2"
   },
   "dependencies": {
-    "@payloadcms/ui": "^3.0.2",
+    "@payloadcms/ui": "3.56.0",
     "flowbite-react-icons": "^1.0.8",
     "next": "15.0.4",
     "react": "19.0.0",

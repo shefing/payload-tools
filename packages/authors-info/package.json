@@ -39,9 +39,9 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "payload": "3.35.1",
+    "payload": "3.56.0",
     "typescript": "^5.7.3",
-    "@payloadcms/ui": "3.35.1",
+    "@payloadcms/ui": "3.56.0",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
     "react": "19.0.0",
@@ -57,8 +57,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@payloadcms/ui": "3.35.1",
-    "payload": "3.35.1",
+    "@payloadcms/ui": "3.56.0",
+    "payload": "3.56.0",
     "i18next": "^23.0.0"
   }
 }

@@ -1,51 +1,53 @@
-'use client';
-import { useConfig, useTranslation } from '@payloadcms/ui';
-import { formatAdminURL, formatDate } from '@payloadcms/ui/shared';
-import LinkImport from 'next/link.js';
-import React from 'react';
+'use client'
+import { Link, useConfig, useTranslation } from '@payloadcms/ui'
+import { formatDate } from '@payloadcms/ui/shared'
+import { formatAdminURL } from 'payload/shared'
+import React from 'react'
 import moment from 'moment';
-//@ts-ignore
-const Link = (LinkImport.default || LinkImport) as unknown as typeof LinkImport.default;
 
-type CreatedAtCellProps = {
-  collectionSlug?: string;
-  docID?: number | string;
-  globalSlug?: string;
+export type CreatedAtCellProps = {
+  collectionSlug?: string
+  docID?: number | string
+  globalSlug?: string
+  isTrashed?: boolean
   rowData?: {
-    id: number | string;
-    updatedAt: Date | number | string;
-  };
-};
+    id: number | string
+    updatedAt: Date | number | string
+  }
+}
 
 export const CreatedAtCell: React.FC<CreatedAtCellProps> = ({
-  collectionSlug,
-  docID,
-  globalSlug,
-  rowData: { id, updatedAt } = {},
-}) => {
+                                                              collectionSlug,
+                                                              docID,
+                                                              globalSlug,
+                                                              isTrashed,
+                                                              rowData: { id, updatedAt } = {},
+                                                            }) => {
   const {
     config: {
       admin: { dateFormat },
       routes: { admin: adminRoute },
     },
-  } = useConfig();
+  } = useConfig()
 
-  const { i18n } = useTranslation();
+  const { i18n } = useTranslation()
 
-  let to: string;
+  const trashedDocPrefix = isTrashed ? 'trash/' : ''
+
+  let to: string
 
   if (collectionSlug) {
     to = formatAdminURL({
       adminRoute,
-      path: `/collections/${collectionSlug}/${docID}/versions/${id}`,
-    });
+      path: `/collections/${collectionSlug}/${trashedDocPrefix}${docID}/versions/${id}`,
+    })
   }
 
   if (globalSlug) {
     to = formatAdminURL({
       adminRoute,
       path: `/globals/${globalSlug}/versions/${id}`,
-    });
+    })
   }
 
   return (

@@ -35,14 +35,14 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "payload": "3.0.2",
+    "payload": "3.56.0",
     "typescript": "^5.5.2",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",
     "tailwindcss": "^3.4.14"
   },
   "dependencies": {
-    "@payloadcms/ui": "^3.0.2",
+    "@payloadcms/ui": "3.56.0",
     "lucide-react": "^0.394.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",

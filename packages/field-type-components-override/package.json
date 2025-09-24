@@ -25,7 +25,7 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "payload": "^3.45.0",
+    "payload": "3.56.0",
     "typescript": "5.7.3"
   },
   "publishConfig": {

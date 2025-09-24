@@ -166,6 +166,36 @@ When you're ready to actually purge the package:
 
 ---
 
+## Getting started (pnpm install)
+
+This is a pnpm workspace/monorepo. Install dependencies from the repository root.
+
+Prerequisites
+- Node: ^18.20.2 or >=20.9.0 (see package.json "engines")
+- pnpm: 9.x (this repo pins pnpm in package.json "packageManager")
+
+Recommended: use Corepack to get the right pnpm version
+- Enable Corepack once: corepack enable
+- Activate the pinned pnpm version for this repo: corepack prepare pnpm@9.4.0 --activate
+
+Install all workspace dependencies (from the repo root)
+- pnpm install
+  - This will create/update a single pnpm-lock.yaml at the repository root.
+  - Do not expect lockfiles inside packages/*; pnpm uses a shared workspace lockfile.
+
+Install for a single workspace package only (optional)
+- You can limit installation/linking to specific packages using filter flags (still run from root):
+  - pnpm --filter @shefing/quickfilter install
+  - pnpm --filter ./packages/custom-version-view install
+
+Clean reinstall (optional)
+- From the repo root: rm -rf node_modules pnpm-lock.yaml && pnpm install
+- Many packages also expose a "reinstall" script you can run inside them if needed.
+
+Build
+- Most packages can be built with: pnpm -r build (run scripts recursively)
+- Or build one package: pnpm --filter @shefing/quickfilter build
+
 ## FAQ
 
 - Why isn’t pnpm.lock.json created when I run "pnpm i"?

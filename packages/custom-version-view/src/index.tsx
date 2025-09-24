@@ -1,175 +1,169 @@
-import type { EditViewComponent, PaginatedDocs, PayloadServerReactComponent } from 'payload';
-import { Gutter, ListQueryProvider } from '@payloadcms/ui';
-import { notFound } from 'next/navigation';
-import { isNumber } from 'payload/shared';
-import React from 'react';
-// import { SetDocumentStepNav } from './components/cells/setDocumentStepNav';
-import { SetDocumentStepNav } from './components/setDocumentStepNav/index.js';
-import { buildVersionColumns } from './components/buildColumns.js';
-import { getLatestVersion } from './getLatestVersion.js';
-import { VersionsViewClient } from './index.client.js';
-//import './index.scss' ?
+import { Gutter, ListQueryProvider, SetDocumentStepNav } from '@payloadcms/ui'
+import { notFound } from 'next/navigation.js'
+import { type DocumentViewServerProps, type PaginatedDocs, type Where } from 'payload'
+import { isNumber } from 'payload/shared'
+import React from 'react'
 
-/* eslint-disable */
-export const baseClass = 'versions';
-export const VersionsView: PayloadServerReactComponent<EditViewComponent> = async (props) => {
-  const { initPageResult, searchParams } = props;
+import { fetchLatestVersion, fetchVersions } from './fetchVersions'
+import { CreatedAtCell } from './components/cells/CreatedAt'
+import { buildVersionColumns } from './components/buildColumns'
+import { VersionsViewClient } from './index.client.js'
+import './index.scss'
 
-  if (!initPageResult) {
-    return <React.Fragment>initPageResult is not defined</React.Fragment>;
-  }
+const baseClass = 'versions'
+
+export async function VersionsView(props: DocumentViewServerProps) {
   const {
-    collectionConfig,
-    docID: id,
-    globalConfig,
-    req,
-    req: {
-      i18n,
-      payload,
-      payload: { config },
-      t,
-      user,
+    hasPublishedDoc,
+    initPageResult: {
+      collectionConfig,
+      docID: id,
+      globalConfig,
+      req,
+      req: {
+        i18n,
+        payload: { config },
+        t,
+        user,
+      },
     },
-  } = initPageResult;
+    routeSegments: segments,
+    searchParams: { limit, page, sort },
+    versions: { disableGutter = false, useVersionDrawerCreatedAtCell = false } = {},
+  } = props
 
-  const collectionSlug = collectionConfig?.slug;
-  const globalSlug = globalConfig?.slug;
-  const { limit, page, sort } = searchParams;
+  const draftsEnabled = (collectionConfig ?? globalConfig)?.versions?.drafts
+
+  const collectionSlug = collectionConfig?.slug
+  const globalSlug = globalConfig?.slug
+
+  const isTrashed = segments[2] === 'trash'
 
   const {
     localization,
     routes: { api: apiRoute },
     serverURL,
-  } = config;
+  } = config
 
-  let versionsData: PaginatedDocs;
-  let limitToUse = isNumber(limit) ? Number(limit) : undefined;
-  let latestPublishedVersion = null;
-  let latestDraftVersion = null;
+  const whereQuery: {
+    and: Array<{ parent?: { equals: number | string }; snapshot?: { not_equals: boolean } }>
+  } & Where = {
+    and: [],
+  }
+  if (localization && draftsEnabled) {
+    whereQuery.and.push({
+      snapshot: {
+        not_equals: true,
+      },
+    })
+  }
 
-  if (collectionSlug) {
-    limitToUse = limitToUse || collectionConfig.admin.pagination.defaultLimit;
-    try {
-      versionsData = await payload.findVersions({
-        collection: collectionSlug,
+  const defaultLimit = collectionSlug ? collectionConfig?.admin?.pagination?.defaultLimit : 10
+
+  const limitToUse = isNumber(limit) ? Number(limit) : defaultLimit
+
+  const versionsData: PaginatedDocs = await fetchVersions({
+    collectionSlug,
+    depth: 0,
+    globalSlug,
+    limit: limitToUse,
+    overrideAccess: false,
+    page: page ? parseInt(page.toString(), 10) : undefined,
+    parentID: id,
+    req,
+    sort: sort as string,
+    user,
+    where: whereQuery,
+  })
+
+  if (!versionsData) {
+    return notFound()
+  }
+  versionsData.docs.forEach((doc) => {
+    if (doc.version.updator) doc.updator = doc.version.updator;
+    if (doc.version.process) doc.process = doc.version.process;
+  });
+
+
+  const [currentlyPublishedVersion, latestDraftVersion] = await Promise.all([
+    hasPublishedDoc
+      ? fetchLatestVersion({
+        collectionSlug,
         depth: 0,
-        limit: limitToUse,
+        globalSlug,
         overrideAccess: false,
-        page: page ? parseInt(page.toString(), 10) : undefined,
+        parentID: id,
         req,
-        sort: sort as string,
-        user,
-        where: {
-          parent: {
-            equals: id,
-          },
+        select: {
+          id: true,
+          updatedAt: true,
         },
-      });
-      versionsData.docs.forEach((doc) => {
-        if (doc.version.updator) doc.updator = doc.version.updator;
-      });
-      if (collectionConfig?.versions?.drafts) {
-        latestDraftVersion = await getLatestVersion({
-          slug: collectionSlug,
-          type: 'collection',
-          parentID: id,
-          payload,
-          status: 'draft',
-        });
-        latestPublishedVersion = await getLatestVersion({
-          slug: collectionSlug,
-          type: 'collection',
-          parentID: id,
-          payload,
-          status: 'published',
-        });
-      }
-    } catch (error) {
-      console.error(error); // eslint-disable-line no-console
-    }
-  }
-
-  if (globalSlug) {
-    limitToUse = limitToUse || 10;
-    try {
-      versionsData = await payload.findGlobalVersions({
-        slug: globalSlug,
-        depth: 0,
-        limit: limitToUse,
-        overrideAccess: false,
-        page: page ? parseInt(page as string, 10) : undefined,
-        req,
-        sort: sort as string,
+        status: 'published',
         user,
-      });
+      })
+      : Promise.resolve(null),
+    draftsEnabled
+      ? fetchLatestVersion({
+        collectionSlug,
+        depth: 0,
+        globalSlug,
+        overrideAccess: false,
+        parentID: id,
+        req,
+        select: {
+          id: true,
+          updatedAt: true,
+        },
+        status: 'draft',
+        user,
+      })
+      : Promise.resolve(null),
+  ])
 
-      if (globalConfig?.versions?.drafts) {
-        latestDraftVersion = await getLatestVersion({
-          slug: globalSlug,
-          type: 'global',
-          payload,
-          status: 'draft',
-        });
-        latestPublishedVersion = await getLatestVersion({
-          slug: globalSlug,
-          type: 'global',
-          payload,
-          status: 'published',
-        });
-      }
-    } catch (error) {
-      console.error(error); // eslint-disable-line no-console
-    }
-    if (!versionsData) {
-      return notFound();
-    }
-  }
   const fetchURL = collectionSlug
     ? `${serverURL}${apiRoute}/${collectionSlug}/versions`
-    : globalSlug
-      ? `${serverURL}${apiRoute}/globals/${globalSlug}/versions`
-      : '';
-  const publishedNewerThanDraft = latestPublishedVersion?.updatedAt > latestDraftVersion?.updatedAt;
-
-  if (publishedNewerThanDraft) {
-    latestDraftVersion = {
-      id: '',
-      updatedAt: '',
-    };
-  }
+    : `${serverURL}${apiRoute}/globals/${globalSlug}/versions`
 
   const columns = buildVersionColumns({
     collectionConfig,
-    config,
+    CreatedAtCellOverride: useVersionDrawerCreatedAtCell ? CreatedAtCell : undefined,
+    currentlyPublishedVersion,
     docID: id,
-    //@ts-ignore
     docs: versionsData?.docs,
     globalConfig,
-    //@ts-ignore
     i18n,
-    latestDraftVersion: latestDraftVersion?.id,
-    latestPublishedVersion: latestPublishedVersion?.id,
-  });
+    isTrashed,
+    latestDraftVersion,
+  })
+
+  const pluralLabel =
+    typeof collectionConfig?.labels?.plural === 'function'
+      ? collectionConfig.labels.plural({ i18n, t })
+      : (collectionConfig?.labels?.plural ?? globalConfig?.label)
+
+  const GutterComponent = disableGutter ? React.Fragment : Gutter
 
   return (
     <React.Fragment>
       <SetDocumentStepNav
-        collectionSlug={collectionConfig?.slug}
-        globalSlug={globalConfig?.slug}
+        collectionSlug={collectionSlug}
+        globalSlug={globalSlug}
         id={id}
-        pluralLabel={collectionConfig?.labels?.plural || globalConfig?.label}
-        useAsTitle={collectionConfig?.admin?.useAsTitle || globalConfig?.slug}
+        isTrashed={isTrashed}
+        pluralLabel={pluralLabel}
+        useAsTitle={collectionConfig?.admin?.useAsTitle || globalSlug}
         view={i18n.t('version:versions')}
       />
       <main className={baseClass}>
-        <Gutter className={`${baseClass}__wrap`}>
+        <GutterComponent className={`${baseClass}__wrap`}>
           <ListQueryProvider
-            //@ts-ignore
-            collectionSlug={collectionSlug}
             data={versionsData}
-            defaultLimit={limitToUse}
-            defaultSort={sort as string}
             modifySearchParams
+            orderableFieldName={collectionConfig?.orderable === true ? '_order' : undefined}
+            query={{
+              limit: limitToUse,
+              sort: sort as string,
+            }}
           >
             <VersionsViewClient
               baseClass={baseClass}
@@ -178,9 +172,8 @@ export const VersionsView: PayloadServerReactComponent<EditViewComponent> = asyn
               paginationLimits={collectionConfig?.admin?.pagination?.limits}
             />
           </ListQueryProvider>
-        </Gutter>
+        </GutterComponent>
       </main>
     </React.Fragment>
-  );
-};
-export default VersionsView; //as CustomVersionsView;
+  )
+}
