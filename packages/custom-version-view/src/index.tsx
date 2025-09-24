@@ -8,7 +8,6 @@ import { fetchLatestVersion, fetchVersions } from './fetchVersions'
 import { CreatedAtCell } from './components/cells/CreatedAt'
 import { buildVersionColumns } from './components/buildColumns'
 import { VersionsViewClient } from './index.client.js'
-import './index.scss'
 
 const baseClass = 'versions'
 
