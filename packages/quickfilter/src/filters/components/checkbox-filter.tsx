@@ -64,7 +64,7 @@ export function CheckboxFilter({
 
       <div
         className={cn(
-          'flex items-center gap-3 transition-colors py-px',
+          'flex items-center gap-1 transition-colors py-px',
           locale.direction === 'rtl' && 'justify-start',
         )}
       >

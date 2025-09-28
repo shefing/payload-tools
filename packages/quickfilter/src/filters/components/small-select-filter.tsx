@@ -119,7 +119,7 @@ export function SmallSelectFilter({
 
       <div
         className={cn(
-          'flex items-center gap-3 transition-colors py-0.5',
+          'flex items-center gap-1 transition-colors py-0.5',
           locale.direction === 'rtl' && 'justify-start',
         )}
       >
