@@ -35,7 +35,10 @@ function findFieldsByName(fields: ClientField[], fieldNames: string[]): ClientFi
   const results: ClientField[] = []
   function recursiveSearch(currentFields: ClientField[]) {
     const filteredFields = currentFields.filter(
-      (field) => 'name' in field && fieldNames.includes(field.name as string),
+      (field) =>
+        ('name' in field && fieldNames.includes(field.name as string)) ||
+        ('virtual' in field &&
+          fieldNames.includes(field.virtual as string)),
     )
     results.push(...filteredFields)
     currentFields.forEach((item) => {
@@ -105,7 +108,7 @@ const QuickFilter = ({
   filterList,
 }: {
   slug: string
-  filterList: (string | { name: string; width: string })[][]
+  filterList: (string | { name: string; width: string; virtualName: string })[][]
 }) => {
   const [fields, setFields] = useState<FilterDetaild[]>([])
   const [filterRows, setFilterRows] = useState<FilterRow[]>([])
@@ -128,8 +131,9 @@ const QuickFilter = ({
       })),
     )
     const fieldNames = flattenedFieldConfigs.map(({ field }) =>
-      typeof field === 'string' ? field : field.name,
+      typeof field === 'string' ? field : field.virtualName ? field.virtualName : field.name,
     )
+
     const matchedFields = findFieldsByName(collection?.fields || [], fieldNames)
     const simplifiedFields: FilterDetaild[] = matchedFields.map((field) => {
       const label = (field as FieldAffectingData).label
