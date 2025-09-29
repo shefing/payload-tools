@@ -108,7 +108,7 @@ const QuickFilter = ({
   filterList,
 }: {
   slug: string
-  filterList: (string | { name: string; width: string; virtualName: string })[][]
+  filterList: (string | { name: string; width: string; })[][]
 }) => {
   const [fields, setFields] = useState<FilterDetaild[]>([])
   const [filterRows, setFilterRows] = useState<FilterRow[]>([])
@@ -131,7 +131,7 @@ const QuickFilter = ({
       })),
     )
     const fieldNames = flattenedFieldConfigs.map(({ field }) =>
-      typeof field === 'string' ? field : field.virtualName ? field.virtualName : field.name,
+      typeof field === 'string' ? field : field.name,
     )
 
     const matchedFields = findFieldsByName(collection?.fields || [], fieldNames)
