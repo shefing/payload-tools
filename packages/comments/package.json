@@ -55,8 +55,13 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "^18.2.21",
     "payload": "3.56.0",
+    "@payloadcms/richtext-lexical": "3.56.0",
+    "@payloadcms/ui": "3.56.0",
     "tailwindcss": "^3.4.14",
     "tsx": "^4.7.1",
+    "next": "15.0.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "typescript": "5.5.4"
   },
   "publishConfig": {
@@ -73,14 +78,9 @@
     "@lexical/text": "0.20.0",
     "@lexical/utils": "0.20.0",
     "@lexical/yjs": "0.20.0",
-    "@payloadcms/richtext-lexical": "3.56.0",
-    "@payloadcms/ui": "3.56.0",
     "flowbite-react-icons": "^1.0.8",
     "lexical": "0.20.0",
     "moment": "^2.30.1",
-    "next": "15.0.4",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
     "typesense": "^1.8.2",
     "yjs": "^13.6.18"
   }
