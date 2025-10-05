@@ -94,6 +94,8 @@ export const Users: CollectionConfig = {
         { name: 'department', width: '300px' }, // Custom width
         'isActive',
       ],
+      // 🆕 Virtual field example (Payload 3.56.0+)
+      { name: 'orders.status', width: '250px' }, // ⚡ Using "collectionName.fieldName" format
     ],
   },
   // ... rest of your collection config
