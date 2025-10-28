@@ -1,4 +1,4 @@
-import type { CollectionSlug, Config } from 'payload';
+import type { CollectionConfig, CollectionSlug, Config } from 'payload';
 
 
 export type CollectionFilterPluginConfig = {
@@ -9,6 +9,35 @@ export type CollectionFilterPluginConfig = {
   excludedCollections?: CollectionSlug[];
   includedCollections?: CollectionSlug[];
 };
+
+export function addQuickFilterToCollection(newCollection: CollectionConfig) {
+  // Initialize components if not exists
+  if (!newCollection.admin) {
+    newCollection.admin = {};
+  }
+
+  if (!newCollection.admin.components) {
+    newCollection.admin.components = {};
+  }
+
+  if (!newCollection.admin.components.beforeListTable) {
+    newCollection.admin.components.beforeListTable = [];
+  } else if (!Array.isArray(newCollection.admin.components.beforeListTable)) {
+    // If it's not an array, convert it to an array
+    newCollection.admin.components.beforeListTable = [
+      newCollection.admin.components.beforeListTable,
+    ];
+  }
+
+  // Add the QuickFilter component
+  newCollection.admin.components.beforeListTable.push({
+    path: '@shefing/quickfilter/QuickFilter',
+    clientProps: {
+      filterList: newCollection.custom.filterList,
+      slug: newCollection.slug,
+    },
+  });
+}
 
 export const CollectionQuickFilterPlugin =
   (pluginOptions: CollectionFilterPluginConfig = {}) =>
@@ -31,33 +60,7 @@ export const CollectionQuickFilterPlugin =
       if (shouldProcessCollection && collection.custom?.filterList && Array.isArray(collection.custom.filterList)) {
         // Clone the collection to avoid mutating the original
         const newCollection = { ...collection };
-
-        // Initialize components if not exists
-        if (!newCollection.admin) {
-          newCollection.admin = {};
-        }
-
-        if (!newCollection.admin.components) {
-          newCollection.admin.components = {};
-        }
-
-        if (!newCollection.admin.components.beforeListTable) {
-          newCollection.admin.components.beforeListTable = [];
-        } else if (!Array.isArray(newCollection.admin.components.beforeListTable)) {
-          // If it's not an array, convert it to an array
-          newCollection.admin.components.beforeListTable = [
-            newCollection.admin.components.beforeListTable,
-          ];
-        }
-
-        // Add the QuickFilter component
-        newCollection.admin.components.beforeListTable.push({
-          path: '@shefing/quickfilter/QuickFilter',
-          clientProps: {
-            filterList: collection.custom.filterList,
-            slug: collection.slug,
-          },
-        });
+        addQuickFilterToCollection(newCollection);
 
         return newCollection;
       }
