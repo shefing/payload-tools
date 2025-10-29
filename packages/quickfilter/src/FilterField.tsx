@@ -90,8 +90,8 @@ const FilterField = ({
           label={field.label}
           key={field.name}
           options={(field.options || []).map((option: any) => ({
-            label: getTranslation(option.label, i18n),
-            value: option.value,
+            label: option.label ? getTranslation(option.label, i18n) : option,
+            value: option.value ? option.value : option,
           }))}
           onChange={handleSelectFilterChange}
           value={controlledValue}
