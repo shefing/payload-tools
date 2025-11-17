@@ -44,15 +44,27 @@ export function SelectFilter({
 }: SelectFilterProps) {
   const [open, setOpen] = useState(false);
   const [internalValue, setInternalValue] = useState<SelectFilterValue | undefined>(value);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const isRtl = locale?.direction === 'rtl';
   const showSearch = options.length > 10;
   const showSelectAll = multiSelect && options.length > 3;
 
-  // Sync internal state with external value prop
+  // Initialize internal state only once on mount
   useEffect(() => {
-    setInternalValue(value);
-  }, [value]);
+    if (!isInitialized) {
+      setInternalValue(value);
+      setIsInitialized(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialized]);
+
+  // Handle external clear (when value becomes undefined/empty)
+  useEffect(() => {
+    if (isInitialized && (!value || value.type === 'none' || value.selectedValues?.length === 0)) {
+      setInternalValue(undefined);
+    }
+  }, [value, isInitialized]);
 
   const selectedValues = internalValue?.selectedValues || [];
   const allSelected = selectedValues.length === options.length;
@@ -221,7 +233,11 @@ export function SelectFilter({
           {selectedValues.map((value, index) => {
             const option = options.find((opt) => opt.value === value);
             return (
-              <Badge key={value+index} variant='secondary' className='text-xs bg-background border'>
+              <Badge
+                key={value + index}
+                variant='secondary'
+                className='text-xs bg-background border'
+              >
                 {option?.label || value}
                 <button
                   className='ml-1 hover:bg-muted rounded-full'

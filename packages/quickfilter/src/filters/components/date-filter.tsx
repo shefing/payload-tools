@@ -14,7 +14,6 @@ import { Calendar } from '../../ui/calendar';
 import { getDateFilterOptions } from '../constants/date-filter-options';
 import { SupportedLocale, getLabel } from '../../labels';
 
-
 interface DateFilterProps {
   label?: string;
   value?: DateFilterValue;
@@ -52,6 +51,16 @@ export function DateFilter({
         setCustomRange(value.customRange);
       }
       setIsInitialized(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialized]);
+
+  // Handle external clear (when value becomes undefined/empty)
+  useEffect(() => {
+    if (isInitialized && (!value || Object.keys(value).length === 0)) {
+      setInternalValue(undefined);
+      setCustomRange({ from: undefined, to: undefined });
+      setShowCustom(false);
     }
   }, [value, isInitialized]);
 
