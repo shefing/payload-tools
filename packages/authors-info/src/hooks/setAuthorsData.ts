@@ -40,7 +40,7 @@ export const setAuthorsData = (
           }
           break;
         case 'update':
-          if (args?.originalDoc._status === 'draft' && args?.data._status === 'published') {
+          if (args?.data._status === 'published') {
             args.data[publishedAtFieldName] = new Date();
             args.data[publishedByFieldName] = args.req.user?.[usernameField] || 'system';
           }
