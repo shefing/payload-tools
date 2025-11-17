@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { useConfig, useListQuery, useTranslation } from '@payloadcms/ui';
 import type {
   ClientField,
@@ -121,6 +121,7 @@ const QuickFilter = ({
   const locale = i18n.language as SupportedLocale;
 
   const [filterValues, setFilterValues] = useState<Record<string, any>>({});
+  const isUpdatingFromQuery = useRef(false);
 
   // Build the list of filter fields from config
   useEffect(() => {
@@ -175,6 +176,10 @@ const QuickFilter = ({
   // Sync from URL (query.where) into internal state
   useEffect(() => {
     if (fields.length === 0) return;
+    if (isUpdatingFromQuery.current) {
+      isUpdatingFromQuery.current = false;
+      return;
+    }
     const valuesFromQuery: Record<string, any> = parseWhereClauseToFilterValues(
       query.where,
       fields,
@@ -235,7 +240,8 @@ const QuickFilter = ({
         page: 1,
       } as ListQuery;
 
-      refineListData(refinedData).then((r) => {
+      isUpdatingFromQuery.current = true;
+      refineListData(refinedData).then(() => {
         console.log('Query refreshed', refinedData);
       });
     }

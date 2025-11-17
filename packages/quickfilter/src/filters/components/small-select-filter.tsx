@@ -40,16 +40,28 @@ export function SmallSelectFilter({
   const [internalValue, setInternalValue] = useState<SelectFilterValue>(
     value || { type: 'none', selectedValues: [] },
   );
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const isRtl = locale?.direction === 'rtl';
 
   // Limit options to maxOptions
   const limitedOptions = options.slice(0, maxOptions);
 
-  // Sync internal state with external value prop
+  // Initialize internal state only once on mount
   useEffect(() => {
-    setInternalValue(value || { type: 'none', selectedValues: [] });
-  }, [value]);
+    if (!isInitialized) {
+      setInternalValue(value || { type: 'none', selectedValues: [] });
+      setIsInitialized(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialized]);
+
+  // Handle external clear (when value becomes undefined/empty)
+  useEffect(() => {
+    if (isInitialized && (!value || value.type === 'none' || value.selectedValues?.length === 0)) {
+      setInternalValue({ type: 'none', selectedValues: [] });
+    }
+  }, [value, isInitialized]);
 
   const handleOptionToggle = (optionValue: string) => {
     let newSelectedValues: string[];
