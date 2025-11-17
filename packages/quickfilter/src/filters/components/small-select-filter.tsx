@@ -133,7 +133,7 @@ export function SmallSelectFilter({
                 size='sm'
                 className={cn(
                   'px-3 py-1 text-xs rounded-none border-0',
-                  index > 0 && 'border-l',
+                  // index > 0 && 'border-l',
                   getButtonColor(option.value, index),
                 )}
                 onClick={() => handleOptionToggle(option.value)}

@@ -38,18 +38,22 @@ export function DateFilter({
   const [isOpen, setIsOpen] = useState(false);
   const [openFromCalendar, setOpenFromCalendar] = useState(false);
   const [openToCalendar, setOpenToCalendar] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const isRTL = locale.direction === 'rtl';
   const localeCode = locale.code as SupportedLocale;
   const { pastOptions, futureOptions } = getDateFilterOptions(localeCode);
 
-  // Sync internal state with external value prop
+  // Initialize internal state only once on mount
   useEffect(() => {
-    setInternalValue(value);
-    if (value?.type === 'custom' && value.customRange) {
-      setCustomRange(value.customRange);
+    if (!isInitialized) {
+      setInternalValue(value);
+      if (value?.type === 'custom' && value.customRange) {
+        setCustomRange(value.customRange);
+      }
+      setIsInitialized(true);
     }
-  }, [value]);
+  }, [value, isInitialized]);
 
   const labels = {
     selectOption: getLabel('selectOption', localeCode),
@@ -202,20 +206,19 @@ export function DateFilter({
           <PopoverContent className='useTw w-80 p-0'>
             <div className='p-4'>
               <div className='grid grid-cols-2 gap-4'>
-
                 {/* Past Options - Right column */}
                 <div className='space-y-1'>
                   <div
-                      className={cn(
-                          'text-sm font-semibold text-muted-foreground mb-2',
-                          isRTL && 'text-right',
-                      )}
+                    className={cn(
+                      'text-sm font-semibold text-muted-foreground mb-2',
+                      isRTL && 'text-right',
+                    )}
                   >
                     {labels.past}
                   </div>
                   <div className='space-y-0.5'>
                     {pastOptions.map((option) => (
-                        <div key={option.value}>{renderOptionWithDate(option)}</div>
+                      <div key={option.value}>{renderOptionWithDate(option)}</div>
                     ))}
                   </div>
                 </div>
@@ -235,7 +238,6 @@ export function DateFilter({
                     ))}
                   </div>
                 </div>
-
               </div>
 
               <Separator className='my-4' />
