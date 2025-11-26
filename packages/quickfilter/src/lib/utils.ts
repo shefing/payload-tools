@@ -26,6 +26,8 @@ export const parseWhereClauseToFilterValues = (
   locale: SupportedLocale,
 ): Record<string, any> => {
   const values: Record<string, any> = {};
+
+  // Collect all possible field names (including virtual ones)
   const fieldNames = new Set(
     fields.flatMap((f) => {
       if (typeof f.virtual === 'string') {
@@ -34,111 +36,134 @@ export const parseWhereClauseToFilterValues = (
       return [f.name];
     }),
   );
-  const recursiveParse = (clause: any) => {
+
+  // Temporary storage: fieldName → combined condition object
+  // This allows us to merge multiple conditions on the same field (e.g. split dates)
+  const collectedConditions: Record<string, any> = {};
+
+  // Recursively walk through AND/OR clauses and collect conditions per field
+  const collectConditions = (clause: any) => {
     if (!clause || typeof clause !== 'object') return;
 
+    // Handle { and: [...] }
     if (clause.and) {
-      clause.and.forEach(recursiveParse);
+      clause.and.forEach(collectConditions);
       return;
     }
+
+    // Handle { or: [...] } – we currently only support single-item OR
     if (clause.or) {
-      if (clause.or.length > 1) {
-        return;
-      }
-      clause.or.forEach(recursiveParse);
+      if (clause.or.length > 1) return; // Complex OR not supported yet
+      clause.or.forEach(collectConditions);
       return;
     }
+
+    // Leaf level: { fieldName: { equals: ..., greater_than_equal: ..., etc } }
     for (const fieldName in clause) {
-      if (fieldNames.has(fieldName)) {
-        const fieldDef = fields.find((f) => {
-          let name = f.name;
-          if (typeof f.virtual === 'string') {
-            name = f.virtual;
-          }
-          return name === fieldName;
-        });
-        const condition = clause[fieldName];
+      if (!fieldNames.has(fieldName)) continue;
 
-        // Handle string values for date fields (e.g., 'todayAndFuture')
-        if (fieldDef && fieldDef.type === 'date' && typeof condition === 'string') {
-          const predefinedValue = condition;
-          if ([...pastOptionKeys, ...futureOptionKeys].includes(predefinedValue as any)) {
-            values[fieldName] = {
-              type: 'predefined',
-              predefinedValue,
-            };
-            continue;
-          }
-        }
+      const condition = clause[fieldName];
+      if (!condition || typeof condition !== 'object') continue;
 
-        if (fieldDef && condition && typeof condition === 'object') {
-          if ('equals' in condition) {
-            if (fieldDef.type === 'checkbox') {
-              values[fieldName] =
-                condition.equals == 'true' || condition.equals === true ? 'checked' : 'unchecked';
-            } else if (fieldDef.type === 'select') {
-              values[fieldName] = { selectedValues: [condition.equals] };
-            }
-          } else if ('in' in condition && Array.isArray(condition.in)) {
-            if (fieldDef.type === 'select') {
-              values[fieldName] = { selectedValues: condition.in };
-            }
-          } else if ('greater_than_equal' in condition || 'less_than_equal' in condition) {
-            if (fieldDef.type === 'date') {
-              const fromDate = condition.greater_than_equal
-                ? new Date(condition.greater_than_equal)
-                : null;
-              const toDate = condition.less_than_equal ? new Date(condition.less_than_equal) : null;
-              const allDateOptions = [...pastOptionKeys, ...futureOptionKeys];
-              let matchedOption = null;
-
-              for (const option of allDateOptions) {
-                const range = getDateRangeForOption(option, locale);
-                let isFromMatch: boolean;
-                if (fromDate) {
-                  isFromMatch = range.from?.toDateString() === fromDate.toDateString();
-                } else if (fromDate == null && range.to == undefined) {
-                  // all future: fromDate == null & range.to == undefined
-                  isFromMatch = true;
-                }
-                let isToMatch: boolean;
-                if (toDate) {
-                  isToMatch = range.to?.toDateString() === toDate.toDateString();
-                } else if (toDate == null && range.to == undefined) {
-                  // all future: fromDate == null & range.to == undefined
-                  isToMatch = true;
-                }
-
-                if (isFromMatch && isToMatch) {
-                  matchedOption = option;
-                  break;
-                }
-              }
-
-              if (matchedOption) {
-                values[fieldName] = {
-                  type: 'predefined',
-                  predefinedValue: matchedOption,
-                };
-              } else {
-                values[fieldName] = {
-                  type: 'custom',
-                  customRange: {
-                    from: fromDate,
-                    to: toDate,
-                  },
-                };
-              }
-            }
-          }
-        }
+      // Initialize field entry if not exists
+      if (!collectedConditions[fieldName]) {
+        collectedConditions[fieldName] = {};
       }
+
+      // Merge all operators into one object per field
+      Object.assign(collectedConditions[fieldName], condition);
     }
   };
 
-  recursiveParse(where);
+  // Start collection from root where clause
+  collectConditions(where);
+
+  // Now process each collected field condition
+  for (const [fieldName, condition] of Object.entries(collectedConditions)) {
+    const fieldDef = fields.find((f) => {
+      const name = typeof f.virtual === 'string' ? f.virtual : f.name;
+      return name === fieldName;
+    });
+
+    if (!fieldDef) continue;
+
+    // Case 1: Direct string value like "today", "thisWeek", etc.
+    if (typeof condition === 'string') {
+      const predefinedValue = condition;
+      if ([...pastOptionKeys, ...futureOptionKeys].includes(predefinedValue as any)) {
+        values[fieldName] = { type: 'predefined', predefinedValue };
+      }
+      continue;
+    }
+
+    // Case 2: Checkbox or single-value select (equals)
+    if ('equals' in condition) {
+      if (fieldDef.type === 'checkbox') {
+        values[fieldName] =
+          condition.equals === true || condition.equals === 'true' ? 'checked' : 'unchecked';
+      } else if (fieldDef.type === 'select') {
+        values[fieldName] = { selectedValues: [condition.equals] };
+      }
+      continue;
+    }
+
+    // Case 3: Multi-select (in: [...])
+    if ('in' in condition && Array.isArray(condition.in)) {
+      if (fieldDef.type === 'select') {
+        values[fieldName] = { selectedValues: condition.in };
+      }
+      continue;
+    }
+
+    // Case 4: Date field with greater_than_equal / less_than_equal (possibly split!)
+    if (
+      fieldDef.type === 'date' &&
+      ('greater_than_equal' in condition || 'less_than_equal' in condition)
+    ) {
+      const fromDate = condition.greater_than_equal ? new Date(condition.greater_than_equal) : null;
+      const toDate = condition.less_than_equal ? new Date(condition.less_than_equal) : null;
+
+      // Try to match a predefined date option (today, thisWeek, etc.)
+      let matchedOption: string | null = null;
+      for (const option of [...pastOptionKeys, ...futureOptionKeys]) {
+        const range = getDateRangeForOption(option, locale);
+
+        const fromMatch =
+          fromDate === null
+            ? range.from === undefined
+            : range.from && fromDate.toDateString() === range.from.toDateString();
+
+        const toMatch =
+          toDate === null
+            ? range.to === undefined
+            : range.to && toDate.toDateString() === range.to.toDateString();
+
+        if (fromMatch && toMatch) {
+          matchedOption = option;
+          break;
+        }
+      }
+
+      if (matchedOption) {
+        values[fieldName] = {
+          type: 'predefined',
+          predefinedValue: matchedOption,
+        };
+      } else {
+        values[fieldName] = {
+          type: 'custom',
+          customRange: {
+            from: fromDate,
+            to: toDate,
+          },
+        };
+      }
+    }
+  }
+
   return values;
 };
+
 // Builds an array of condition objects from the quick filter values
 export const buildQuickFilterConditions = (
   values: Record<string, any>,
@@ -212,6 +237,29 @@ export const buildQuickFilterConditions = (
   });
   return conditions;
 };
+
+export function splitDualDateConditions(conditions: Record<string, any>[]): Record<string, any>[] {
+  return conditions.flatMap((condition) => {
+    const [[fieldName, query]] = Object.entries(condition);
+
+    // Safety – if it's not an object with a query inside
+    if (!query || typeof query !== 'object') return [condition];
+
+    const hasGte = 'greater_than_equal' in query;
+    const hasLte = 'less_than_equal' in query;
+
+    // Only split when BOTH bounds exist
+    if (hasGte && hasLte) {
+      return [
+        { [fieldName]: { greater_than_equal: query.greater_than_equal } },
+        { [fieldName]: { less_than_equal: query.less_than_equal } },
+      ];
+    }
+
+    // Otherwise – return as-is (including cases with only one bound)
+    return [condition];
+  });
+}
 
 // Recursive function to find a field by name
 export function findFieldByName(fields: Field[], fieldName: string): Field {

@@ -23,7 +23,11 @@ import { ChevronDown, ChevronUp, Filter, RefreshCw, X } from 'lucide-react';
 import { isEqual } from 'lodash';
 import { getDateFilterOptions } from './filters/constants/date-filter-options';
 import { Button } from './ui/button';
-import { buildQuickFilterConditions, parseWhereClauseToFilterValues } from './lib/utils';
+import {
+  buildQuickFilterConditions,
+  parseWhereClauseToFilterValues,
+  splitDualDateConditions,
+} from './lib/utils';
 
 // Helper function to get localized label
 const getLocalizedLabel = (label: any, locale: SupportedLocale): string => {
@@ -206,6 +210,8 @@ const QuickFilter = ({
       return;
     }
     const quickFilterConditions = buildQuickFilterConditions(filterValues, fields, locale);
+    const flattenedQuickFilterConditions = splitDualDateConditions(quickFilterConditions);
+
     const quickFilterFieldNames = new Set(
       fields.map((f) => {
         let name = f.name;
@@ -217,7 +223,7 @@ const QuickFilter = ({
     );
     const otherFilters = cleanWhereClause(query.where, quickFilterFieldNames);
 
-    const allConditions = [...quickFilterConditions];
+    const allConditions = [...flattenedQuickFilterConditions];
     if (otherFilters) {
       if (otherFilters.and && Array.isArray(otherFilters.and)) {
         allConditions.push(...otherFilters.and);
