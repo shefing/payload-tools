@@ -19,6 +19,85 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Converts default filter values to quick filter format
+export const parseDefaultFilterToFilterValues = (
+  defaultFilter: Record<string, any>,
+  fields: FilterDetaild[],
+  locale: SupportedLocale,
+): Record<string, any> => {
+  const values: Record<string, any> = {};
+
+  Object.entries(defaultFilter).forEach(([fieldName, value]) => {
+    if (!value) return;
+
+    const fieldDef = fields.find((f) => {
+      const name = typeof f.virtual === 'string' ? f.virtual : f.name;
+      return name === fieldName;
+    });
+
+    if (!fieldDef) return;
+
+    switch (fieldDef.type) {
+      case 'date': {
+        // If value is a string, treat it as a predefined value
+        if (typeof value === 'string') {
+          const predefinedValue = value;
+          if ([...pastOptionKeys, ...futureOptionKeys].includes(predefinedValue as any)) {
+            const range = getDateRangeForOption(predefinedValue, locale);
+            values[fieldName] = {
+              type: 'predefined',
+              predefinedValue,
+              customRange: {
+                from: range.from,
+                to: range.to,
+              },
+            };
+          }
+        }
+        break;
+      }
+      case 'select': {
+        // Handle query format: { equals: 'value' } or { in: ['val1', 'val2'] }
+        if (typeof value === 'object' && !Array.isArray(value)) {
+          if ('equals' in value) {
+            values[fieldName] = { selectedValues: [value.equals] };
+          } else if ('in' in value && Array.isArray(value.in)) {
+            values[fieldName] = { selectedValues: value.in };
+          }
+        }
+        // Handle simple format: 'value' or ['val1', 'val2']
+        else if (Array.isArray(value)) {
+          values[fieldName] = { selectedValues: value };
+        } else {
+          // Single value
+          values[fieldName] = { selectedValues: [value] };
+        }
+        break;
+      }
+      case 'checkbox': {
+        // Handle query format: { equals: true } or { equals: 'true' }
+        if (typeof value === 'object' && 'equals' in value) {
+          const equalsValue = value.equals;
+          if (equalsValue === true || equalsValue === 'true') {
+            values[fieldName] = 'checked';
+          } else if (equalsValue === false || equalsValue === 'false') {
+            values[fieldName] = 'unchecked';
+          }
+        }
+        // Handle simple format: true, false, 'checked', 'unchecked'
+        else if (value === true || value === 'true' || value === 'checked') {
+          values[fieldName] = 'checked';
+        } else if (value === false || value === 'false' || value === 'unchecked') {
+          values[fieldName] = 'unchecked';
+        }
+        break;
+      }
+    }
+  });
+
+  return values;
+};
+
 // Translates URL query conditions to the quick filter's internal state
 export const parseWhereClauseToFilterValues = (
   where: any,
@@ -235,7 +314,7 @@ export const buildQuickFilterConditions = (
       conditions.push(condition);
     }
   });
-  return conditions;
+  return splitDualDateConditions(conditions);
 };
 
 export function splitDualDateConditions(conditions: Record<string, any>[]): Record<string, any>[] {
@@ -341,7 +420,7 @@ export function processNavGroups(
           // If we have fields and a defaultFilter, calculate the URL with where clause
           if (fields.length > 0) {
             // Parse the defaultFilter to get filter values
-            const filterValues = parseWhereClauseToFilterValues(
+            const filterValues = parseDefaultFilterToFilterValues(
               collection.custom.defaultFilter,
               fields,
               i18n.language as SupportedLocale,

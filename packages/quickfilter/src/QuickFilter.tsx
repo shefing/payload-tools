@@ -210,7 +210,6 @@ const QuickFilter = ({
       return;
     }
     const quickFilterConditions = buildQuickFilterConditions(filterValues, fields, locale);
-    const flattenedQuickFilterConditions = splitDualDateConditions(quickFilterConditions);
 
     const quickFilterFieldNames = new Set(
       fields.map((f) => {
@@ -223,7 +222,7 @@ const QuickFilter = ({
     );
     const otherFilters = cleanWhereClause(query.where, quickFilterFieldNames);
 
-    const allConditions = [...flattenedQuickFilterConditions];
+    const allConditions = [...quickFilterConditions];
     if (otherFilters) {
       if (otherFilters.and && Array.isArray(otherFilters.and)) {
         allConditions.push(...otherFilters.and);
