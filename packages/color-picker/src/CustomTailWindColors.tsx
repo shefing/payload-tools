@@ -85,7 +85,7 @@ export const SelectColor: React.FC<Props> = (props) => {
   }
 
   return (
-    <div>
+    <div className="useTw">
       {
         <FieldLabel
           htmlFor={`bfColourPickerField-${path?.replace(/\./gi, '__')}`}
@@ -117,7 +117,7 @@ export const SelectColor: React.FC<Props> = (props) => {
             </div>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="comp mb-[10px] p-0" side="right" align="start">
+        <PopoverContent className="useTw comp mb-[10px] p-0" side="right" align="start">
           <Command>
             <CommandInput className="comp" placeholder="Search color..." autoFocus={false} />
             <CommandList>
