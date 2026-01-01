@@ -1,6 +1,6 @@
 {
   "name": "@shefing/quickfilter",
-  "version": "1.0.91",
+  "version": "1.0.92",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -43,9 +43,9 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "@payloadcms/translations": "3.61.0",
-    "@payloadcms/next": "3.61.0",
-    "@payloadcms/ui": "3.61.0",
+    "@payloadcms/translations": "3.67.0",
+    "@payloadcms/next": "3.67.0",
+    "@payloadcms/ui": "3.67.0",
     "@swc/cli": "^0.1.65",
     "@swc/core": "^1.6.3",
     "@types/react": "19.1.12",
@@ -61,7 +61,7 @@
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "next": "15.4.4",
-    "payload": "3.61.0"
+    "payload": "3.67.0"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.1.4",
