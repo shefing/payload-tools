@@ -339,6 +339,9 @@ export function DateFilter({
                               }}
                               initialFocus
                               className='useTw'
+                              disabled={(date) =>
+                                customRange.from ? date <= customRange.from : false
+                              }
                             />
                           </PopoverContent>
                         </Popover>
