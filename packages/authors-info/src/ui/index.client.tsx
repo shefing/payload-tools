@@ -2,6 +2,8 @@
 import React, { Fragment } from 'react';
 import moment from 'moment';
 import 'moment/locale/he';
+import { useLocale } from '@payloadcms/ui'
+
 export interface TableCellProps {
   cellData: any;
   fieldKey: 'createdAt' | 'updatedAt';
@@ -9,7 +11,8 @@ export interface TableCellProps {
 
 export const CreatedAtCellClient: React.FC<TableCellProps> = (props) => {
   const { cellData, fieldKey } = props;
-  moment.locale('he');
+  const locale = useLocale()
+  moment.locale(locale.code);
 
   // Ensure cellData is not null before passing it to moment
   const validCellData = cellData?.rowData?.[fieldKey] ?? null;
