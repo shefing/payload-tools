@@ -1,7 +1,6 @@
 'use client';
 import React, { Fragment } from 'react';
 import moment from 'moment';
-import 'moment/locale/he';
 import { useLocale } from '@payloadcms/ui'
 
 export interface TableCellProps {
