@@ -17,7 +17,7 @@ export const CreatedAtCellClient: React.FC<TableCellProps> = (props) => {
   // Ensure cellData is not null before passing it to moment
   const validCellData = cellData?.rowData?.[fieldKey] ?? null;
 
-  const fromNow = validCellData ? moment(validCellData).fromNow() : 'N/A';
+  const fromNow = validCellData ? moment(validCellData,locale.code).fromNow() : 'N/A';
 
   return <Fragment>{validCellData ? fromNow : 'N/A'}</Fragment>;
 };

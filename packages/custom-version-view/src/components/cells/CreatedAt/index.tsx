@@ -4,6 +4,7 @@ import { formatDate } from '@payloadcms/ui/shared'
 import { formatAdminURL } from 'payload/shared'
 import React from 'react'
 import moment from 'moment';
+import { useLocale } from '@payloadcms/ui'
 
 export type CreatedAtCellProps = {
   collectionSlug?: string
@@ -31,6 +32,7 @@ export const CreatedAtCell: React.FC<CreatedAtCellProps> = ({
   } = useConfig()
 
   const { i18n } = useTranslation()
+  const locale = useLocale()
 
   const trashedDocPrefix = isTrashed ? 'trash/' : ''
 
@@ -56,7 +58,7 @@ export const CreatedAtCell: React.FC<CreatedAtCellProps> = ({
       prefetch={false}
       title={formatDate({ date: updatedAt, i18n, pattern: dateFormat })}
     >
-      {updatedAt && moment(updatedAt as Date).fromNow()}
+      {updatedAt && moment(updatedAt as Date,locale.code).fromNow()}
     </Link>
   );
 };
