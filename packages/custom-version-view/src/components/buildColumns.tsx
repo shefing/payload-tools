@@ -108,14 +108,14 @@ export const buildVersionColumns = ({
     }),
   });
   columns.splice(1, 0, {
-    accessor: 'updator',
+    accessor: 'process',
     active: true,
     field: {
       name: '',
       type: 'text',
     },
-    Heading: <SortColumn Label={'Updated by'} disable name='updator' />,
-    renderedCells: docs.map((doc:Updator, i) => {
+    Heading: <SortColumn Label={'Process'} disable name='process' />,
+    renderedCells: docs.map((doc:Process, i) => {
       return <IDCell id={doc.process as string} key={i} />;
     }),
   });
