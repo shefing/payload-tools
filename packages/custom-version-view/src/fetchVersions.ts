@@ -163,12 +163,14 @@ export const fetchLatestVersion = async <TVersionData extends object = object>({
   user?: TypedUser
   where?: Where
 }): Promise<null | TypeWithVersion<TVersionData>> => {
+  const entityConfig = collectionSlug
+    ? req.payload.collections[collectionSlug]?.config
+    : globalSlug
+      ? req.payload.globals[globalSlug]?.config
+      : undefined
+  const draftsEnabled = entityConfig?.versions?.drafts
   const and: Where[] = [
-    {
-      'version._status': {
-        equals: status,
-      },
-    },
+    ...(draftsEnabled ? [{ 'version._status': { equals: status } }] : []),
     ...(where ? [where] : []),
   ]
 

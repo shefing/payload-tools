@@ -66,6 +66,7 @@ export default async function VersionsView(props: DocumentViewServerProps) {
     depth: 0,
     globalSlug,
     limit: limitToUse,
+    locale: req.locale,
     overrideAccess: false,
     page: page ? parseInt(page.toString(), 10) : undefined,
     parentID: id,
