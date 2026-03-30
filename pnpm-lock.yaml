@@ -305,6 +305,9 @@ importers:
       '@types/react-dom':
         specifier: npm:types-react-dom@19.0.0-rc.0
         version: types-react-dom@19.0.0-rc.0
+      mongodb:
+        specifier: ^6.0.0
+        version: 6.20.0
       next:
         specifier: 15.3.3
         version: 15.3.3(@playwright/test@1.56.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4)
