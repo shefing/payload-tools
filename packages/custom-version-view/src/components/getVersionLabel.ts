@@ -33,7 +33,16 @@ export function getVersionLabel({
 } {
   const publishedNewerThanDraft =
     currentlyPublishedVersion?.updatedAt > latestDraftVersion?.updatedAt
-
+  if (version.version._status === 'published') {
+    const isCurrentlyPublished = version.id === currentlyPublishedVersion?.id
+    return {
+      name: isCurrentlyPublished ? 'currentlyPublished' : 'previouslyPublished',
+      label: isCurrentlyPublished
+        ? t('version:currentlyPublished')
+        : t('version:previouslyPublished'),
+      pillStyle: isCurrentlyPublished ? 'success' : 'light',
+    }
+  }
   if (version.version._status === 'draft') {
     if (publishedNewerThanDraft) {
       return {
@@ -49,14 +58,10 @@ export function getVersionLabel({
         pillStyle: 'light',
       }
     }
-  } else {
-    const isCurrentlyPublished = version.id === currentlyPublishedVersion?.id
-    return {
-      name: isCurrentlyPublished ? 'currentlyPublished' : 'previouslyPublished',
-      label: isCurrentlyPublished
-        ? t('version:currentlyPublished')
-        : t('version:previouslyPublished'),
-      pillStyle: isCurrentlyPublished ? 'success' : 'light',
-    }
+  }
+  return {
+    name: 'draft',
+    label: t('version:draft'),
+    pillStyle: 'light',
   }
 }

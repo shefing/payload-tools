@@ -59,7 +59,7 @@ export default async function VersionsView(props: DocumentViewServerProps) {
 
   const defaultLimit = collectionSlug ? collectionConfig?.admin?.pagination?.defaultLimit : 10
 
-  const limitToUse = isNumber(limit) ? Number(limit) : defaultLimit
+  const limitToUse = limit ? Number(limit) : (isNumber(defaultLimit) ? defaultLimit : 10)
 
   const versionsData: PaginatedDocs = await fetchVersions({
     collectionSlug,
@@ -91,15 +91,13 @@ export default async function VersionsView(props: DocumentViewServerProps) {
         const collection = mongoose.collection(versionCollectionName)
         const versionIds = versionsData.docs.map((doc: any) => doc.id)
         // Use mongoose's built-in Types.ObjectId to avoid direct mongodb dependency
+        const { ObjectId } = await import('mongodb')
         const objectIds = versionIds.map((id: string) => {
-          try { return (mongoose as any).base?.Types?.ObjectId
-            ? new (mongoose as any).base.Types.ObjectId(id)
-            : id
-          } catch { return id }
+          try { return new ObjectId(id) } catch { return id }
         })
         const rawDocs = await collection.find(
           { _id: { $in: objectIds } },
-          { projection: { _id: 1, 'version.updator': 1, 'version.process': 1, 'version.creator': 1 } }
+          { projection: { _id: 1, 'version.updator': 1, 'version.process': 1, 'version.creator': 1, 'version._status': 1 } }
         ).toArray()
         const rawMap = new Map(rawDocs.map((d: any) => [d._id.toString(), d.version || {}]))
         const locale = req.locale || 'he'
@@ -116,6 +114,12 @@ export default async function VersionsView(props: DocumentViewServerProps) {
             doc.updator = getLocalized(raw.updator)
             doc.process = getLocalized(raw.process)
             doc.creator = getLocalized(raw.creator)
+            // Payload bug: findVersions passes draft:undefined to afterRead,
+            // causing _status defaultValue:'draft' to overwrite the real value.
+            // Fix: read _status directly from MongoDB.
+            if (raw._status && doc.version) {
+              doc.version._status = getLocalized(raw._status)
+            }
           }
         })
       }
