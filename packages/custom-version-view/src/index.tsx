@@ -64,6 +64,7 @@ export default async function VersionsView(props: DocumentViewServerProps) {
   const versionsData: PaginatedDocs = await fetchVersions({
     collectionSlug,
     depth: 0,
+    draft: true,
     globalSlug,
     limit: limitToUse,
     locale: req.locale,
