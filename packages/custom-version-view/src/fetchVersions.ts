@@ -120,7 +120,6 @@ export const fetchVersions = async <TVersionData extends object = object>({
       return (await req.payload.findGlobalVersions({
         slug: globalSlug,
         depth,
-        draft,
         limit,
         locale,
         overrideAccess,
