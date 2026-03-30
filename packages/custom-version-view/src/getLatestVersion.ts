@@ -34,6 +34,7 @@ export async function getLatestVersion(args: Args): Promise<ReturnType> {
   try {
     const sharedOptions = {
       depth: 0,
+      draft: true,
       limit: 1,
       sort: '-updatedAt',
       where: {
