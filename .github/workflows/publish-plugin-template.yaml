@@ -18,6 +18,8 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     defaults:
       run:
         working-directory: packages/${{ inputs.plugin-name }}
@@ -29,6 +31,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ github.token }}
+          persist-credentials: true
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
@@ -52,6 +57,7 @@ jobs:
         run: pnpm run build
 
       - name: Bump version
+        id: bump
         run: |
           echo "Current version: $(pnpm pkg get version)"
           # Get current version
@@ -76,6 +82,15 @@ jobs:
           # Update package.json
           pnpm pkg set version="$new_version"
           echo "New version: $new_version"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "chore: bump ${{ inputs.plugin-name }} version to ${{ steps.bump.outputs.new_version }} [skip ci]"
+          git push
 
       - name: Publish to NPM
         run: |
