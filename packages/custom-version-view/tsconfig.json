@@ -15,7 +15,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
-    "module": "ES6",
+    "module": "ESNext",
     "sourceMap": true,
     "strict": false,
     "isolatedModules": true,

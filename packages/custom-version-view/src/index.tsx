@@ -59,7 +59,7 @@ export default async function VersionsView(props: DocumentViewServerProps) {
 
   const defaultLimit = collectionSlug ? collectionConfig?.admin?.pagination?.defaultLimit : 10
 
-  const limitToUse = isNumber(limit) ? Number(limit) : defaultLimit
+  const limitToUse = limit ? Number(limit) : (isNumber(defaultLimit) ? defaultLimit : 10)
 
   const versionsData: PaginatedDocs = await fetchVersions({
     collectionSlug,
@@ -79,10 +79,54 @@ export default async function VersionsView(props: DocumentViewServerProps) {
   if (!versionsData) {
     return notFound()
   }
-  versionsData.docs.forEach((doc) => {
-    if (doc.version.updator) doc.updator = doc.version.updator;
-    if (doc.version.process) doc.process = doc.version.process;
-  });
+
+  // Payload's transform/stripFields removes plugin-added fields (updator, process, creator)
+  // from version docs because they may not be in the flattened field schema at transform time.
+  // Workaround: query MongoDB directly for these fields and merge them into the docs.
+  if (versionsData.docs?.length > 0 && collectionSlug) {
+    try {
+      const mongoose = (req.payload.db as any)?.connection
+      if (mongoose) {
+        const versionCollectionName = `_${collectionSlug}_versions`
+        const collection = mongoose.collection(versionCollectionName)
+        const versionIds = versionsData.docs.map((doc: any) => doc.id)
+        // Use mongoose's built-in Types.ObjectId to avoid direct mongodb dependency
+        const { ObjectId } = await import('mongodb')
+        const objectIds = versionIds.map((id: string) => {
+          try { return new ObjectId(id) } catch { return id }
+        })
+        const rawDocs = await collection.find(
+          { _id: { $in: objectIds } },
+          { projection: { _id: 1, 'version.updator': 1, 'version.process': 1, 'version.creator': 1, 'version._status': 1 } }
+        ).toArray()
+        const rawMap = new Map(rawDocs.map((d: any) => [d._id.toString(), d.version || {}]))
+        const locale = req.locale || 'he'
+        versionsData.docs.forEach((doc: any) => {
+          const raw = rawMap.get(doc.id) as any
+          if (raw) {
+            // Handle localized fields: stored as { he: "value" } in MongoDB
+            const getLocalized = (val: any) => {
+              if (val && typeof val === 'object' && !Array.isArray(val)) {
+                return val[locale] || val['he'] || val['en'] || Object.values(val)[0]
+              }
+              return val
+            }
+            doc.updator = getLocalized(raw.updator)
+            doc.process = getLocalized(raw.process)
+            doc.creator = getLocalized(raw.creator)
+            // Payload bug: findVersions passes draft:undefined to afterRead,
+            // causing _status defaultValue:'draft' to overwrite the real value.
+            // Fix: read _status directly from MongoDB.
+            if (raw._status && doc.version) {
+              doc.version._status = getLocalized(raw._status)
+            }
+          }
+        })
+      }
+    } catch (e: any) {
+      console.error('[custom-version-view] Failed to fetch author fields from MongoDB:', e.message)
+    }
+  }
 
 
   const [currentlyPublishedVersion, latestDraftVersion] = await Promise.all([
