@@ -1,10 +1,11 @@
 'use client'
 
+import type { TFunction } from '@payloadcms/translations'
 import { Pill, useConfig, useTranslation } from '@payloadcms/ui'
 import { formatDate } from '@payloadcms/ui/shared'
 import React from 'react'
 
-import { getVersionLabel } from './getVersionLabel'
+import { getVersionLabel } from './getVersionLabel.js'
 
 const baseClass = 'version-pill-label'
 
@@ -19,7 +20,11 @@ const renderPill = (label: React.ReactNode, pillStyle: Parameters<typeof Pill>[0
 export const VersionPillLabel: React.FC<{
   currentlyPublishedVersion?: {
     id: number | string
+    publishedLocale?: string
     updatedAt: string
+    version: {
+      updatedAt: string
+    }
   }
   disableDate?: boolean
 
@@ -30,7 +35,8 @@ export const VersionPillLabel: React.FC<{
     updatedAt?: string
     version: {
       [key: string]: unknown
-      _status: string
+      _status: 'draft' | 'published'
+      updatedAt: string
     }
   }
   /**
@@ -64,12 +70,12 @@ export const VersionPillLabel: React.FC<{
       localization,
     },
   } = useConfig()
-  const { i18n, t } = useTranslation()
+  const { i18n, t } = useTranslation<TFunction>()
 
   const { label, pillStyle } = getVersionLabel({
     currentlyPublishedVersion,
     latestDraftVersion,
-    t,
+    t: t as Parameters<typeof getVersionLabel>[0]['t'],
     version: doc,
   })
   const labelText: React.ReactNode = (
@@ -92,7 +98,9 @@ export const VersionPillLabel: React.FC<{
     localization && localization?.locales
       ? localization.locales.find((loc) => loc.code === localeCode)
       : null
-  const localeLabel = locale ? locale?.label?.[i18n?.language] || locale?.label : null
+  const localeLabel: string | null = locale
+    ? (typeof locale?.label === 'object' ? locale.label[i18n?.language] ?? null : locale?.label ?? null)
+    : null
 
   return (
     <div className={baseClass}>
