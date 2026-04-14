@@ -5,6 +5,7 @@ import { CalendarIcon, ChevronDown, X } from 'lucide-react';
 
 import { he, enUS, ar, fr, es, zhCN } from 'date-fns/locale';
 import { Locale as DateFnsLocale } from 'date-fns';
+
 import { formatDate, getDateRangeForOption } from '../utils/date-helpers';
 import { DateFilterValue, DateRange, Locale } from '../types/filters-type';
 import { Button } from '../../ui/button';
@@ -13,6 +14,15 @@ import { Label } from '../../ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { Separator } from '../../ui/separator';
 import { Calendar } from '../../ui/calendar';
+
+const DATE_FNS_LOCALE_MAP: Record<string, DateFnsLocale> = {
+  he,
+  ar,
+  fr,
+  es,
+  zh: zhCN,
+  en: enUS,
+};
 import { getDateFilterOptions } from '../constants/date-filter-options';
 import { SupportedLocale, getLabel } from '../../labels';
 
@@ -45,15 +55,7 @@ export function DateFilter({
   const localeCode = locale.code as SupportedLocale;
   const { pastOptions, futureOptions } = getDateFilterOptions(localeCode);
 
-  const dateFnsLocaleMap: Record<string, DateFnsLocale> = {
-    he,
-    ar,
-    fr,
-    es,
-    zh: zhCN,
-    en: enUS,
-  };
-  const calendarLocale = dateFnsLocaleMap[localeCode] ?? enUS;
+  const calendarLocale = DATE_FNS_LOCALE_MAP[localeCode] ?? enUS;
 
   // Initialize internal state only once on mount
   useEffect(() => {
