@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { CalendarIcon, ChevronDown, X } from 'lucide-react';
 
+import { he, enUS, ar, fr, es, zhCN } from 'date-fns/locale';
+import { Locale as DateFnsLocale } from 'date-fns';
 import { formatDate, getDateRangeForOption } from '../utils/date-helpers';
 import { DateFilterValue, DateRange, Locale } from '../types/filters-type';
 import { Button } from '../../ui/button';
@@ -42,6 +44,16 @@ export function DateFilter({
   const isRTL = locale.direction === 'rtl';
   const localeCode = locale.code as SupportedLocale;
   const { pastOptions, futureOptions } = getDateFilterOptions(localeCode);
+
+  const dateFnsLocaleMap: Record<string, DateFnsLocale> = {
+    he,
+    ar,
+    fr,
+    es,
+    zh: zhCN,
+    en: enUS,
+  };
+  const calendarLocale = dateFnsLocaleMap[localeCode] ?? enUS;
 
   // Initialize internal state only once on mount
   useEffect(() => {
@@ -301,6 +313,7 @@ export function DateFilter({
                               }}
                               initialFocus
                               className='useTw'
+                              locale={calendarLocale}
                               disabled={(date) => (customRange.to ? date >= customRange.to : false)}
                             />
                           </PopoverContent>
@@ -339,6 +352,7 @@ export function DateFilter({
                               }}
                               initialFocus
                               className='useTw'
+                              locale={calendarLocale}
                               disabled={(date) =>
                                 customRange.from ? date <= customRange.from : false
                               }
