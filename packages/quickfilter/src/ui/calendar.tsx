@@ -149,8 +149,9 @@ function CalendarDayButton({
   className,
   day,
   modifiers,
+  locale = 'he',
   ...props
-}: React.ComponentProps<typeof DayButton>) {
+}: React.ComponentProps<typeof DayButton> & { locale?: string }) {
   const defaultClassNames = getDefaultClassNames();
 
   const ref = React.useRef<HTMLButtonElement>(null);
@@ -163,7 +164,7 @@ function CalendarDayButton({
       ref={ref}
       variant='ghost'
       size='icon'
-      data-day={day.date.toLocaleDateString()}
+      data-day={day.date.toLocaleDateString(locale)} 
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&
