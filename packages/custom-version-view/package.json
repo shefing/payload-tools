@@ -39,7 +39,7 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",
     "mongodb": "^6.0.0",
-    "next": "15.3.3",
+    "next": "16.2.4",
     "payload": "3.80.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",

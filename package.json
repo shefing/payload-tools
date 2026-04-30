@@ -36,7 +36,8 @@
   "pnpm": {
     "overrides": {
       "@types/react": "npm:types-react@19.0.0-rc.0",
-      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.0"
+      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.0",
+      "undici": "^8.1.0"
     }
   },
   "overrides": {
