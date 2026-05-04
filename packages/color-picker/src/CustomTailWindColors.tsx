@@ -12,6 +12,7 @@ import {
   CommandList,
 } from './components/command.js'
 import { cn } from './lib/utils.js'
+import { getLabelString } from './lib/getLabelString.js'
 import { Paintbrush } from 'lucide-react'
 import TailWindColors from './TailWindColors.js'
 import { TextFieldClientProps } from 'payload'
@@ -72,13 +73,7 @@ export const SelectColor: React.FC<Props> = (props) => {
   const [selectColor, setSelectColor] = useState(
     colors.find((color) => color.value === value) || null,
   )
-  const rawLabel = field?.label
-  const labelToUse: string =
-    typeof rawLabel === 'string'
-      ? rawLabel
-      : rawLabel && typeof rawLabel === 'object'
-        ? (Object.values(rawLabel)[0] as string) ?? 'Color'
-        : 'Color'
+  const labelToUse = getLabelString(field?.label)
 
   const handleSelect = (label: string) => {
     const obj = colors.find((color) => color.label === label) || null
