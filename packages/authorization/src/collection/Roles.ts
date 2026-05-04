@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload';
-import { isAdmin, isAdminFieldLevel } from '../access/isAdmin';
-import { isAdminOrSelf } from '../access/isAdminOrSelf';
+import { isAdmin, isAdminFieldLevel } from '../access/isAdmin.js';
+import { isAdminOrSelf } from '../access/isAdminOrSelf.js';
 export const Roles: CollectionConfig = {
   slug: 'roles',
   labels: {
@@ -83,7 +83,7 @@ export const Roles: CollectionConfig = {
               options: [],
               required: true,
               admin: {
-                width: '70%',
+                width: '40%',
               },
               localized: true,
             },
@@ -124,15 +124,24 @@ export const Roles: CollectionConfig = {
               },
               localized: true,
             },
+            {
+              name: 'fields',
+              label: {
+                en: 'Fields (optional)',
+                he: 'שדות (אופציונלי)',
+              },
+              type: 'text',
+              hasMany: true,
+              admin: {
+                width: '30%',
+                description: 'Restrict this permission to specific fields (leave empty for all fields)',
+              },
+            },
           ],
         },
       ],
     },
   ],
 };
-
-
-
-
 
 
