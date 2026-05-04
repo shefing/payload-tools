@@ -1,5 +1,5 @@
 import { Access, User, Payload } from 'payload';
-import { AuthorizationPluginConfig } from '../types.js';
+import { AuthorizationPluginConfig, FieldLevelPermission } from '../types.js';
 
 const PERMISSION_HIERARCHY: Record<string, string[]> = {
   publish: ['write', 'read', 'publish'],
@@ -7,7 +7,8 @@ const PERMISSION_HIERARCHY: Record<string, string[]> = {
   read: ['read'],
 };
 
-// Returns true if user has action access to the collection, and (if fieldName provided) to the field
+// Returns true if user has action access to the collection, and (if fieldName provided) to the field.
+// Both action and field access must come from the same permission entry to avoid cross-role leaks.
 export const canUserAccessAction = async (
   user: User | null | undefined,
   slugName: string,
@@ -31,34 +32,32 @@ export const canUserAccessAction = async (
 
   if (!roles.docs || roles.docs.length === 0) return false;
 
-  const userAllowedActions = new Set<string>();
-  let hasFieldAccess = !fieldName; // If no fieldName provided, default to true
-
   for (const role of roles.docs) {
-    const permissions = role[config.permissionsField];
-    if (permissions) {
-      for (const permission of permissions) {
-        if (permission.entity.includes(slugName)) {
-          // permission.type is string[] (hasMany select field)
-          const types: string[] = permission.type;
-          for (const type of types) {
-            userAllowedActions.add(type);
-            PERMISSION_HIERARCHY[type]?.forEach((perm) => userAllowedActions.add(perm));
-          }
+    const permissions: FieldLevelPermission[] | undefined = role[config.permissionsField];
+    if (!permissions) continue;
 
-          // Field-level check: only relevant when fieldName is provided
-          // and the permission grants the requested action (directly or via hierarchy)
-          if (fieldName && types.some((type) => PERMISSION_HIERARCHY[type]?.includes(action))) {
-            if (!permission.fields || permission.fields.length === 0) {
-              hasFieldAccess = true; // No fields specified = all fields allowed
-            } else if (permission.fields.includes(fieldName)) {
-              hasFieldAccess = true;
-            }
-          }
-        }
+    for (const permission of permissions) {
+      if (!permission.entity.includes(slugName)) continue;
+
+      // permission.type is string[] (hasMany select field)
+      // Expand all types through the hierarchy to get the full set of granted actions
+      const grantedActions = new Set<string>();
+      for (const type of permission.type) {
+        grantedActions.add(type);
+        PERMISSION_HIERARCHY[type]?.forEach((perm) => grantedActions.add(perm));
       }
+
+      if (!grantedActions.has(action)) continue;
+
+      // Action is granted by this permission. If no fieldName requested, we're done.
+      if (!fieldName) return true;
+
+      // Field-level check: empty/missing fields means all fields are allowed
+      if (!permission.fields || permission.fields.length === 0) return true;
+
+      if (permission.fields.includes(fieldName)) return true;
     }
   }
 
-  return userAllowedActions.has(action) && hasFieldAccess;
+  return false;
 };
