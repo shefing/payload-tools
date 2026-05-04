@@ -50,7 +50,9 @@
     "typescript": "^5.5.2"
   },
   "dependencies": {
-    "flowbite-react-icons": "^1.0.8"
+    "flowbite-react-icons": "^1.0.8",
+    "@faceless-ui/modal": "^3.0.0",
+    "sonner": "^1.0.0"
   },
   "publishConfig": {
     "access": "public"
