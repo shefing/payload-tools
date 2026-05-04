@@ -1,6 +1,6 @@
 {
   "name": "@shefing/right-panel",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -50,8 +50,8 @@
     "typescript": "^5.5.2"
   },
   "dependencies": {
-    "flowbite-react-icons": "^1.0.8",
     "@faceless-ui/modal": "^3.0.0",
+    "flowbite-react-icons": "^1.0.8",
     "sonner": "^1.0.0"
   },
   "publishConfig": {
