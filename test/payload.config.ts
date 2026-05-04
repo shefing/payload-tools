@@ -18,6 +18,7 @@ import { createIconSelectField } from '@shefing/icon-select'
 import CollectionQuickFilterPlugin from '@shefing/quickfilter'
 import { CollectionResetPreferencesPlugin } from '@shefing/reset-list-view'
 import RightPanelPlugin from '@shefing/right-panel'
+import { seed } from './seed.js'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -119,6 +120,7 @@ export default buildConfig(
         RightPanelPlugin({}),
       ],
 
+      onInit: async (payload) => { await seed(payload) },
       secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-me',
       sharp,
 

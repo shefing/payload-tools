@@ -8,7 +8,10 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "generate:importmap": "cross-env PAYLOAD_CONFIG_PATH=./payload.config.ts payload generate:importmap",
-    "generate:types": "cross-env PAYLOAD_CONFIG_PATH=./payload.config.ts payload generate:types"
+    "generate:types": "cross-env PAYLOAD_CONFIG_PATH=./payload.config.ts payload generate:types",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
     "@shefing/authorization": "workspace:*",
@@ -34,6 +37,7 @@
     "@types/node": "^22.5.4",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.2",
+    "@playwright/test": "^1.52.0",
     "cross-env": "^7.0.3",
     "mongodb-memory-server": "10.1.4",
     "next": "16.2.4",
