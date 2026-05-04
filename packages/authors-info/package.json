@@ -1,6 +1,6 @@
 {
   "name": "@shefing/authors-info",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "private": false,
   "bugs": "https://github.com/shefing/payload-tools/issues",
   "repository": "https://github.com/shefing/payload-tools",
@@ -39,12 +39,12 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "typescript": "^5.7.3",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
+    "copyfiles": "^2.4.1",
     "moment": "^2.30.1",
     "rimraf": "^5.0.5",
-    "copyfiles": "^2.4.1"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "moment": "^2.30.1"
@@ -54,7 +54,7 @@
   },
   "peerDependencies": {
     "@payloadcms/ui": "3.84.1",
-    "payload": "3.84.1",
-    "i18next": "^23.0.0"
+    "i18next": "^23.0.0",
+    "payload": "3.84.1"
   }
 }
