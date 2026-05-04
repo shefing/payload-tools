@@ -1,5 +1,7 @@
 'use client'
 import { MarkNode } from '@lexical/mark'
+import type { RangeSelection } from 'lexical'
+import type { KlassConstructor } from 'lexical'
 import { CommentPlugin } from '../commentPlugin'
 import { ToolbarGroup } from '@payloadcms/richtext-lexical'
 import {
@@ -18,7 +20,7 @@ const toolbarGroups: ToolbarGroup[] = [
 
       isActive: ({ selection }) => {
         if ($isRangeSelection(selection)) {
-          const selectedNode = getSelectedNode(selection)
+          const selectedNode = getSelectedNode(selection as RangeSelection)
           return selectedNode != null
         }
         return false
@@ -37,7 +39,7 @@ const toolbarGroups: ToolbarGroup[] = [
 ]
 
 export const commentClientFeature = createClientFeature({
-  nodes: [MarkNode],
+  nodes: [MarkNode as unknown as KlassConstructor<typeof MarkNode>],
   plugins: [
     {
       Component: CommentPlugin,
