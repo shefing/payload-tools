@@ -12,13 +12,14 @@ import {
   CommandList,
 } from './components/command.js'
 import { cn } from './lib/utils.js'
+import { getLabelString } from './lib/getLabelString.js'
 import { Paintbrush } from 'lucide-react'
 import TailWindColors from './TailWindColors.js'
-import { SelectFieldClientProps } from 'payload'
+import { TextFieldClientProps } from 'payload'
 type Props = {
   isFont?: boolean
   isBackground?: boolean
-} & SelectFieldClientProps
+} & TextFieldClientProps
 
 const createColorTailwindOption = () => {
   const result: { color: string; value: string; label: string }[] = []
@@ -72,7 +73,7 @@ export const SelectColor: React.FC<Props> = (props) => {
   const [selectColor, setSelectColor] = useState(
     colors.find((color) => color.value === value) || null,
   )
-  const labelToUse = field.label ? field.label : 'Color'
+  const labelToUse = getLabelString(field?.label)
 
   const handleSelect = (label: string) => {
     const obj = colors.find((color) => color.label === label) || null

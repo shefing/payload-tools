@@ -51,7 +51,7 @@ export const ResetListViewButton: React.FC<Props> = ({ slug }) => {
     }
   }
   return (
-      <PopupList.Button onClick={handleReset}>
+      <PopupList.Button onClick={handleReset} className={"reset-list-view"}>
         {t('general:resetPreferences')+"-"+getTranslation(currentCollectionConfig.labels.plural, i18n)}
       </PopupList.Button>)
 }

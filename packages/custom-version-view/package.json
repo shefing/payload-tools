@@ -34,15 +34,9 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "@payloadcms/translations": "3.80.0",
-    "@payloadcms/ui": "3.80.0",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",
     "mongodb": "^6.0.0",
-    "next": "16.2.4",
-    "payload": "3.80.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
     "typescript": "^5.5.2"
   },
   "dependencies": {

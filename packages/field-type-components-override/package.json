@@ -10,6 +10,16 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./exports/types": {
+      "import": "./dist/exports/types.js",
+      "require": "./dist/exports/types.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -25,7 +35,6 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "payload": "3.56.0",
     "typescript": "5.7.3"
   },
   "publishConfig": {
