@@ -43,15 +43,10 @@
     "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
   },
   "devDependencies": {
-    "@payloadcms/ui": "3.56.0",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",
     "autoprefixer": "^10.4.20",
-    "next": "16.2.4",
-    "payload": "3.56.0",
     "postcss": "^8.5.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
     "typescript": "^5.5.2"
   },
   "dependencies": {

@@ -54,10 +54,6 @@ export const Roles: CollectionConfig = {
           he: 'הרשאות',
         },
       },
-      label: {
-        en: 'Permissions',
-        he: 'הרשאות',
-      },
       // Save this field to JWT so we can use from `req.user`
       saveToJWT: true,
       interfaceName: 'RolePermissions',

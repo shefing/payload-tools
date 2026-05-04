@@ -53,11 +53,12 @@ export const CollectionResetPreferencesPlugin =
         }
 
         // Add the ResetListViewButton component
+
         newCollection.admin.components.listMenuItems.push({
           clientProps: {
             slug: collection.slug,
           },
-          path: process.env.PLUGIN_DEV ? 'reset-list-view/ResetListViewButton#ResetListViewButton' : '@shefing/reset-list-view/ResetListViewButton',
+          path: '@shefing/reset-list-view/ResetListViewButton#ResetListViewButton',
         })
 
         return newCollection
