@@ -23,5 +23,5 @@ jobs:
       - name: Build packages
         run: pnpm build
 
-      - name: Run Vitest (integration tests)
-        run: pnpm --filter @shefing/dev-app test:int
+      - name: Run Vitest (package unit tests)
+        run: pnpm test:packages
