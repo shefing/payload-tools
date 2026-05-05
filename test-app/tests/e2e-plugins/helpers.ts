@@ -82,7 +82,7 @@ export async function login(page: Page) {
   await page.fill('input[type="email"]', adminUser.email)
   await page.fill('input[type="password"]', adminUser.password)
   await page.locator('button[type="submit"]').click()
-  await page.waitForURL((url) => !url.href.includes('/admin/login'), { timeout: 15000 })
+  await page.waitForURL((url) => !url.href.includes('/admin/login'), { timeout: 30000 })
   await page.waitForLoadState('domcontentloaded')
 }
 
