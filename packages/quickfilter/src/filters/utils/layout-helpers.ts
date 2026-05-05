@@ -68,25 +68,20 @@ export const parseColumns = (raw: unknown): string[] => {
   }
 
   if (typeof raw === 'string') {
+    const trimmed = raw.trim();
+    if (!trimmed) return [];
+
     try {
-      const cleaned = raw
-        .trim()
-        .replace(/^"+/, '')
-        .replace(/"+$/, '')
-        .replace(/\\"/g, '"')
-        .replace(/\\+"/g, '"')
-        .replace(/\\\\/g, '\\');
-
-      const parsed = JSON.parse(cleaned);
-
+      const parsed = JSON.parse(trimmed);
       if (Array.isArray(parsed)) {
-        console.log('Parsed columns:', parsed);
-        console.log('row:', raw);
         return parsed;
       }
-    } catch (err) {
-      console.warn('Failed to parse columns string:', raw, err);
+    } catch {
+      // Not valid JSON — treat as a single plain column accessor
     }
+
+    // Plain string like "title" — wrap in array
+    return [trimmed];
   }
 
   return [];

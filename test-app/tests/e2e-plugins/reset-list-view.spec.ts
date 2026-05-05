@@ -52,7 +52,7 @@ test.describe('CollectionResetPreferencesPlugin (@shefing/reset-list-view)', () 
 
   test('reset button removes the columns query param from the URL', async ({ page }) => {
     // Manually add a columns param to simulate a saved preference state
-    await page.goto('/admin/collections/pages?columns=title')
+    await page.goto('/admin/collections/pages?columns=%5B%22title%22%5D')
     await page.waitForURL(/\/admin\/collections\/pages/)
 
     const menuButton = page.locator('.list-controls__view-column-control .popup--type-click')
