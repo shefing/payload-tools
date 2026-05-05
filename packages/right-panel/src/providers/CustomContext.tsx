@@ -15,6 +15,8 @@ interface ICustomContext {
   resetRightPanel: () => void;
   prevStepNav: any[];
   setPrevStepNav: (value: any) => void;
+  inRightPanel: boolean;
+  setInRightPanel: (value: boolean) => void;
 }
 export const CustomContext = createContext<ICustomContext>({
   lastFocusedLexicalEditor: '',
@@ -30,6 +32,8 @@ export const CustomContext = createContext<ICustomContext>({
   resetRightPanel: () => null,
   prevStepNav: [],
   setPrevStepNav: () => null,
+  inRightPanel: false,
+  setInRightPanel: () => null,
 });
 export const CustomContextProvider = ({ children }) => {
   const [lastFocusedLexicalEditor, setLastFocusedLexicalEditor] = useState('');
@@ -38,6 +42,7 @@ export const CustomContextProvider = ({ children }) => {
   const [collection, setCollection] = useState('');
   const [id, setId] = useState('');
   const [prevStepNav, setPrevStepNav] = useState([]);
+  const [inRightPanel, setInRightPanel] = useState(false);
 
   const resetRightPanel = () => {
     setCollection('');
@@ -70,6 +75,8 @@ export const CustomContextProvider = ({ children }) => {
         resetRightPanel,
         prevStepNav,
         setPrevStepNav,
+        inRightPanel,
+        setInRightPanel,
       }}
     >
       {children}
