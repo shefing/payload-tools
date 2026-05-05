@@ -1,22 +1,37 @@
 'use client';
-import React, { Fragment } from 'react';
+import React from 'react';
 import moment from 'moment';
-import { useLocale } from '@payloadcms/ui'
+import { DefaultCell, useLocale } from '@payloadcms/ui'
+import type { DateFieldClient, DefaultCellComponentProps } from 'payload'
 
-export interface TableCellProps {
-  cellData: any;
-  fieldKey: 'createdAt' | 'updatedAt';
-}
+export type DateCellProps = DefaultCellComponentProps<DateFieldClient>
 
-export const CreatedAtCellClient: React.FC<TableCellProps> = (props) => {
-  const { cellData, fieldKey } = props;
-  const locale = useLocale()
+export const CreatedAtCellClient: React.FC<DateCellProps> = (props) => {
+  const locale = useLocale();
   moment.locale(locale.code);
 
-  // Ensure cellData is not null before passing it to moment
-  const validCellData = cellData?.rowData?.[fieldKey] ?? null;
+  // @ts-ignore
+  const rawDate = props?.cellData ?? props?.rowData?.createdAt ?? null;
+  const fullFormatted = rawDate ? moment(rawDate).format('LLLL') : '';
 
-  const fromNow = validCellData ? moment(validCellData,locale.code).fromNow() : 'N/A';
+  return (
+    <span title={fullFormatted}>
+      <DefaultCell {...props} />
+    </span>
+  );
+};
 
-  return <Fragment>{validCellData ? fromNow : 'N/A'}</Fragment>;
+export const UpdatedAtCellClient: React.FC<DateCellProps> = (props) => {
+  const locale = useLocale();
+  moment.locale(locale.code);
+
+  // @ts-ignore
+  const rawDate = props?.cellData ?? props?.rowData?.updatedAt ?? null;
+  const fullFormatted = rawDate ? moment(rawDate).format('LLLL') : '';
+
+  return (
+    <span title={fullFormatted}>
+      <DefaultCell {...props} />
+    </span>
+  );
 };
