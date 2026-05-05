@@ -31,7 +31,37 @@ on:
           - major
 
 jobs:
+  test-before-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Run Vitest
+        run: pnpm --filter @shefing/dev-app test:int
+      - name: Install Playwright browsers
+        run: pnpm --filter @shefing/dev-app exec playwright install --with-deps chromium
+      - name: Build test-app
+        run: pnpm --filter @shefing/dev-app build
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+      - name: Run Playwright E2E
+        run: pnpm --filter @shefing/dev-app test:e2e
+        env:
+          CI: true
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+
   validate:
+    needs: test-before-publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
