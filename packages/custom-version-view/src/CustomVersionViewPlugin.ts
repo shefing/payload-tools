@@ -3,11 +3,17 @@ import type { Config } from 'payload';
 export interface versionsPluginPConfig {
   excludedCollections?: string[];
   excludedGlobals?: string[];
+  updatedByField?: string;
+  createdByField?: string;
+  processField?: string;
 }
 
 const defaultConfig: Required<versionsPluginPConfig> = {
   excludedCollections: [],
   excludedGlobals: [],
+  updatedByField: 'updator',
+  createdByField: 'creator',
+  processField: 'process',
 };
 
 function ensurePath(obj: any, path: string[]): any {
@@ -34,6 +40,14 @@ const versionsPlugin =
           if (!currentCollection.admin?.components?.views?.edit?.versions?.Component) {
             versions.Component = { path: '@shefing/custom-version-view/index' } as any;
           }
+          currentCollection.custom = {
+            ...currentCollection.custom,
+            customVersionView: {
+              updatedByField: mergedConfig.updatedByField,
+              createdByField: mergedConfig.createdByField,
+              processField: mergedConfig.processField,
+            },
+          };
         });
     }
     if (globals !== undefined) {
@@ -51,6 +65,14 @@ const versionsPlugin =
             ]);
             versions.Component = { path: '@shefing/custom-version-view/index' } as any;
           }
+          currentGlobal.custom = {
+            ...currentGlobal.custom,
+            customVersionView: {
+              updatedByField: mergedConfig.updatedByField,
+              createdByField: mergedConfig.createdByField,
+              processField: mergedConfig.processField,
+            },
+          };
         });
     }
 

@@ -79,9 +79,17 @@ export default async function VersionsView(props: DocumentViewServerProps) {
   if (!versionsData) {
     return notFound()
   }
+  const customVersionViewConfig = (collectionConfig ?? globalConfig)?.custom?.customVersionView as
+    | { updatedByField?: string; createdByField?: string; processField?: string }
+    | undefined
+
+  const updatedByField = customVersionViewConfig?.updatedByField ?? 'updator'
+  const createdByField = customVersionViewConfig?.createdByField ?? 'creator'
+  const processField = customVersionViewConfig?.processField ?? 'process'
+
   versionsData.docs.forEach((doc) => {
-    if (doc.version.updator) doc.updator = doc.version.updator;
-    if (doc.version.process) doc.process = doc.version.process;
+    if (doc.version[updatedByField]) doc[updatedByField] = doc.version[updatedByField];
+    if (doc.version[processField]) doc[processField] = doc.version[processField];
   });
 
 
@@ -134,6 +142,9 @@ export default async function VersionsView(props: DocumentViewServerProps) {
     i18n,
     isTrashed,
     latestDraftVersion,
+    updatedByField,
+    createdByField,
+    processField,
   })
 
   const pluralLabel =

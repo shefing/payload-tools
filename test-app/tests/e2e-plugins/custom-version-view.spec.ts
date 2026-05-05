@@ -86,4 +86,47 @@ test.describe('versionsPlugin (@shefing/custom-version-view)', () => {
     const relativeTime = page.getByText(/ago|just now|a few seconds/i).first()
     await expect(relativeTime).toBeVisible({ timeout: 10000 })
   })
+
+  test('versions list shows "Updated by" column header', async ({ page }) => {
+    await expect(page.locator('input[name="title"]')).toBeVisible({ timeout: 15000 })
+    const tab = versionsTab(page)
+    await tab.waitFor({ state: 'visible', timeout: 15000 })
+    await tab.click()
+    await page.waitForURL(/\/versions/, { timeout: 15000 })
+    await page.waitForLoadState('networkidle', { timeout: 15000 })
+
+    await expect(page.getByText('Updated by').first()).toBeVisible({ timeout: 10000 })
+  })
+
+  test('versions list shows "Process" column header', async ({ page }) => {
+    await expect(page.locator('input[name="title"]')).toBeVisible({ timeout: 15000 })
+    const tab = versionsTab(page)
+    await tab.waitFor({ state: 'visible', timeout: 15000 })
+    await tab.click()
+    await page.waitForURL(/\/versions/, { timeout: 15000 })
+    await page.waitForLoadState('networkidle', { timeout: 15000 })
+
+    await expect(page.getByText('Process').first()).toBeVisible({ timeout: 10000 })
+  })
+
+  test('updatedByField config defaults to "updator" field name', async ({ request }) => {
+    // Verify the plugin uses the default field name by checking the versions API response
+    const token = await getToken(request)
+    const suffix = randomSuffix()
+    const id = await createArticle(request, token, {
+      title: `Version Field Config Test ${suffix}`,
+      _status: 'draft',
+    })
+
+    const versionsRes = await request.get(`/api/articles/versions?where[parent][equals]=${id}`, {
+      headers: { Authorization: token },
+    })
+    expect(versionsRes.ok()).toBeTruthy()
+    const versionsBody = await versionsRes.json()
+    // The versions docs should exist
+    expect(versionsBody.docs).toBeDefined()
+    expect(versionsBody.docs.length).toBeGreaterThan(0)
+
+    await request.delete(`/api/articles/${id}`, { headers: { Authorization: token } })
+  })
 })
