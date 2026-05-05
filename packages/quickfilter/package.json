@@ -40,7 +40,8 @@
     "lint": "eslint src",
     "lint:fix": "eslint --fix --ext .ts,.tsx src",
     "prepublishOnly": "pnpm clean && pnpm build",
-    "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install"
+    "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.65",
@@ -54,7 +55,8 @@
     "rimraf": "^5.0.5",
     "tailwind-merge": "^3.0.1",
     "tailwindcss": "3.4.17",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "vitest": "^3.1.2"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.1.4",

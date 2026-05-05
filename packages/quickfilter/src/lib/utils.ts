@@ -8,6 +8,7 @@ import type {
   SelectFilterValue,
 } from '../filters/types/filters-type';
 import { SupportedLocale } from '../labels';
+import { getLabelString } from './getLabelString';
 import { futureOptionKeys, pastOptionKeys } from '../filters/constants/date-filter-options';
 import { getDateRangeForOption } from '../filters/utils/date-helpers';
 import type { Field, FieldAffectingData, SelectField, UIField } from 'payload';
@@ -410,7 +411,7 @@ export function processNavGroups(
                   name: fieldName,
                   type: fieldConfig?.type,
                   options: (fieldConfig as SelectField)?.options,
-                  label: (fieldConfig as UIField)?.label || fieldName,
+                  label: getLabelString((fieldConfig as UIField)?.label, fieldName),
                   row: 0,
                   virtual: 'virtual' in fieldConfig && fieldConfig.virtual,
                 } as FilterDetaild;
