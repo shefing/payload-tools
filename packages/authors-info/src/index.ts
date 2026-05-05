@@ -183,25 +183,30 @@ const processFields = (fields: Field[], hasDraft: boolean): Field[] => {
     },
     fields: authorFields,
   };
-  const hiddenFields = fields.filter(
-    (field) => (field as FieldAffectingData).admin?.hidden === true,
-  );
-  if (fields[0].type == 'tabs') {
-    fields[0].tabs.push(authorTab);
+  const isTabIneligible = (field: Field) =>
+    (field as FieldAffectingData).admin?.hidden === true ||
+    ('name' in field && (field as FieldAffectingData).name === 'id');
+
+  const tabIneligibleFields = fields.filter(isTabIneligible);
+  const tabEligibleFields = fields.filter((field) => !isTabIneligible(field));
+
+  const firstEligible = tabEligibleFields[0];
+  if (firstEligible && firstEligible.type == 'tabs') {
+    firstEligible.tabs.push(authorTab);
   } else {
     const contentTab: UnnamedTab = {
       label: {
         en: 'Content',
         he: 'תוכן',
       },
-      fields: [...fields.filter((field) => (field as FieldAffectingData).admin?.hidden !== true)],
+      fields: tabEligibleFields,
     };
     fields = [
       {
         type: 'tabs',
         tabs: [contentTab, authorTab],
       },
-      ...hiddenFields,
+      ...tabIneligibleFields,
     ];
   }
   return fields;
