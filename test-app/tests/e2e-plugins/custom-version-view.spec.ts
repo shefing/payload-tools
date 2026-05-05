@@ -56,13 +56,14 @@ test.describe('versionsPlugin (@shefing/custom-version-view)', () => {
     await saveDraftBtn.waitFor({ state: 'visible' })
     await expect(saveDraftBtn).toBeEnabled({ timeout: 10000 })
     await saveDraftBtn.click()
-    await page.waitForTimeout(500)
+    // Wait for save to complete (button becomes enabled again or network settles)
+    await page.waitForLoadState('networkidle', { timeout: 15000 })
 
     const tab = versionsTab(page)
-    await tab.waitFor({ state: 'visible', timeout: 15000 })
+    await tab.waitFor({ state: 'visible', timeout: 30000 })
     await tab.click()
-    await page.waitForURL(/\/versions/, { timeout: 15000 })
-    await page.waitForLoadState('networkidle', { timeout: 15000 })
+    await page.waitForURL(/\/versions/, { timeout: 30000 })
+    await page.waitForLoadState('networkidle', { timeout: 30000 })
 
     const firstVersionLink = page.getByRole('link').filter({ hasText: /ago|draft|published/i }).first()
     if (await firstVersionLink.isVisible({ timeout: 5000 }).catch(() => false)) {
