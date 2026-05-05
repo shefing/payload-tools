@@ -11,6 +11,7 @@ import 'dotenv/config'
  */
 export default defineConfig({
   testDir: './tests',
+  testMatch: ['**/e2e/**/*.spec.ts', '**/e2e-plugins/**/*.spec.ts'],
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
