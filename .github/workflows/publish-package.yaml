@@ -42,8 +42,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - name: Run Vitest
-        run: pnpm --filter @shefing/dev-app test:int
+      - name: Run Vitest (package unit tests)
+        run: pnpm test:packages
       - name: Install Playwright browsers
         run: pnpm --filter @shefing/dev-app exec playwright install --with-deps chromium
       - name: Build test-app

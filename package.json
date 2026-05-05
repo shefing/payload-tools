@@ -10,6 +10,7 @@
   "main": "index.js",
   "scripts": {
     "build": "turbo build --filter \"@shefing/*\"",
+    "test:packages": "vitest run --config ./vitest.config.mts",
     "dev": "pnpm --filter test dev",
     "dev:types": "cd test && pnpm generate:types",
     "test": "cd test && pnpm test",
@@ -38,7 +39,8 @@
     "eslint-config-next": "15.0.0-rc.0",
     "@swc/cli": "^0.1.65",
     "@swc/core": "^1.6.3",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "vitest": "4.0.18"
   },
   "pnpm": {
     "overrides": {
