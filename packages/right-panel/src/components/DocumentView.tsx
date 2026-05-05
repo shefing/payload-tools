@@ -34,7 +34,7 @@ export const DocumentDrawerContent: React.FC<DocumentDrawerProps> = ({
   /*  const {
     config: { collections },
   } = useConfig()*/
-  const { setIsRightPanelOpen, prevStepNav } = useCustomContext();
+  const { setIsRightPanelOpen, prevStepNav, setInRightPanel } = useCustomContext();
   const { stepNav, setStepNav } = useStepNav();
 
   /*  const [collectionConfig] = useState(() =>
@@ -79,6 +79,7 @@ export const DocumentDrawerContent: React.FC<DocumentDrawerProps> = ({
             redirectAfterDelete: redirectAfterDelete !== undefined ? redirectAfterDelete : false,
             redirectAfterDuplicate:
               redirectAfterDuplicate !== undefined ? redirectAfterDuplicate : false,
+            searchParams: { inRightPanel: '1' },
             signal: controller.signal,
           });
 
@@ -166,6 +167,11 @@ export const DocumentDrawerContent: React.FC<DocumentDrawerProps> = ({
     return () => {
       abortAndIgnore(documentViewAbortControllerRef.current as AbortController);
     };
+  }, []);
+
+  useEffect(() => {
+    setInRightPanel(true);
+    return () => setInRightPanel(false);
   }, []);
 
   useEffect(() => {

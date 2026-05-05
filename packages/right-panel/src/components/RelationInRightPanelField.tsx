@@ -7,7 +7,7 @@ import { useCustomContext } from '../providers/CustomContext.js';
 
 //throw event /context on click
 const RelationInRightPanelField: React.FC<RelationshipFieldClientProps> = (props) => {
-  const { isRightPanelOpen, setIsRightPanelOpen, setId, setCollection, setPrevStepNav } =
+  const { isRightPanelOpen, setIsRightPanelOpen, setId, setCollection, setPrevStepNav, inRightPanel } =
     useCustomContext();
   const { stepNav } = useStepNav();
   const { path } = props;
@@ -34,7 +34,7 @@ const RelationInRightPanelField: React.FC<RelationshipFieldClientProps> = (props
   return (
     <div className='relation-field-container'>
       <RelationshipField {...props} />
-      {entityId && (
+      {entityId && !inRightPanel && (
         <ArrowRightToBracket size={14} onClick={handleClick} className='relation-field-icon' />
       )}
     </div>
