@@ -35,6 +35,9 @@ export const buildVersionColumns = ({
                                       i18n: { t },
                                       isTrashed,
                                       latestDraftVersion,
+                                      updatedByField = 'updator',
+                                      createdByField = 'creator',
+                                      processField = 'process',
                                     }: {
   collectionConfig?: SanitizedCollectionConfig
   CreatedAtCellOverride?: React.ComponentType<CreatedAtCellProps>
@@ -45,6 +48,9 @@ export const buildVersionColumns = ({
   i18n: I18n
   isTrashed?: boolean
   latestDraftVersion?: TypeWithVersion<any>
+  updatedByField?: string
+  createdByField?: string
+  processField?: string
 }): Column[] => {
   const entityConfig = collectionConfig || globalConfig
 
@@ -90,27 +96,27 @@ export const buildVersionColumns = ({
   ];
 
   columns.splice(1, 0, {
-    accessor: 'updator',
+    accessor: updatedByField,
     active: true,
     field: {
       name: '',
       type: 'text',
     },
-    Heading: <SortColumn Label={'Updated by'} disable name='updator' />,
-    renderedCells: docs.map((doc:Updator, i) => {
-      return <IDCell id={doc.updator as string} key={i} />;
+    Heading: <SortColumn Label={'Updated by'} disable name={updatedByField} />,
+    renderedCells: docs.map((doc: any, i) => {
+      return <IDCell id={doc[updatedByField] as string} key={i} />;
     }),
   });
   columns.splice(1, 0, {
-    accessor: 'process',
+    accessor: processField,
     active: true,
     field: {
       name: '',
       type: 'text',
     },
-    Heading: <SortColumn Label={'Process'} disable name='process' />,
-    renderedCells: docs.map((doc:Updator, i) => {
-      return <IDCell id={doc.process as string} key={i} />;
+    Heading: <SortColumn Label={'Process'} disable name={processField} />,
+    renderedCells: docs.map((doc: any, i) => {
+      return <IDCell id={doc[processField] as string} key={i} />;
     }),
   });
   if (
