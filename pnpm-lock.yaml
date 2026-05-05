@@ -443,6 +443,9 @@ importers:
       rimraf:
         specifier: ^5.0.5
         version: 5.0.10
+      vitest:
+        specifier: ^3.1.2
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.9)(happy-dom@20.9.0)(jiti@1.21.7)(jsdom@28.0.0)(sass@1.99.0)(tsx@4.21.0)(yaml@2.8.1)
 
   packages/reset-list-view:
     dependencies:

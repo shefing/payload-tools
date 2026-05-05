@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useField } from '@payloadcms/ui';
 import { FieldLabel as Label } from '@payloadcms/ui';
 import { cn } from './lib/utils';
+import { getLabelString } from './lib/getLabelString';
 import { Button } from './components/button';
 import {
   Command,
@@ -49,7 +50,6 @@ const createIconOptions = () => {
 const icons = createIconOptions();
 const SelectIcons: React.FC<Props> = (props) => {
   const { field, path } = props;
-  const label = field.label;
   const { value, setValue } = useField<string>({ path: path });
   const [open, setOpen] = useState(false);
   const [selectIcon, setSelectIcon] = useState(icons.find((icon) => icon.value === value) || null);
@@ -59,7 +59,7 @@ const SelectIcons: React.FC<Props> = (props) => {
     setValue(value);
     setOpen(false);
   };
-  const labelToUse = label ? label : 'Icon';
+  const labelToUse = getLabelString(field.label);
   return (
     <div className='comp'>
       <Label
