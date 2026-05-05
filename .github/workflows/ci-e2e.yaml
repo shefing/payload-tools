@@ -28,6 +28,13 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm --filter @shefing/dev-app exec playwright install --with-deps chromium
 
+      - name: Permit runner to access MongoDB Atlas
+        uses: textbook/atlas-ip@v1
+        with:
+          atlas-private-key: ${{ secrets.ATLAS_PRIVATE_KEY }}
+          atlas-public-key: ${{ secrets.ATLAS_PUBLIC_KEY }}
+          group-id: ${{ vars.ATLAS_GROUP_ID }}
+
       - name: Build test-app
         run: pnpm --filter @shefing/dev-app build
         env:
