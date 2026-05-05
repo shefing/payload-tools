@@ -24,8 +24,8 @@ export async function login({
   await page.fill('#field-password', user.password)
   await page.click('button[type="submit"]')
 
-  await page.waitForURL(`${serverURL}/admin`)
+  await page.waitForURL(`${serverURL}/admin`, { timeout: 30000 })
 
   const dashboardArtifact = page.locator('span[title="Dashboard"]')
-  await expect(dashboardArtifact).toBeVisible()
+  await expect(dashboardArtifact).toBeVisible({ timeout: 30000 })
 }

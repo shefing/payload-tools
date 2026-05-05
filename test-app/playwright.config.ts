@@ -14,6 +14,8 @@ export default defineConfig({
   testMatch: ['**/e2e/**/*.spec.ts', '**/e2e-plugins/**/*.spec.ts'],
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
+  /* Increase timeout for CI */
+  timeout: process.env.CI ? 60000 : 30000,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
