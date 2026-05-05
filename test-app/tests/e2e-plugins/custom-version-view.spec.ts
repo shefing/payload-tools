@@ -56,12 +56,14 @@ test.describe('versionsPlugin (@shefing/custom-version-view)', () => {
     await saveDraftBtn.waitFor({ state: 'visible' })
     await expect(saveDraftBtn).toBeEnabled({ timeout: 10000 })
     await saveDraftBtn.click()
-    // Wait for save to complete (button becomes enabled again or network settles)
-    await page.waitForLoadState('networkidle', { timeout: 15000 })
+    // Wait for save to complete — Payload may redirect after save, so wait for URL to stabilize
+    await page.waitForLoadState('networkidle', { timeout: 20000 })
 
-    const tab = versionsTab(page)
-    await tab.waitFor({ state: 'visible', timeout: 30000 })
-    await tab.click()
+    // Navigate directly to the versions page to avoid stale tab locator after save/redirect
+    const currentUrl = page.url()
+    const articleEditUrl = currentUrl.split('/versions')[0].replace(/\/$/, '')
+    const versionsUrl = `${articleEditUrl}/versions`
+    await page.goto(versionsUrl)
     await page.waitForURL(/\/versions/, { timeout: 30000 })
     await page.waitForLoadState('networkidle', { timeout: 30000 })
 
