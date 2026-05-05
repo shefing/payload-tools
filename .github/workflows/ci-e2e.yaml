@@ -31,14 +31,14 @@ jobs:
       - name: Build test-app
         run: pnpm --filter @shefing/dev-app build
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.MONGODB_URI }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
 
       - name: Run Playwright E2E tests
         run: pnpm --filter @shefing/dev-app test:e2e
         env:
           CI: true
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.MONGODB_URI }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
 
       - name: Upload Playwright report
