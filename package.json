@@ -9,7 +9,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "turbo build --filter \"@payload-tools/*\"",
+    "build": "turbo build --filter \"@shefing/*\"",
     "dev": "pnpm --filter test dev",
     "dev:types": "cd test && pnpm generate:types",
     "test": "cd test && pnpm test",
