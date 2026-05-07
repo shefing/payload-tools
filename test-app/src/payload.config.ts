@@ -17,6 +17,7 @@ import DynamicFieldOverrides from '@shefing/field-type-component-override'
 import { createIconSelectField } from '@shefing/icon-select'
 import CollectionQuickFilterPlugin from '@shefing/quickfilter'
 import { CollectionResetPreferencesPlugin } from '@shefing/reset-list-view'
+import { changesButtonPlugin } from '@shefing/changes-button'
 import RightPanelPlugin from '@shefing/right-panel'
 import { seed } from './seed'
 
@@ -140,6 +141,7 @@ export default buildConfig({
     DynamicFieldOverrides({ overrides: [] }),
     CollectionQuickFilterPlugin({ includedCollections: ['pages'] }),
     CollectionResetPreferencesPlugin({}),
+    changesButtonPlugin(),
     addAuthorsInfo({ usernameField: 'email' }),
     // RightPanelPlugin({}),
   ],

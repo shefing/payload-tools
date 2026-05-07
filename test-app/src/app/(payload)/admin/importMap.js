@@ -5,6 +5,7 @@ import { default as default_0ba0d6a826c1cdb82a195f359f1d01b6 } from '@shefing/cu
 import { SelectColorFont as SelectColorFont_1c40f24ee7224375f250d2f46f89fc0b } from '@shefing/color-picker/CustomTailWindColors'
 import { SelectColorBackground as SelectColorBackground_1c40f24ee7224375f250d2f46f89fc0b } from '@shefing/color-picker/CustomTailWindColors'
 import { default as default_890511a84d4565086d474664853bee3f } from '@shefing/icon-select/selectIcons'
+import { ChangesButton as ChangesButton_b9b801cfdf1e0404dc7cf25dd920bf48 } from '@shefing/changes-button/client'
 import { default as default_4dd24e2ec1d9dc857c6d5bb6d71a585f } from '@shefing/quickfilter/QuickFilter'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -17,6 +18,7 @@ export const importMap = {
   "@shefing/color-picker/CustomTailWindColors#SelectColorFont": SelectColorFont_1c40f24ee7224375f250d2f46f89fc0b,
   "@shefing/color-picker/CustomTailWindColors#SelectColorBackground": SelectColorBackground_1c40f24ee7224375f250d2f46f89fc0b,
   "@shefing/icon-select/selectIcons#default": default_890511a84d4565086d474664853bee3f,
+  "@shefing/changes-button/client#ChangesButton": ChangesButton_b9b801cfdf1e0404dc7cf25dd920bf48,
   "@shefing/quickfilter/QuickFilter#default": default_4dd24e2ec1d9dc857c6d5bb6d71a585f,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

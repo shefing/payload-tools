@@ -1,0 +1,58 @@
+{
+  "name": "@shefing/changes-button",
+  "version": "0.1.0",
+  "private": false,
+  "bugs": "https://github.com/shefing/payload-tools/issues",
+  "repository": "https://github.com/shefing/payload-tools",
+  "license": "MIT",
+  "author": "shefing",
+  "type": "module",
+  "main": "dist/ChangesButtonPlugin.js",
+  "module": "dist/ChangesButtonPlugin.js",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/ChangesButtonPlugin.js",
+      "require": "./dist/ChangesButtonPlugin.js"
+    },
+    "./client": {
+      "import": "./dist/index.client.js",
+      "require": "./dist/index.client.js"
+    },
+    "./server": {
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.js"
+    }
+  },
+  "scripts": {
+    "build": "pnpm copyfiles && pnpm build:swc && pnpm build:types",
+    "build:swc": "swc ./src -d ./dist --config-file .swcrc",
+    "build:types": "node --max-old-space-size=8192 ../../node_modules/typescript/bin/tsc --emitDeclarationOnly --noCheck --outDir dist",
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
+    "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png,json}\" dist/",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx src",
+    "prepublishOnly": "pnpm clean && pnpm build",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "dequal": "^2.0.3"
+  },
+  "peerDependencies": {
+    "@payloadcms/next": ">=3.84.0",
+    "@payloadcms/ui": ">=3.84.0",
+    "payload": ">=3.84.0",
+    "react": ">=19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.1",
+    "typescript": "^5.5.2",
+    "vitest": "^3.1.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
