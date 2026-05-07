@@ -10,6 +10,7 @@ on:
         options:
           - authorization
           - authors-info
+          - changes-button
           - color-picker
           - comments
           - cover-image

@@ -39,6 +39,9 @@ Improve version control with a **custom version view** that displays "**Updated 
 11. **🔄 [Reset List View](packages/reset-list-view/)**  
    Add a "Reset Preferences" button to collection list views, allowing users to quickly reset their list view preferences (columns, filters, pagination, etc.) to the default state.
 
+12. **🔍 [Changes Button](packages/changes-button/)**  
+   Add a **"Changes" button** to drafts-enabled collections and globals that opens a slide-in drawer showing a field-by-field diff between the currently published version and the user's unsaved edits or latest draft — letting editors review exactly what will be published before clicking **Publish**.
+
 ---
 
 💡 **Tip:** Each plugin is modular and can be integrated independently based on your project needs. Check out the linked documentation for installation instructions and configuration details.
@@ -122,6 +125,9 @@ Improve version control with a **custom version view** that displays "**Updated 
 
 11. **🔄 [Reset List View](packages/reset-list-view/)**  
    Add a "Reset Preferences" button to collection list views, allowing users to quickly reset their list view preferences (columns, filters, pagination, etc.) to the default state.
+
+12. **🔍 [Changes Button](packages/changes-button/)**  
+   Add a **"Changes" button** to drafts-enabled collections and globals that opens a slide-in drawer showing a field-by-field diff between the currently published version and the user's unsaved edits or latest draft — letting editors review exactly what will be published before clicking **Publish**.
 
 ---
 
