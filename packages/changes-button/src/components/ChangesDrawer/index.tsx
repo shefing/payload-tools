@@ -117,7 +117,10 @@ const ChangesDrawerContent: React.FC<ChangesDrawerContentProps> = ({
     <div className="changes-button__drawer">
       {pending ? <LoadingOverlay /> : null}
       {!pending && error ? <p className="changes-button__error">{error}</p> : null}
-      {!pending && !error && result?.hasChanges === false ? (
+      {!pending && !error && result?.notPublishedYet ? (
+        <p className="changes-button__empty">{getLabel('notPublishedYet', i18n.language)}</p>
+      ) : null}
+      {!pending && !error && !result?.notPublishedYet && result?.hasChanges === false ? (
         <p className="changes-button__empty">{getLabel('noChangesToReview', i18n.language)}</p>
       ) : null}
       {!pending && !error && result?.hasChanges ? (

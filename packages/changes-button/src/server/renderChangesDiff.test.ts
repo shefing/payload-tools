@@ -119,6 +119,25 @@ describe('renderChangesDiffHandler', () => {
     expect(statuses).toEqual(['draft', 'published'])
   })
 
+  it('returns notPublishedYet when no published baseline exists, regardless of draft', async () => {
+    const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
+
+    // No published version, but a draft exists (typical "saved as draft, never published" case)
+    fetchLatestVersionMock.mockImplementation(async ({ status }: { status: string }) =>
+      status === 'published' ? null : { version: { title: 'drafted' }, updatedAt: '2024-01-02' },
+    )
+
+    const result = await renderChangesDiffHandler({
+      collectionSlug: 'posts',
+      docID: 'abc-123',
+      req: makeReq(),
+    } as never)
+
+    expect(result.notPublishedYet).toBe(true)
+    expect(result.hasChanges).toBe(false)
+    expect(result.Diff).toBeNull()
+  })
+
   it('issue #3: returns safe no-op when there is no latest draft for the doc', async () => {
     const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
 
@@ -199,7 +218,7 @@ describe('renderChangesDiffHandler', () => {
     }
   })
 
-  it('returns no-op when neither published nor draft exist for a global', async () => {
+  it('returns notPublishedYet for a global with no published baseline', async () => {
     const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
 
     fetchLatestVersionMock.mockResolvedValue(null)
@@ -209,6 +228,11 @@ describe('renderChangesDiffHandler', () => {
       req: makeReq(),
     } as never)
 
-    expect(result).toEqual({ availableSources: ['latestDraft'], Diff: null, hasChanges: false })
+    expect(result).toEqual({
+      availableSources: ['latestDraft'],
+      Diff: null,
+      hasChanges: false,
+      notPublishedYet: true,
+    })
   })
 })

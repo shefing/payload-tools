@@ -46,6 +46,13 @@ export type RenderChangesDiffResult = {
   Diff: ReactNode
   /** `true` when at least one field differs between from/to. */
   hasChanges: boolean
+  /**
+   * `true` when the document has no published baseline yet. The diff is
+   * intentionally suppressed in this case (the comparison would otherwise
+   * be "empty vs current", which misrepresents the change set). The client
+   * should render a dedicated message instead.
+   */
+  notPublishedYet?: boolean
 }
 
 /**
@@ -129,14 +136,26 @@ export const renderChangesDiffHandler: ServerFunction<
   // `versionTo` on the RIGHT (green, "after"). We always compare the
   // currently published version (left) against the latest saved draft of
   // this same document (right) — i.e. "what is published" vs "what will be
-  // published next". For docs that have never been published yet, the LEFT
-  // is an empty baseline so every populated field shows as an addition.
-  const versionFromSiblingData: object = currentlyPublishedVersion
-    ? {
-        ...(currentlyPublishedVersion.version as object),
-        updatedAt: currentlyPublishedVersion.updatedAt,
-      }
-    : {}
+  // published next".
+  //
+  // If there is no published baseline yet, comparing "empty vs current"
+  // misrepresents the change set (every field becomes an addition). The
+  // user-visible expectation is "current document vs last published";
+  // when no last-published exists, suppress the diff and let the client
+  // surface a dedicated message instead.
+  if (!currentlyPublishedVersion) {
+    return {
+      availableSources: ['latestDraft'],
+      Diff: null,
+      hasChanges: false,
+      notPublishedYet: true,
+    }
+  }
+
+  const versionFromSiblingData: object = {
+    ...(currentlyPublishedVersion.version as object),
+    updatedAt: currentlyPublishedVersion.updatedAt,
+  }
 
   // If no draft exists either (e.g. brand-new global with drafts enabled
   // but never saved), there is nothing on the right side — treat as
