@@ -4,13 +4,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
  * `renderChangesDiff.test.ts` exercises the high-level branching of
  * `renderChangesDiffHandler` without spinning up Payload.
  *
- * The vendored diff pipeline (`../vendor/diff/*`) and the schema-map utilities
- * (`@payloadcms/ui/utilities/*`) are mocked — we are not testing those, only:
+ * Covers the five use-cases from the bug report:
  *
- *   1. `hasChanges` is `false` when the from/to sibling data are identical.
- *   2. `hasChanges` is `true` when they differ.
- *   3. `compareFrom: 'unsaved'` requires `formData` and feeds it through.
- *   4. Missing published baseline returns `{ hasChanges: false, Diff: null }`.
+ *   1. New collection doc (no `docID`) → safe no-op, no DiffCollapser crash.
+ *   2. `fetchLatestVersion` is always called with `parentID: docID` (so we
+ *      never accidentally compare against an unrelated doc's version).
+ *   3. Drafts-enabled doc with no draft yet → safe no-op result.
+ *   4. `hasChanges: false` when published === draft (saved doc with no
+ *      pending changes — the button click flow already saved any edits).
+ *   5. Always compares currently-published (LEFT) vs latest-draft (RIGHT);
+ *      the response shape no longer carries a compare toggle.
  */
 
 // ---- Module mocks (must be at top, before importing the SUT) ----------------
@@ -39,7 +42,7 @@ vi.mock('../vendor/diff/utilities/countChangedFields.js', () => ({
 vi.mock('@payloadcms/ui/utilities/getClientConfig', () => ({
   getClientConfig: () => ({
     collections: [{ slug: 'posts', fields: [{ name: 'title', type: 'text' }] }],
-    globals: [],
+    globals: [{ slug: 'site', fields: [{ name: 'title', type: 'text' }] }],
   }),
 }))
 vi.mock('@payloadcms/ui/utilities/getClientSchemaMap', () => ({
@@ -63,11 +66,11 @@ const makeReq = () =>
     i18n: {},
     payload: {
       auth: vi.fn(async () => ({
-        permissions: { collections: { posts: { fields: undefined } } },
+        permissions: { collections: { posts: { fields: undefined } }, globals: { site: { fields: undefined } } },
       })),
       collections: { posts: { config: { fields: [{ name: 'title', type: 'text' }] } } },
       config: { localization: undefined },
-      globals: {},
+      globals: { site: { config: { fields: [{ name: 'title', type: 'text' }] } } },
       importMap: {},
       logger: { error: vi.fn() },
     },
@@ -81,25 +84,101 @@ beforeEach(() => {
 })
 
 describe('renderChangesDiffHandler', () => {
-  it('returns hasChanges: false when from/to sibling data are equal', async () => {
+  it('issue #1+#2: returns no-op without calling fetchLatestVersion when collection doc has no docID', async () => {
+    const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
+
+    const result = await renderChangesDiffHandler({
+      collectionSlug: 'posts',
+      // no docID — brand-new (unsaved) doc
+      req: makeReq(),
+    } as never)
+
+    expect(fetchLatestVersionMock).not.toHaveBeenCalled()
+    expect(result).toEqual({ availableSources: [], Diff: null, hasChanges: false })
+  })
+
+  it('issue #2: scopes both fetchLatestVersion calls to parentID = docID', async () => {
     const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
 
     fetchLatestVersionMock.mockImplementation(async ({ status }: { status: string }) => ({
+      version: { title: status === 'published' ? 'old' : 'new' },
+      updatedAt: '2024-01-01T00:00:00Z',
+    }))
+
+    await renderChangesDiffHandler({
+      collectionSlug: 'posts',
+      docID: 'abc-123',
+      req: makeReq(),
+    } as never)
+
+    expect(fetchLatestVersionMock).toHaveBeenCalledTimes(2)
+    for (const call of fetchLatestVersionMock.mock.calls) {
+      expect(call[0]).toMatchObject({ collectionSlug: 'posts', parentID: 'abc-123' })
+    }
+    const statuses = fetchLatestVersionMock.mock.calls.map((c) => c[0].status).sort()
+    expect(statuses).toEqual(['draft', 'published'])
+  })
+
+  it('issue #3: returns safe no-op when there is no latest draft for the doc', async () => {
+    const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
+
+    fetchLatestVersionMock.mockImplementation(async ({ status }: { status: string }) =>
+      status === 'published' ? { version: { title: 'pub' }, updatedAt: '2024-01-01' } : null,
+    )
+
+    const result = await renderChangesDiffHandler({
+      collectionSlug: 'posts',
+      docID: 'abc-123',
+      req: makeReq(),
+    } as never)
+
+    expect(result.hasChanges).toBe(false)
+    expect(result.Diff).toBeNull()
+  })
+
+  it('issue #4: hasChanges is false when published equals latest draft', async () => {
+    const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
+
+    fetchLatestVersionMock.mockImplementation(async () => ({
       version: { title: 'same' },
       updatedAt: '2024-01-01T00:00:00Z',
-      __status: status,
     }))
 
     const result = await renderChangesDiffHandler({
       collectionSlug: 'posts',
-      compareFrom: 'latestDraft',
+      docID: 'abc-123',
       req: makeReq(),
     } as never)
 
     expect(result.hasChanges).toBe(false)
   })
 
-  it('returns hasChanges: true when sibling data differ', async () => {
+  it('issue #5: always compares published (from) vs latest draft (to); no compareFrom toggle', async () => {
+    const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
+
+    fetchLatestVersionMock.mockImplementation(async ({ status }: { status: string }) => ({
+      version: { title: status === 'published' ? 'OLD' : 'NEW' },
+      updatedAt: '2024-01-01T00:00:00Z',
+    }))
+
+    const result = (await renderChangesDiffHandler({
+      collectionSlug: 'posts',
+      docID: 'abc-123',
+      req: makeReq(),
+    } as never)) as unknown as {
+      Diff: { from: { title: string }; to: { title: string } }
+      availableSources: string[]
+      hasChanges: boolean
+    }
+
+    expect(result.hasChanges).toBe(true)
+    expect(result.Diff.from.title).toBe('OLD')
+    expect(result.Diff.to.title).toBe('NEW')
+    // `availableSources` is kept for backward-compat but always reports a single, fixed source.
+    expect(result.availableSources).toEqual(['latestDraft'])
+  })
+
+  it('handles globals (no docID required)', async () => {
     const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
 
     fetchLatestVersionMock.mockImplementation(async ({ status }: { status: string }) => ({
@@ -108,44 +187,28 @@ describe('renderChangesDiffHandler', () => {
     }))
 
     const result = await renderChangesDiffHandler({
-      collectionSlug: 'posts',
-      compareFrom: 'latestDraft',
+      globalSlug: 'site',
       req: makeReq(),
     } as never)
 
     expect(result.hasChanges).toBe(true)
-    expect(result.Diff).toBeTruthy()
+    // globals also pass through `parentID` (which is `undefined`); never short-circuited by the docID guard.
+    expect(fetchLatestVersionMock).toHaveBeenCalledTimes(2)
+    for (const call of fetchLatestVersionMock.mock.calls) {
+      expect(call[0]).toMatchObject({ globalSlug: 'site' })
+    }
   })
 
-  it('throws when compareFrom === "unsaved" and no formData is supplied', async () => {
-    const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
-
-    fetchLatestVersionMock.mockResolvedValue({
-      version: { title: 'published' },
-      updatedAt: '2024-01-01T00:00:00Z',
-    })
-
-    await expect(
-      renderChangesDiffHandler({
-        collectionSlug: 'posts',
-        compareFrom: 'unsaved',
-        req: makeReq(),
-      } as never),
-    ).rejects.toThrow(/formData.*required.*unsaved/)
-  })
-
-  it('returns no-op result when there is no published baseline (latestDraft compare with no draft)', async () => {
+  it('returns no-op when neither published nor draft exist for a global', async () => {
     const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
 
     fetchLatestVersionMock.mockResolvedValue(null)
 
     const result = await renderChangesDiffHandler({
-      collectionSlug: 'posts',
-      compareFrom: 'latestDraft',
+      globalSlug: 'site',
       req: makeReq(),
     } as never)
 
-    expect(result.hasChanges).toBe(false)
-    expect(result.Diff).toBeNull()
+    expect(result).toEqual({ availableSources: ['latestDraft'], Diff: null, hasChanges: false })
   })
 })

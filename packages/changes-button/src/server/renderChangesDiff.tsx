@@ -19,14 +19,20 @@ import { getSchemaMap } from '@payloadcms/ui/utilities/getSchemaMap'
 
 import { fetchLatestVersion } from './fetchVersions.js'
 
+/**
+ * Kept for backward compatibility with any external typings — the runtime
+ * always compares the currently saved doc against the latest published
+ * version. The toggle was removed in v0.2 (see issue tracker).
+ */
 export type CompareFrom = 'latestDraft' | 'unsaved'
 
 export type RenderChangesDiffArgs = {
   collectionSlug?: string
-  /** `'unsaved'` | `'latestDraft'`. Defaults to `'latestDraft'`. */
+  /** @deprecated Ignored. Always compares saved doc vs latest published. */
   compareFrom?: CompareFrom
+  /** Document id. Required — comparison is always scoped to this doc. */
   docID?: number | string
-  /** Required when `compareFrom === 'unsaved'`. */
+  /** @deprecated Ignored. Caller must save the draft before invoking. */
   formData?: Record<string, unknown>
   globalSlug?: string
   /** Optional locale code list; defaults to all configured locales. */
@@ -34,7 +40,7 @@ export type RenderChangesDiffArgs = {
 }
 
 export type RenderChangesDiffResult = {
-  /** Sources that exist for this document; the client decides whether to show the toggle. */
+  /** Always `['latestDraft']` — the toggle was removed; the field is kept for backward compatibility. */
   availableSources: CompareFrom[]
   /** Server-rendered React node containing the diff (empty when `hasChanges === false`). */
   Diff: ReactNode
@@ -57,8 +63,7 @@ export const renderChangesDiffHandler: ServerFunction<
 > = async ({ req, ...args }: RenderChangesDiffArgs & { req: PayloadRequest }): Promise<RenderChangesDiffResult> => {
   const {
     collectionSlug,
-    compareFrom = 'latestDraft',
-    formData,
+    docID,
     globalSlug,
     selectedLocales: selectedLocalesArg,
   } = args
@@ -81,6 +86,15 @@ export const renderChangesDiffHandler: ServerFunction<
     )
   }
 
+  // For collections, the comparison must be scoped to the specific document
+  // via `parentID`. Without it, `findVersions` would return the latest
+  // version of *any* doc in the collection — bug #2 from the issue. For new
+  // (unsaved) collection docs, `docID` is undefined and there is nothing
+  // meaningful to compare against, so we short-circuit with no-changes.
+  if (collectionSlug && !docID) {
+    return { availableSources: [], Diff: null, hasChanges: false }
+  }
+
   // Resolve doc-level permissions for the diff (mirrors `Version/index.tsx`
   // behavior, but uses the public `payload.auth` flow rather than the
   // internal `initPageResult.permissions`).
@@ -88,21 +102,35 @@ export const renderChangesDiffHandler: ServerFunction<
   const docPermissions: SanitizedCollectionPermission | SanitizedGlobalPermission | undefined =
     collectionSlug ? permissions.collections?.[collectionSlug] : permissions.globals?.[globalSlug!]
 
-  // Fetch baseline (currently published) and — when needed — the latest draft.
+  // Fetch baseline (currently published) and the latest draft — both scoped
+  // to this specific document via `parentID`.
   const [currentlyPublishedVersion, latestDraftVersion] = await Promise.all([
-    fetchLatestVersion({ collectionSlug, globalSlug, locale: 'all', overrideAccess: false, req, status: 'published' }),
-    compareFrom === 'latestDraft'
-      ? fetchLatestVersion({ collectionSlug, globalSlug, locale: 'all', overrideAccess: false, req, status: 'draft' })
-      : Promise.resolve<null | TypeWithVersion<object>>(null),
+    fetchLatestVersion({
+      collectionSlug,
+      globalSlug,
+      locale: 'all',
+      overrideAccess: false,
+      parentID: docID,
+      req,
+      status: 'published',
+    }),
+    fetchLatestVersion({
+      collectionSlug,
+      globalSlug,
+      locale: 'all',
+      overrideAccess: false,
+      parentID: docID,
+      req,
+      status: 'draft',
+    }) as Promise<null | TypeWithVersion<object>>,
   ])
 
   // The diff renders `versionFrom` on the LEFT (red, "before") and
-  // `versionTo` on the RIGHT (green, "after"). For the Review flow the user
-  // wants to see the currently published version on the left and the
-  // proposed/new content (unsaved edits or latest draft) on the right —
-  // i.e. "what is published" → "what will be published". For brand-new
-  // entities with no published baseline yet, `from` is an empty object so
-  // every field shows as an addition.
+  // `versionTo` on the RIGHT (green, "after"). We always compare the
+  // currently published version (left) against the latest saved draft of
+  // this same document (right) — i.e. "what is published" vs "what will be
+  // published next". For docs that have never been published yet, the LEFT
+  // is an empty baseline so every populated field shows as an addition.
   const versionFromSiblingData: object = currentlyPublishedVersion
     ? {
         ...(currentlyPublishedVersion.version as object),
@@ -110,21 +138,16 @@ export const renderChangesDiffHandler: ServerFunction<
       }
     : {}
 
-  let versionToSiblingData: object
-  if (compareFrom === 'unsaved') {
-    if (!formData) {
-      throw new Error('[changes-button] `formData` is required when compareFrom === "unsaved".')
-    }
-    versionToSiblingData = formData
-  } else {
-    if (!latestDraftVersion) {
-      // Nothing to diff against — treat as no changes.
-      return { availableSources: ['unsaved'], Diff: null, hasChanges: false }
-    }
-    versionToSiblingData = {
-      ...(latestDraftVersion.version as object),
-      updatedAt: latestDraftVersion.updatedAt,
-    }
+  // If no draft exists either (e.g. brand-new global with drafts enabled
+  // but never saved), there is nothing on the right side — treat as
+  // "no changes".
+  if (!latestDraftVersion) {
+    return { availableSources: ['latestDraft'], Diff: null, hasChanges: false }
+  }
+
+  const versionToSiblingData: object = {
+    ...(latestDraftVersion.version as object),
+    updatedAt: latestDraftVersion.updatedAt,
   }
 
   // Build the schema maps the diff pipeline expects.
@@ -181,15 +204,7 @@ export const renderChangesDiffHandler: ServerFunction<
       } as Parameters<typeof countChangedFields>[0]) > 0
     : false
 
-  const availableSources: CompareFrom[] = []
-  if (formData || compareFrom === 'unsaved') {
-    availableSources.push('unsaved')
-  }
-  if (latestDraftVersion) {
-    availableSources.push('latestDraft')
-  }
-
-  return { availableSources, Diff, hasChanges }
+  return { availableSources: ['latestDraft'], Diff, hasChanges }
 }
 
 export default renderChangesDiffHandler
