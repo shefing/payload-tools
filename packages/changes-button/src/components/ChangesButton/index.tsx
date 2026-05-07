@@ -35,9 +35,12 @@ export const ChangesButton: React.FC = () => {
   const {
     collectionSlug,
     globalSlug,
+    hasPublishedDoc,
     hasPublishPermission,
     id: docID,
     isTrashed,
+    unpublishedVersionCount,
+    uploadStatus,
   } = useDocumentInfo()
   const modified = useFormModified()
   const { getEntityConfig } = useConfig()
@@ -58,8 +61,18 @@ export const ChangesButton: React.FC = () => {
   // of *any* doc — see issue #2).
   const hasIdentity = Boolean(globalSlug) || Boolean(docID)
 
-  const visible =
-    draftsEnabled && Boolean(hasPublishPermission) && !isTrashed && hasIdentity
+  // Mirror PublishButton's `canPublish` gate so the Changes button is
+  // visible exactly when Publish is enabled. PublishButton uses:
+  //   hasPublishPermission && (modified || hasNewerVersions || !hasPublishedDoc)
+  //   && uploadStatus !== 'uploading'
+  // (see @payloadcms/ui/src/elements/PublishButton/index.tsx).
+  const hasNewerVersions = (unpublishedVersionCount ?? 0) > 0
+  const canPublish =
+    Boolean(hasPublishPermission) &&
+    (modified || hasNewerVersions || !hasPublishedDoc) &&
+    uploadStatus !== 'uploading'
+
+  const visible = draftsEnabled && canPublish && !isTrashed && hasIdentity
 
   const { Drawer: ChangesDrawerInstance, drawerSlug } = useChangesDrawer({
     collectionSlug,
