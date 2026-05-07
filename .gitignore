@@ -50,3 +50,4 @@ next-env.d.ts
 **/.terraform*
 
 **/dist/**
+**/node_modules/**

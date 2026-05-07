@@ -13,6 +13,7 @@ export const PLUGIN_LABELS = {
     failedToLoadDiff: 'Failed to load diff.',
     toggleUnsaved: 'Unsaved',
     toggleLatestDraft: 'Latest draft',
+    notPublishedYet: 'This document has not been published yet — there is no published baseline to compare against.',
   },
   ar: {
     changes: 'التغييرات',
@@ -21,6 +22,7 @@ export const PLUGIN_LABELS = {
     failedToLoadDiff: 'فشل تحميل الفروق.',
     toggleUnsaved: 'غير محفوظ',
     toggleLatestDraft: 'أحدث مسودة',
+    notPublishedYet: 'لم يتم نشر هذا المستند بعد — لا يوجد إصدار منشور للمقارنة معه.',
   },
   fr: {
     changes: 'Modifications',
@@ -29,6 +31,7 @@ export const PLUGIN_LABELS = {
     failedToLoadDiff: 'Échec du chargement des différences.',
     toggleUnsaved: 'Non enregistré',
     toggleLatestDraft: 'Dernier brouillon',
+    notPublishedYet: 'Ce document n\'a pas encore été publié — il n\'y a pas de version publiée à comparer.',
   },
   es: {
     changes: 'Cambios',
@@ -37,6 +40,7 @@ export const PLUGIN_LABELS = {
     failedToLoadDiff: 'Error al cargar las diferencias.',
     toggleUnsaved: 'Sin guardar',
     toggleLatestDraft: 'Último borrador',
+    notPublishedYet: 'Este documento aún no se ha publicado — no hay versión publicada con la que comparar.',
   },
   zh: {
     changes: '更改',
@@ -45,6 +49,7 @@ export const PLUGIN_LABELS = {
     failedToLoadDiff: '加载差异失败。',
     toggleUnsaved: '未保存',
     toggleLatestDraft: '最新草稿',
+    notPublishedYet: '此文档尚未发布 — 没有可对比的已发布版本。',
   },
   he: {
     changes: 'שינויים',
@@ -53,6 +58,7 @@ export const PLUGIN_LABELS = {
     failedToLoadDiff: 'טעינת ההשוואה נכשלה.',
     toggleUnsaved: 'לא נשמר',
     toggleLatestDraft: 'טיוטה אחרונה',
+    notPublishedYet: 'מסמך זה עדיין לא פורסם — אין גרסה מפורסמת להשוואה.',
   },
 } as const;
 

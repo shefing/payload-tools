@@ -4,22 +4,26 @@ import {
   formatDrawerSlug,
   LoadingOverlay,
   useEditDepth,
-  useForm,
-  useFormModified,
   useServerFunctions,
   useTranslation,
 } from '@payloadcms/ui'
 import React, { useCallback, useEffect, useId, useMemo, useState } from 'react'
 
-import type { CompareFrom, RenderChangesDiffResult } from '../../server/renderChangesDiff.js'
+import type { RenderChangesDiffResult } from '../../server/renderChangesDiff.js'
 
 import { getLabel, SERVER_FUNCTION_KEY } from '../../labels.js'
-import { CompareSourceToggle } from './CompareSourceToggle.js'
 
 export type UseChangesDrawerArgs = {
   collectionSlug?: string
   docID?: number | string
   globalSlug?: string
+  /**
+   * Optional provider returning the in-memory form values to use as the
+   * right-hand ("after") side of the diff. When it returns a non-null
+   * object, the drawer forwards it to the server function as `formData`,
+   * so the diff reflects unsaved edits without persisting them first.
+   */
+  formDataProvider?: () => null | Record<string, unknown>
 }
 
 export type UseChangesDrawerReturn = {
@@ -78,77 +82,57 @@ type ChangesDrawerContentProps = UseChangesDrawerArgs
 const ChangesDrawerContent: React.FC<ChangesDrawerContentProps> = ({
   collectionSlug,
   docID,
+  formDataProvider,
   globalSlug,
 }) => {
   const { serverFunction } = useServerFunctions()
-  const modified = useFormModified()
-  const { getData } = useForm()
   const { i18n } = useTranslation()
 
-  const initialCompareFrom: CompareFrom = modified ? 'unsaved' : 'latestDraft'
-  const [compareFrom, setCompareFrom] = useState<CompareFrom>(initialCompareFrom)
   const [pending, setPending] = useState<boolean>(true)
   const [error, setError] = useState<null | string>(null)
   const [result, setResult] = useState<null | RenderChangesDiffResult>(null)
 
-  const fetchDiff = useCallback(
-    async (next: CompareFrom) => {
-      setPending(true)
-      setError(null)
-      try {
-        const formData = next === 'unsaved' ? (getData() as Record<string, unknown>) : undefined
-        const r = (await serverFunction({
-          name: SERVER_FUNCTION_KEY,
-          args: {
-            collectionSlug,
-            compareFrom: next,
-            docID,
-            formData,
-            globalSlug,
-          },
-        })) as RenderChangesDiffResult
-        setResult(r)
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('[changes-button] failed to render diff', err)
-        setError(err instanceof Error ? err.message : getLabel('failedToLoadDiff', i18n.language))
-      } finally {
-        setPending(false)
-      }
-    },
-    [collectionSlug, docID, getData, globalSlug, serverFunction, i18n.language],
-  )
+  const fetchDiff = useCallback(async () => {
+    setPending(true)
+    setError(null)
+    try {
+      // If the caller has unsaved edits, snapshot them and hand them to
+      // the server function so the diff reflects the in-memory form
+      // state without requiring a draft save first.
+      const formData = formDataProvider ? formDataProvider() : null
+      const r = (await serverFunction({
+        name: SERVER_FUNCTION_KEY,
+        args: {
+          collectionSlug,
+          docID,
+          formData: formData ?? undefined,
+          globalSlug,
+        },
+      })) as RenderChangesDiffResult
+      setResult(r)
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('[changes-button] failed to render diff', err)
+      setError(err instanceof Error ? err.message : getLabel('failedToLoadDiff', i18n.language))
+    } finally {
+      setPending(false)
+    }
+  }, [collectionSlug, docID, globalSlug, serverFunction, i18n.language, formDataProvider])
 
-  // Initial fetch on mount.
+  // Fetch on mount.
   useEffect(() => {
-    void fetchDiff(initialCompareFrom)
-    // Run once on mount; subsequent updates flow through `handleToggle`.
+    void fetchDiff()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleToggle = useCallback(
-    (next: CompareFrom) => {
-      if (next === compareFrom) {
-        return
-      }
-      setCompareFrom(next)
-      void fetchDiff(next)
-    },
-    [compareFrom, fetchDiff],
-  )
-
   return (
     <div className="changes-button__drawer">
-      {result?.availableSources && modified ? (
-        <CompareSourceToggle
-          availableSources={result.availableSources}
-          onChange={handleToggle}
-          value={compareFrom}
-        />
-      ) : null}
       {pending ? <LoadingOverlay /> : null}
       {!pending && error ? <p className="changes-button__error">{error}</p> : null}
-      {!pending && !error && result?.hasChanges === false ? (
+      {!pending && !error && result?.notPublishedYet ? (
+        <p className="changes-button__empty">{getLabel('notPublishedYet', i18n.language)}</p>
+      ) : null}
+      {!pending && !error && !result?.notPublishedYet && result?.hasChanges === false ? (
         <p className="changes-button__empty">{getLabel('noChangesToReview', i18n.language)}</p>
       ) : null}
       {!pending && !error && result?.hasChanges ? (
