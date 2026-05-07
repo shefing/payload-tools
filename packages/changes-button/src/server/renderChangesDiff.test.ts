@@ -50,10 +50,21 @@ vi.mock('@payloadcms/ui/utilities/getClientSchemaMap', () => ({
 }))
 vi.mock('@payloadcms/ui/utilities/getSchemaMap', () => ({ getSchemaMap: () => new Map() }))
 
-// `fetchLatestVersion` is the only side-effecting helper inside the SUT — mock it
-// per-test to control the published / draft return values.
+// `fetchLatestVersion` and `fetchCurrentlyPublishedDoc` are the only
+// side-effecting helpers inside the SUT — mock them per-test to control the
+// published / draft return values.
+//
+// To keep existing tests intact, by default `fetchCurrentlyPublishedDoc`
+// delegates to `fetchLatestVersionMock({ status: 'published', ... })` — i.e.
+// the LEFT side still resolves through the same mock that older tests already
+// configure.
 const fetchLatestVersionMock = vi.fn()
+const fetchCurrentlyPublishedDocMock = vi.fn(async (args: { status?: string }) =>
+  fetchLatestVersionMock({ ...args, status: 'published' }),
+)
 vi.mock('./fetchVersions.js', () => ({
+  fetchCurrentlyPublishedDoc: (...args: unknown[]) =>
+    (fetchCurrentlyPublishedDocMock as (...a: unknown[]) => unknown)(...args),
   fetchLatestVersion: (...args: unknown[]) => fetchLatestVersionMock(...args),
   fetchVersions: vi.fn(),
 }))
@@ -81,6 +92,11 @@ const makeReq = () =>
 
 beforeEach(() => {
   fetchLatestVersionMock.mockReset()
+  fetchCurrentlyPublishedDocMock.mockClear()
+  // Re-bind the default delegating implementation after `mockClear`.
+  fetchCurrentlyPublishedDocMock.mockImplementation(async (args: { status?: string }) =>
+    fetchLatestVersionMock({ ...args, status: 'published' }),
+  )
 })
 
 describe('renderChangesDiffHandler', () => {

@@ -122,3 +122,84 @@ export const fetchLatestVersion = async <TVersionData extends object = object>({
 
   return latest?.docs?.length ? (latest.docs[0] as TypeWithVersion<TVersionData>) : null
 }
+
+/**
+ * Fetch the currently-published document directly from the main collection
+ * (or the global itself), rather than from the `_versions` history.
+ *
+ * This is the source of truth for "what is live right now": the doc in
+ * `meetings` (with `_status: 'published'`) reflects the latest publish,
+ * whereas `_meetings_versions` history may contain stale entries — e.g.
+ * when a publish happens, the live doc updates immediately but the
+ * matching version row's `updatedAt` doesn't always line up with what
+ * the user perceives as "currently published".
+ *
+ * Returns the doc shape wrapped to match `TypeWithVersion` so the diff
+ * pipeline can consume it the same way as a version row.
+ */
+export const fetchCurrentlyPublishedDoc = async <TVersionData extends object = object>({
+  collectionSlug,
+  globalSlug,
+  locale,
+  overrideAccess,
+  parentID,
+  req,
+}: {
+  collectionSlug?: string
+  globalSlug?: string
+  locale?: 'all' | ({} & string)
+  overrideAccess?: boolean
+  parentID?: number | string
+  req: PayloadRequest
+}): Promise<null | TypeWithVersion<TVersionData>> => {
+  try {
+    if (collectionSlug) {
+      if (!parentID) {
+        return null
+      }
+      const doc = (await req.payload.findByID({
+        id: parentID,
+        collection: collectionSlug,
+        depth: 1,
+        draft: false, // force the published variant
+        locale,
+        overrideAccess,
+        req,
+      })) as Record<string, unknown> | null
+      if (!doc) {
+        return null
+      }
+      // Only treat it as a published baseline if it is actually published.
+      if (doc._status !== undefined && doc._status !== 'published') {
+        return null
+      }
+      return {
+        version: doc,
+        updatedAt: (doc.updatedAt as string) ?? new Date().toISOString(),
+      } as unknown as TypeWithVersion<TVersionData>
+    } else if (globalSlug) {
+      const doc = (await req.payload.findGlobal({
+        slug: globalSlug,
+        depth: 1,
+        draft: false,
+        locale,
+        overrideAccess,
+        req,
+      })) as Record<string, unknown> | null
+      if (!doc) {
+        return null
+      }
+      if (doc._status !== undefined && doc._status !== 'published') {
+        return null
+      }
+      return {
+        version: doc,
+        updatedAt: (doc.updatedAt as string) ?? new Date().toISOString(),
+      } as unknown as TypeWithVersion<TVersionData>
+    }
+    return null
+  } catch (err) {
+    logError({ err, payload: req.payload })
+    return null
+  }
+}

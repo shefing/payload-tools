@@ -17,7 +17,7 @@ import { getClientConfig } from '@payloadcms/ui/utilities/getClientConfig'
 import { getClientSchemaMap } from '@payloadcms/ui/utilities/getClientSchemaMap'
 import { getSchemaMap } from '@payloadcms/ui/utilities/getSchemaMap'
 
-import { fetchLatestVersion } from './fetchVersions.js'
+import { fetchCurrentlyPublishedDoc, fetchLatestVersion } from './fetchVersions.js'
 
 /**
  * Kept for backward compatibility with any external typings — the runtime
@@ -122,15 +122,20 @@ export const renderChangesDiffHandler: ServerFunction<
   // the caller did not provide in-memory `formData`. When `formData` is
   // provided we use it directly as the right-hand side of the diff and
   // skip the latest-draft DB fetch entirely.
+  //
+  // For the LEFT-hand baseline we read the **currently published document**
+  // from the main collection (or the global) rather than from the
+  // `_versions` history. This is the live source of truth for "what is
+  // published right now"; the version-history entries may not reflect a
+  // recent publish in the way the user perceives it.
   const [currentlyPublishedVersion, latestDraftVersion] = await Promise.all([
-    fetchLatestVersion({
+    fetchCurrentlyPublishedDoc({
       collectionSlug,
       globalSlug,
       locale: 'all',
       overrideAccess: false,
       parentID: docID,
       req,
-      status: 'published',
     }),
     formData
       ? Promise.resolve(null)
