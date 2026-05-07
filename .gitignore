@@ -49,3 +49,4 @@ next-env.d.ts
 # Ignore any files starting with .terraform at any depth
 **/.terraform*
 
+**/dist/**

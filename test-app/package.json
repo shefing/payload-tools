@@ -38,6 +38,7 @@
     "@shefing/icon-select": "workspace:*",
     "@shefing/quickfilter": "workspace:*",
     "@shefing/reset-list-view": "workspace:*",
+    "@shefing/changes-button": "workspace:*",
     "@shefing/right-panel": "workspace:*",
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",

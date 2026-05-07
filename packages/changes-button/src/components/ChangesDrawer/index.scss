@@ -1,0 +1,38 @@
+.changes-button__drawer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base, 16px);
+  padding: var(--base, 16px) 0;
+}
+
+.changes-button__compare-toggle {
+  display: inline-flex;
+  border: 1px solid var(--theme-elevation-150, #ddd);
+  border-radius: 4px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.changes-button__compare-toggle__option {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  padding: 6px 12px;
+}
+
+.changes-button__compare-toggle__option--active {
+  background: var(--theme-elevation-100, #eee);
+  font-weight: 600;
+}
+
+.changes-button__empty,
+.changes-button__error {
+  color: var(--theme-elevation-500, #666);
+  padding: 24px 0;
+  text-align: center;
+}
+
+.changes-button__error {
+  color: var(--theme-error-500, #b00020);
+}
