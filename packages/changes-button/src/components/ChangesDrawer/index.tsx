@@ -17,6 +17,13 @@ export type UseChangesDrawerArgs = {
   collectionSlug?: string
   docID?: number | string
   globalSlug?: string
+  /**
+   * Optional provider returning the in-memory form values to use as the
+   * right-hand ("after") side of the diff. When it returns a non-null
+   * object, the drawer forwards it to the server function as `formData`,
+   * so the diff reflects unsaved edits without persisting them first.
+   */
+  formDataProvider?: () => null | Record<string, unknown>
 }
 
 export type UseChangesDrawerReturn = {
@@ -75,6 +82,7 @@ type ChangesDrawerContentProps = UseChangesDrawerArgs
 const ChangesDrawerContent: React.FC<ChangesDrawerContentProps> = ({
   collectionSlug,
   docID,
+  formDataProvider,
   globalSlug,
 }) => {
   const { serverFunction } = useServerFunctions()
@@ -88,12 +96,16 @@ const ChangesDrawerContent: React.FC<ChangesDrawerContentProps> = ({
     setPending(true)
     setError(null)
     try {
-      // Always compare currently-published vs latest saved draft of the same doc.
+      // If the caller has unsaved edits, snapshot them and hand them to
+      // the server function so the diff reflects the in-memory form
+      // state without requiring a draft save first.
+      const formData = formDataProvider ? formDataProvider() : null
       const r = (await serverFunction({
         name: SERVER_FUNCTION_KEY,
         args: {
           collectionSlug,
           docID,
+          formData: formData ?? undefined,
           globalSlug,
         },
       })) as RenderChangesDiffResult
@@ -105,7 +117,7 @@ const ChangesDrawerContent: React.FC<ChangesDrawerContentProps> = ({
     } finally {
       setPending(false)
     }
-  }, [collectionSlug, docID, globalSlug, serverFunction, i18n.language])
+  }, [collectionSlug, docID, globalSlug, serverFunction, i18n.language, formDataProvider])
 
   // Fetch on mount.
   useEffect(() => {

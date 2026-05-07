@@ -25,11 +25,16 @@ import { useChangesDrawer } from '../ChangesDrawer'
  * - Document is not in trash.
  * - For collections: the document has been saved at least once (`docID`
  *   is defined). For globals: always (globals always have an implicit id).
+ * - There is something publishable (unsaved edits, newer draft version, or
+ *   not yet published).
  *
- * The diff itself always compares the currently-published version against
- * the latest saved draft of this same document. If the user has unsaved
- * edits when the button is clicked, the form is saved as a draft first so
- * the diff reflects the just-saved content (per issue #4 and #5).
+ * UX:
+ * - When the form has unsaved edits, clicking Changes opens the drawer
+ *   immediately and the diff is computed against the *in-memory* form
+ *   values (sent to the server as `formData`). No draft save happens,
+ *   so there is no form-state churn, no router refresh, and no risk of
+ *   the modal being torn down mid-render. The user can review the diff
+ *   without first clicking "Save Draft".
  */
 export const ChangesButton: React.FC = () => {
   const {
@@ -45,7 +50,7 @@ export const ChangesButton: React.FC = () => {
   const modified = useFormModified()
   const { getEntityConfig } = useConfig()
   const { i18n } = useTranslation()
-  const { submit } = useForm()
+  const { getData } = useForm()
 
   const entity = collectionSlug
     ? getEntityConfig({ collectionSlug })
@@ -61,55 +66,39 @@ export const ChangesButton: React.FC = () => {
   // of *any* doc — see issue #2).
   const hasIdentity = Boolean(globalSlug) || Boolean(docID)
 
-  // Mirror PublishButton's `canPublish` gate so the Changes button is
-  // visible exactly when Publish is enabled. PublishButton uses:
-  //   hasPublishPermission && (modified || hasNewerVersions || !hasPublishedDoc)
-  //   && uploadStatus !== 'uploading'
-  // (see @payloadcms/ui/src/elements/PublishButton/index.tsx).
+  // Mirror PublishButton's `canPublish` gate (modified || hasNewerVersions
+  // || !hasPublishedDoc) so the Changes button shows whenever Publish would.
   const hasNewerVersions = (unpublishedVersionCount ?? 0) > 0
   const canPublish =
     Boolean(hasPublishPermission) &&
     (modified || hasNewerVersions || !hasPublishedDoc) &&
     uploadStatus !== 'uploading'
 
-  const visible = draftsEnabled && canPublish && !isTrashed && hasIdentity
+  const visible = draftsEnabled && !isTrashed && hasIdentity && canPublish
+
+  // When the user clicks Changes while the form is dirty, snapshot the
+  // in-memory form values and hand them to the drawer as `formData`. The
+  // server-side diff handler uses that as the right-hand ("after") side
+  // of the diff instead of the latest persisted draft, so we never need
+  // to call `submit()` here — avoiding the regression where the draft
+  // save's form-state churn / router refresh tore down the modal.
+  const formDataRef = React.useRef<null | Record<string, unknown>>(null)
+
+  const formDataProvider = React.useCallback(() => formDataRef.current, [])
 
   const { Drawer: ChangesDrawerInstance, drawerSlug } = useChangesDrawer({
     collectionSlug,
     docID,
     globalSlug,
+    formDataProvider,
   })
 
   const { openModal } = useModal()
 
-  const [busy, setBusy] = React.useState(false)
-
-  const handleClick = React.useCallback(async () => {
-    if (busy) {
-      return
-    }
-    // If the user has unsaved edits, save them as a draft first so the
-    // server-side diff reflects the latest content (issue #4). The form
-    // submit flow updates `unpublishedVersionCount` and persists the draft;
-    // the drawer will then re-fetch the diff against the freshly saved doc.
-    if (modified) {
-      try {
-        setBusy(true)
-        await submit({
-          overrides: { _status: 'draft' },
-          skipValidation: true,
-        })
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('[changes-button] failed to save draft before opening diff', err)
-        // Fall through to opening the drawer anyway — the user will see the
-        // last persisted state vs published.
-      } finally {
-        setBusy(false)
-      }
-    }
+  const handleClick = React.useCallback(() => {
+    formDataRef.current = modified ? (getData() as Record<string, unknown>) : null
     openModal(drawerSlug)
-  }, [busy, modified, openModal, drawerSlug, submit])
+  }, [modified, getData, openModal, drawerSlug])
 
   if (!visible) {
     return null
@@ -120,10 +109,7 @@ export const ChangesButton: React.FC = () => {
       <Button
         buttonStyle="secondary"
         className="changes-button"
-        disabled={busy}
-        onClick={() => {
-          void handleClick()
-        }}
+        onClick={handleClick}
         size="medium"
       >
         {getLabel('changes', i18n.language)}

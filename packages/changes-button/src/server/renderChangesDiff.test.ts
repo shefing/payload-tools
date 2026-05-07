@@ -119,7 +119,7 @@ describe('renderChangesDiffHandler', () => {
     expect(statuses).toEqual(['draft', 'published'])
   })
 
-  it('returns notPublishedYet when no published baseline exists, regardless of draft', async () => {
+  it('on creation (no published baseline), diffs empty object vs latest draft so all fields show as additions', async () => {
     const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
 
     // No published version, but a draft exists (typical "saved as draft, never published" case)
@@ -127,15 +127,20 @@ describe('renderChangesDiffHandler', () => {
       status === 'published' ? null : { version: { title: 'drafted' }, updatedAt: '2024-01-02' },
     )
 
-    const result = await renderChangesDiffHandler({
+    const result = (await renderChangesDiffHandler({
       collectionSlug: 'posts',
       docID: 'abc-123',
       req: makeReq(),
-    } as never)
+    } as never)) as unknown as {
+      Diff: { from: object; to: { title: string } }
+      hasChanges: boolean
+      notPublishedYet?: boolean
+    }
 
-    expect(result.notPublishedYet).toBe(true)
-    expect(result.hasChanges).toBe(false)
-    expect(result.Diff).toBeNull()
+    expect(result.notPublishedYet).toBeUndefined()
+    expect(result.hasChanges).toBe(true)
+    expect(result.Diff.from).toEqual({})
+    expect(result.Diff.to.title).toBe('drafted')
   })
 
   it('issue #3: returns safe no-op when there is no latest draft for the doc', async () => {
@@ -218,7 +223,7 @@ describe('renderChangesDiffHandler', () => {
     }
   })
 
-  it('returns notPublishedYet for a global with no published baseline', async () => {
+  it('on creation for a global (no published baseline, no draft), returns no-op since right side is empty', async () => {
     const { renderChangesDiffHandler } = await import('./renderChangesDiff.js')
 
     fetchLatestVersionMock.mockResolvedValue(null)
@@ -232,7 +237,6 @@ describe('renderChangesDiffHandler', () => {
       availableSources: ['latestDraft'],
       Diff: null,
       hasChanges: false,
-      notPublishedYet: true,
     })
   })
 })

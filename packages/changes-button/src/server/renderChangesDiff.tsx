@@ -32,7 +32,15 @@ export type RenderChangesDiffArgs = {
   compareFrom?: CompareFrom
   /** Document id. Required — comparison is always scoped to this doc. */
   docID?: number | string
-  /** @deprecated Ignored. Caller must save the draft before invoking. */
+  /**
+   * Optional in-memory form values to use as the right-hand ("after") side
+   * of the diff instead of the latest persisted draft. When provided, the
+   * handler skips the latest-draft DB fetch and compares the currently
+   * published version against this object directly. Used by the client
+   * when the form has unsaved edits, so the diff can reflect those edits
+   * without first persisting them — avoiding form-state churn that would
+   * otherwise close the diff drawer mid-render.
+   */
   formData?: Record<string, unknown>
   globalSlug?: string
   /** Optional locale code list; defaults to all configured locales. */
@@ -71,6 +79,7 @@ export const renderChangesDiffHandler: ServerFunction<
   const {
     collectionSlug,
     docID,
+    formData,
     globalSlug,
     selectedLocales: selectedLocalesArg,
   } = args
@@ -109,8 +118,10 @@ export const renderChangesDiffHandler: ServerFunction<
   const docPermissions: SanitizedCollectionPermission | SanitizedGlobalPermission | undefined =
     collectionSlug ? permissions.collections?.[collectionSlug] : permissions.globals?.[globalSlug!]
 
-  // Fetch baseline (currently published) and the latest draft — both scoped
-  // to this specific document via `parentID`.
+  // Fetch baseline (currently published) — and the latest draft only when
+  // the caller did not provide in-memory `formData`. When `formData` is
+  // provided we use it directly as the right-hand side of the diff and
+  // skip the latest-draft DB fetch entirely.
   const [currentlyPublishedVersion, latestDraftVersion] = await Promise.all([
     fetchLatestVersion({
       collectionSlug,
@@ -121,15 +132,17 @@ export const renderChangesDiffHandler: ServerFunction<
       req,
       status: 'published',
     }),
-    fetchLatestVersion({
-      collectionSlug,
-      globalSlug,
-      locale: 'all',
-      overrideAccess: false,
-      parentID: docID,
-      req,
-      status: 'draft',
-    }) as Promise<null | TypeWithVersion<object>>,
+    formData
+      ? Promise.resolve(null)
+      : (fetchLatestVersion({
+          collectionSlug,
+          globalSlug,
+          locale: 'all',
+          overrideAccess: false,
+          parentID: docID,
+          req,
+          status: 'draft',
+        }) as Promise<null | TypeWithVersion<object>>),
   ])
 
   // The diff renders `versionFrom` on the LEFT (red, "before") and
@@ -138,35 +151,37 @@ export const renderChangesDiffHandler: ServerFunction<
   // this same document (right) — i.e. "what is published" vs "what will be
   // published next".
   //
-  // If there is no published baseline yet, comparing "empty vs current"
-  // misrepresents the change set (every field becomes an addition). The
-  // user-visible expectation is "current document vs last published";
-  // when no last-published exists, suppress the diff and let the client
-  // surface a dedicated message instead.
-  if (!currentlyPublishedVersion) {
-    return {
-      availableSources: ['latestDraft'],
-      Diff: null,
-      hasChanges: false,
-      notPublishedYet: true,
+  // If there is no published baseline yet (creation flow), diff against
+  // an empty object so every populated field shows up as an addition.
+  // This lets the user see exactly what they entered before publishing
+  // for the first time.
+  const versionFromSiblingData: object = currentlyPublishedVersion
+    ? {
+        ...(currentlyPublishedVersion.version as object),
+        updatedAt: currentlyPublishedVersion.updatedAt,
+      }
+    : {}
+
+  // Right-hand side resolution: prefer caller-supplied in-memory form data
+  // (used when the user has unsaved edits and we want to diff them without
+  // persisting first). Otherwise fall back to the latest saved draft.
+  let versionToSiblingData: object
+  if (formData) {
+    versionToSiblingData = {
+      ...(formData as object),
+      updatedAt: (formData as { updatedAt?: unknown }).updatedAt ?? new Date().toISOString(),
     }
-  }
-
-  const versionFromSiblingData: object = {
-    ...(currentlyPublishedVersion.version as object),
-    updatedAt: currentlyPublishedVersion.updatedAt,
-  }
-
-  // If no draft exists either (e.g. brand-new global with drafts enabled
-  // but never saved), there is nothing on the right side — treat as
-  // "no changes".
-  if (!latestDraftVersion) {
-    return { availableSources: ['latestDraft'], Diff: null, hasChanges: false }
-  }
-
-  const versionToSiblingData: object = {
-    ...(latestDraftVersion.version as object),
-    updatedAt: latestDraftVersion.updatedAt,
+  } else {
+    // If no draft exists either (e.g. brand-new global with drafts enabled
+    // but never saved), there is nothing on the right side — treat as
+    // "no changes".
+    if (!latestDraftVersion) {
+      return { availableSources: ['latestDraft'], Diff: null, hasChanges: false }
+    }
+    versionToSiblingData = {
+      ...(latestDraftVersion.version as object),
+      updatedAt: latestDraftVersion.updatedAt,
+    }
   }
 
   // Build the schema maps the diff pipeline expects.
