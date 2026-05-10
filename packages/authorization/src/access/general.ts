@@ -34,7 +34,7 @@ export const canUserAccessAction = async (
   if (!user.userRoles || user.userRoles.length === 0) return false;
 
   const roles = await payload.find({
-    collection: config.rolesCollection || 'roles',
+    collection: config.rolesCollection,
     where: {
       id: { in: user.userRoles.map((role: any) => role.id) },
     },
@@ -43,7 +43,7 @@ export const canUserAccessAction = async (
   if (!roles.docs || roles.docs.length === 0) return false;
 
   for (const role of roles.docs) {
-    const permissions: FieldLevelPermission[] | undefined = role[config.permissionsField || 'permissions'];
+    const permissions: FieldLevelPermission[] | undefined = role[config.permissionsField];
     if (!permissions) continue;
 
     for (const permission of permissions) {
@@ -52,8 +52,7 @@ export const canUserAccessAction = async (
       // permission.type is string[] (hasMany select field)
       // Expand all types through the hierarchy to get the full set of granted actions
       const grantedActions = new Set<string>();
-      const types = Array.isArray(permission.type) ? permission.type : [permission.type];
-      for (const type of types) {
+      for (const type of permission.type) {
         grantedActions.add(type);
         PERMISSION_HIERARCHY[type]?.forEach((perm) => grantedActions.add(perm));
       }

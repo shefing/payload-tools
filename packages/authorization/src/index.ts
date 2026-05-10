@@ -1,8 +1,96 @@
-import { Access, CollectionConfig, Config, GlobalConfig } from 'payload';
+import { Access, CollectionConfig, Config, Field, GlobalConfig } from 'payload';
 import { hasAccessToAction } from './utilities/hasAccessToAction.js';
 import { ensurePath } from './utilities/ensurePath.js';
 import { populateOptions } from './fields/populateOptions.js';
 import { AuthorizationPluginConfig } from './types.js';
+
+// Field types that carry a `name` and represent actual data (vs. presentational/layout fields).
+const DATA_FIELD_TYPES = new Set([
+  'array',
+  'blocks',
+  'checkbox',
+  'code',
+  'date',
+  'email',
+  'group',
+  'json',
+  'number',
+  'point',
+  'radio',
+  'relationship',
+  'richText',
+  'select',
+  'text',
+  'textarea',
+  'upload',
+]);
+
+// Recursively walk fields, applying `access` only to data fields and recursing
+// into presentational/container fields (row, collapsible, tabs, group, array, blocks).
+const applyFieldAccess = (
+  fields: Field[] | undefined,
+  collectionSlug: string,
+  pluginConfig: AuthorizationPluginConfig,
+): Field[] | undefined => {
+  if (!fields) return fields;
+  return fields.map((field): Field => {
+    // Container fields without a name: recurse into nested fields.
+    if (field.type === 'row' || field.type === 'collapsible') {
+      return {
+        ...field,
+        fields: applyFieldAccess(field.fields, collectionSlug, pluginConfig) ?? field.fields,
+      } as Field;
+    }
+    if (field.type === 'tabs') {
+      return {
+        ...field,
+        tabs: field.tabs.map((tab) => ({
+          ...tab,
+          fields: applyFieldAccess(tab.fields, collectionSlug, pluginConfig) ?? tab.fields,
+        })),
+      } as Field;
+    }
+    // Presentational, no nested fields, no access.
+    if (field.type === 'ui') {
+      return field;
+    }
+
+    // Data fields with a name.
+    if (
+      'name' in field &&
+      typeof field.name === 'string' &&
+      DATA_FIELD_TYPES.has(field.type) &&
+      !field.name.startsWith('_')
+    ) {
+      // Recurse into nested fields for group/array.
+      let nested: Partial<Field> = {};
+      if (field.type === 'group' || field.type === 'array') {
+        nested = {
+          fields: applyFieldAccess(field.fields, collectionSlug, pluginConfig) ?? field.fields,
+        } as Partial<Field>;
+      } else if (field.type === 'blocks') {
+        nested = {
+          blocks: field.blocks.map((block) => ({
+            ...block,
+            fields: applyFieldAccess(block.fields, collectionSlug, pluginConfig) ?? block.fields,
+          })),
+        } as Partial<Field>;
+      }
+
+      return {
+        ...field,
+        ...nested,
+        access: {
+          read: hasAccessToAction(collectionSlug, 'read', pluginConfig, field.name),
+          update: hasAccessToAction(collectionSlug, 'write', pluginConfig, field.name),
+          create: hasAccessToAction(collectionSlug, 'write', pluginConfig, field.name),
+        },
+      } as Field;
+    }
+
+    return field;
+  });
+};
 export * from "./access/isAdmin.js";
 export * from "./access/isAdminOrSelf.js";
 export * from "./access/isLoggedIn.js";
@@ -10,11 +98,18 @@ export * from './collection/Roles.js';
 export * from './fields/userFields.js';
 export { default as userFields } from './fields/userFields.js';
 export const addAccess =
-  (pluginConfig: AuthorizationPluginConfig) =>
+  (incomingPluginConfig: AuthorizationPluginConfig) =>
   (incomingConfig: Config): Config => {
     if (!incomingConfig || !incomingConfig.collections) {
       throw new Error('Invalid incoming configuration or collections are missing');
     }
+    // Single source of truth for plugin config defaults.
+    const pluginConfig: Required<Pick<AuthorizationPluginConfig, 'rolesCollection' | 'permissionsField'>> &
+      AuthorizationPluginConfig = {
+      ...incomingPluginConfig,
+      rolesCollection: incomingPluginConfig.rolesCollection || 'roles',
+      permissionsField: incomingPluginConfig.permissionsField || 'permissions',
+    };
     const entities: { label: string; value: string }[] = [];
 
     const createAccess = (slugName: string, labelName?: string) => {
@@ -59,19 +154,9 @@ export const addAccess =
         return {
           ...collection,
           access,
-          fields: collection.fields.map((field) => {
-            if ('name' in field && !field.name.startsWith('_')) {
-              return {
-                ...field,
-                access: {
-                  read: hasAccessToAction(collection.slug, 'read', pluginConfig, field.name),
-                  update: hasAccessToAction(collection.slug, 'write', pluginConfig, field.name),
-                  create: hasAccessToAction(collection.slug, 'write', pluginConfig, field.name),
-                },
-              };
-            }
-            return field;
-          }),
+          fields:
+            applyFieldAccess(collection.fields, collection.slug, pluginConfig) ??
+            collection.fields,
         };
       }) as CollectionConfig[],
       globals: incomingConfig.globals?.map((global) => ({
