@@ -20,9 +20,33 @@ Each role you create consists of:
 - **Write access** automatically includes **read access**.
 - **Publish access** includes both **write and read access**.
 
+✅ **Field-Level Permissions:** Restrict a permission to **specific fields** within a collection. Leave the fields list empty to apply the permission to **all fields**.
+
 With this powerful system, you have complete flexibility in managing access control—ensuring the right people have the right level of control.  
 
 Administrators can set as many permissions he/she wants within a role and as many as roles within a user
+
+### Field-Level Permissions
+
+In addition to collection-level access control, you can now restrict permissions to **specific fields** within a collection.
+
+When defining a permission in a role, you can optionally specify a list of **field names**. If provided, the permission applies **only to those fields**. If left empty, the permission applies to **all fields** (default behavior).
+
+#### Example
+
+A role with a `read` permission on `articles` restricted to the `title` and `summary` fields:
+
+```javascript
+{
+  entity: ['articles'],
+  type: ['read'],
+  fields: ['title', 'summary'],
+}
+```
+
+Users with this role will be able to read the `articles` collection, but only the `title` and `summary` fields will be accessible — all other fields will be hidden.
+
+> **Note:** Field-level permissions are stored in the JWT so they are available at runtime without an extra database lookup.
 ### Install 
 
 - Install the [plugin](https://www.npmjs.com/package/@shefing/authorization) using your node package manager, e.g:

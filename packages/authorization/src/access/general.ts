@@ -1,5 +1,5 @@
 import { Access, User, Payload } from 'payload';
-import { AuthorizationPluginConfig } from '../types.js';
+import { AuthorizationPluginConfig, FieldLevelPermission } from '../types.js';
 
 const PERMISSION_HIERARCHY: Record<string, string[]> = {
   publish: ['write', 'read', 'publish'],
@@ -7,12 +7,25 @@ const PERMISSION_HIERARCHY: Record<string, string[]> = {
   read: ['read'],
 };
 
+/**
+ * Checks if a user has access to a specific action on a collection slug.
+ * Optionally checks for field-level access if a fieldName is provided.
+ *
+ * @param user - The user requesting access
+ * @param slugName - The collection slug name
+ * @param action - The action type (e.g., 'read', 'write', 'publish')
+ * @param payload - The Payload instance
+ * @param config - The authorization plugin configuration
+ * @param fieldName - Optional field name to check for field-level access
+ * @returns Promise<boolean> - True if access is granted, false otherwise
+ */
 export const canUserAccessAction = async (
   user: User | null | undefined,
   slugName: string,
   action: string,
   payload: Payload,
   config: AuthorizationPluginConfig,
+  fieldName?: string,
 ): Promise<boolean> => {
   if (!user) return false;
 
@@ -29,18 +42,36 @@ export const canUserAccessAction = async (
 
   if (!roles.docs || roles.docs.length === 0) return false;
 
-  const userAllowedActions = new Set<string>();
-
   for (const role of roles.docs) {
-    const permissions = role[config.permissionsField];
-    if (permissions) {
-      for (const permission of permissions) {
-        if (permission.entity.includes(slugName)) {
-          userAllowedActions.add(permission.type);
-          PERMISSION_HIERARCHY[permission.type]?.forEach((perm) => userAllowedActions.add(perm));
-        }
+    const permissions: FieldLevelPermission[] | undefined = role[config.permissionsField];
+    if (!permissions) continue;
+
+    for (const permission of permissions) {
+      if (!permission.entity.includes(slugName)) continue;
+
+      // permission.type is string[] (hasMany select field), but normalize to array
+      // in case legacy data or tests pass a plain string.
+      const permissionTypes: string[] = Array.isArray(permission.type)
+        ? permission.type
+        : [permission.type];
+      // Expand all types through the hierarchy to get the full set of granted actions
+      const grantedActions = new Set<string>();
+      for (const type of permissionTypes) {
+        grantedActions.add(type);
+        PERMISSION_HIERARCHY[type]?.forEach((perm) => grantedActions.add(perm));
       }
+
+      if (!grantedActions.has(action)) continue;
+
+      // Action is granted by this permission. If no fieldName requested, we're done.
+      if (!fieldName) return true;
+
+      // Field-level check: empty/missing fields means all fields are allowed
+      if (!permission.fields || permission.fields.length === 0) return true;
+
+      if (permission.fields.includes(fieldName)) return true;
     }
   }
-  return userAllowedActions.has(action);
+
+  return false;
 };

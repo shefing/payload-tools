@@ -45,7 +45,7 @@ describe('canUserAccessAction', () => {
     const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
     const roles = [
       {
-        permissions: [{ entity: ['articles'], type: 'read' }],
+        permissions: [{ entity: ['articles'], type: ['read'] }],
       },
     ]
     const result = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig)
@@ -56,7 +56,7 @@ describe('canUserAccessAction', () => {
     const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
     const roles = [
       {
-        permissions: [{ entity: ['pages'], type: 'read' }],
+        permissions: [{ entity: ['pages'], type: ['read'] }],
       },
     ]
     const result = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig)
@@ -67,7 +67,7 @@ describe('canUserAccessAction', () => {
     const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
     const roles = [
       {
-        permissions: [{ entity: ['articles'], type: 'write' }],
+        permissions: [{ entity: ['articles'], type: ['write'] }],
       },
     ]
     const readResult = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig)
@@ -80,7 +80,7 @@ describe('canUserAccessAction', () => {
     const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
     const roles = [
       {
-        permissions: [{ entity: ['articles'], type: 'publish' }],
+        permissions: [{ entity: ['articles'], type: ['publish'] }],
       },
     ]
     const readResult = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig)
@@ -97,5 +97,87 @@ describe('canUserAccessAction', () => {
     await expect(
       canUserAccessAction(user, 'articles', 'read', payload, pluginConfig),
     ).rejects.toThrow('DB error')
+  })
+
+  describe('field-level permissions', () => {
+    it('returns true for any field when no fields are specified in permission', async () => {
+      const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
+      const roles = [
+        {
+          permissions: [{ entity: ['articles'], type: ['read'], fields: [] }],
+        },
+      ]
+      const result = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig, 'title')
+      expect(result).toBe(true)
+    })
+
+    it('returns true when field is explicitly allowed', async () => {
+      const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
+      const roles = [
+        {
+          permissions: [{ entity: ['articles'], type: ['read'], fields: ['title'] }],
+        },
+      ]
+      const result = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig, 'title')
+      expect(result).toBe(true)
+    })
+
+    it('returns false when field is not in the allowed list', async () => {
+      const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
+      const roles = [
+        {
+          permissions: [{ entity: ['articles'], type: ['read'], fields: ['title'] }],
+        },
+      ]
+      const result = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig, 'content')
+      expect(result).toBe(false)
+    })
+
+    it('grants access if at least one role/permission grants it (OR logic)', async () => {
+      const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
+      const roles = [
+        {
+          permissions: [
+            { entity: ['articles'], type: ['read'], fields: ['title'] },
+            { entity: ['articles'], type: ['read'], fields: ['content'] },
+          ],
+        },
+      ]
+      const titleResult = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig, 'title')
+      const contentResult = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig, 'content')
+      expect(titleResult).toBe(true)
+      expect(contentResult).toBe(true)
+    })
+
+    it('avoids cross-role leaks (action and field must match in the same permission)', async () => {
+      const user: any = { isAdmin: false, userRoles: [{ id: '1' }, { id: '2' }] }
+      const roles = [
+        {
+          id: '1',
+          permissions: [{ entity: ['articles'], type: ['write'], fields: ['title'] }],
+        },
+        {
+          id: '2',
+          permissions: [{ entity: ['articles'], type: ['read'], fields: ['content'] }],
+        },
+      ]
+      // Role 1 has WRITE on 'title', Role 2 has READ on 'content'.
+      // User should NOT have WRITE on 'content'.
+      const result = await canUserAccessAction(user, 'articles', 'write', makePayload(roles), pluginConfig, 'content')
+      expect(result).toBe(false)
+    })
+
+    it('handles multiple types in a single permission', async () => {
+      const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
+      const roles = [
+        {
+          permissions: [{ entity: ['articles'], type: ['read', 'write'], fields: ['title'] }],
+        },
+      ]
+      const readResult = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig, 'title')
+      const writeResult = await canUserAccessAction(user, 'articles', 'write', makePayload(roles), pluginConfig, 'title')
+      expect(readResult).toBe(true)
+      expect(writeResult).toBe(true)
+    })
   })
 })
