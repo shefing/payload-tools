@@ -128,6 +128,7 @@ export const Roles: CollectionConfig = {
               },
               type: 'text',
               hasMany: true,
+              saveToJWT: true,
               admin: {
                 width: '30%',
                 description: 'Restrict this permission to specific fields (leave empty for all fields)',

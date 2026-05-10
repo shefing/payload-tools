@@ -49,10 +49,14 @@ export const canUserAccessAction = async (
     for (const permission of permissions) {
       if (!permission.entity.includes(slugName)) continue;
 
-      // permission.type is string[] (hasMany select field)
+      // permission.type is string[] (hasMany select field), but normalize to array
+      // in case legacy data or tests pass a plain string.
+      const permissionTypes: string[] = Array.isArray(permission.type)
+        ? permission.type
+        : [permission.type];
       // Expand all types through the hierarchy to get the full set of granted actions
       const grantedActions = new Set<string>();
-      for (const type of permission.type) {
+      for (const type of permissionTypes) {
         grantedActions.add(type);
         PERMISSION_HIERARCHY[type]?.forEach((perm) => grantedActions.add(perm));
       }

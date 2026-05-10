@@ -45,7 +45,7 @@ describe('canUserAccessAction', () => {
     const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
     const roles = [
       {
-        permissions: [{ entity: ['articles'], type: 'read' }],
+        permissions: [{ entity: ['articles'], type: ['read'] }],
       },
     ]
     const result = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig)
@@ -56,7 +56,7 @@ describe('canUserAccessAction', () => {
     const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
     const roles = [
       {
-        permissions: [{ entity: ['pages'], type: 'read' }],
+        permissions: [{ entity: ['pages'], type: ['read'] }],
       },
     ]
     const result = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig)
@@ -67,7 +67,7 @@ describe('canUserAccessAction', () => {
     const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
     const roles = [
       {
-        permissions: [{ entity: ['articles'], type: 'write' }],
+        permissions: [{ entity: ['articles'], type: ['write'] }],
       },
     ]
     const readResult = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig)
@@ -80,7 +80,7 @@ describe('canUserAccessAction', () => {
     const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
     const roles = [
       {
-        permissions: [{ entity: ['articles'], type: 'publish' }],
+        permissions: [{ entity: ['articles'], type: ['publish'] }],
       },
     ]
     const readResult = await canUserAccessAction(user, 'articles', 'read', makePayload(roles), pluginConfig)
