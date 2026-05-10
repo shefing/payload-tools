@@ -7,8 +7,18 @@ const PERMISSION_HIERARCHY: Record<string, string[]> = {
   read: ['read'],
 };
 
-// Returns true if user has action access to the collection, and (if fieldName provided) to the field.
-// Both action and field access must come from the same permission entry to avoid cross-role leaks.
+/**
+ * Checks if a user has access to a specific action on a collection slug.
+ * Optionally checks for field-level access if a fieldName is provided.
+ *
+ * @param user - The user requesting access
+ * @param slugName - The collection slug name
+ * @param action - The action type (e.g., 'read', 'write', 'publish')
+ * @param payload - The Payload instance
+ * @param config - The authorization plugin configuration
+ * @param fieldName - Optional field name to check for field-level access
+ * @returns Promise<boolean> - True if access is granted, false otherwise
+ */
 export const canUserAccessAction = async (
   user: User | null | undefined,
   slugName: string,
@@ -24,7 +34,7 @@ export const canUserAccessAction = async (
   if (!user.userRoles || user.userRoles.length === 0) return false;
 
   const roles = await payload.find({
-    collection: config.rolesCollection,
+    collection: config.rolesCollection || 'roles',
     where: {
       id: { in: user.userRoles.map((role: any) => role.id) },
     },
@@ -33,7 +43,7 @@ export const canUserAccessAction = async (
   if (!roles.docs || roles.docs.length === 0) return false;
 
   for (const role of roles.docs) {
-    const permissions: FieldLevelPermission[] | undefined = role[config.permissionsField];
+    const permissions: FieldLevelPermission[] | undefined = role[config.permissionsField || 'permissions'];
     if (!permissions) continue;
 
     for (const permission of permissions) {
@@ -42,7 +52,8 @@ export const canUserAccessAction = async (
       // permission.type is string[] (hasMany select field)
       // Expand all types through the hierarchy to get the full set of granted actions
       const grantedActions = new Set<string>();
-      for (const type of permission.type) {
+      const types = Array.isArray(permission.type) ? permission.type : [permission.type];
+      for (const type of types) {
         grantedActions.add(type);
         PERMISSION_HIERARCHY[type]?.forEach((perm) => grantedActions.add(perm));
       }

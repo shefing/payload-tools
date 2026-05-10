@@ -3,7 +3,7 @@ import { canUserAccessAction } from '../access/general.js';
 
 
 export const hasAccessToAction =
-  (slugName: string, action: string,pluginConfig:any): Access =>
+  (slugName: string, action: string, pluginConfig: any, fieldName?: string): Access =>
   ({ req: { user, payload } }) => {
     if (user && ('userRoles' in user || 'isAdmin' in user)) {
       const cmuser = user as unknown;
@@ -12,7 +12,8 @@ export const hasAccessToAction =
         slugName,
         action,
         payload,
-        pluginConfig
+        pluginConfig,
+        fieldName,
       );
     } else {
       return false;

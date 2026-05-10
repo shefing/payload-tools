@@ -39,21 +39,41 @@ export const addAccess =
 
     const config: Config = {
       ...incomingConfig,
-      collections: incomingConfig.collections?.map((collection) => ({
-        ...collection,
-        ...((pluginConfig.includedCollections 
-            ? pluginConfig.includedCollections.includes(collection.slug) 
-            : pluginConfig.excludedCollections 
-              ? !pluginConfig.excludedCollections.includes(collection.slug) 
-              : true) && {
-          access: collection.labels
-            ? createAccessCollection(
-                collection.slug,
-                String(collection.labels.plural ? collection.labels.plural : collection.labels),
-              )
-            : createAccessCollection(collection.slug),
-        }),
-      })) as CollectionConfig[],
+      collections: incomingConfig.collections?.map((collection) => {
+        const isIncluded =
+          pluginConfig.includedCollections
+            ? pluginConfig.includedCollections.includes(collection.slug)
+            : pluginConfig.excludedCollections
+              ? !pluginConfig.excludedCollections.includes(collection.slug)
+              : true;
+
+        if (!isIncluded) return collection;
+
+        const access = collection.labels
+          ? createAccessCollection(
+              collection.slug,
+              String(collection.labels.plural ? collection.labels.plural : collection.labels),
+            )
+          : createAccessCollection(collection.slug);
+
+        return {
+          ...collection,
+          access,
+          fields: collection.fields.map((field) => {
+            if ('name' in field && !field.name.startsWith('_')) {
+              return {
+                ...field,
+                access: {
+                  read: hasAccessToAction(collection.slug, 'read', pluginConfig, field.name),
+                  update: hasAccessToAction(collection.slug, 'write', pluginConfig, field.name),
+                  create: hasAccessToAction(collection.slug, 'write', pluginConfig, field.name),
+                },
+              };
+            }
+            return field;
+          }),
+        };
+      }) as CollectionConfig[],
       globals: incomingConfig.globals?.map((global) => ({
         ...global,
         access: global.label
