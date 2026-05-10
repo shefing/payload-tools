@@ -2,6 +2,12 @@
 
 This repository contains a set of powerful plugins designed to enhance your [Payload CMS](https://payloadcms.com/) projects. Whether you're managing complex content structures or optimizing the authoring experience, these plugins will help streamline your workflow.
 
+## 💼 Enterprise Support & Consulting
+
+We built these tools to solve complex Payload UX problems. Need a custom Next.js/Payload architecture, migration help, or bespoke plugins? We help product companies build custom CMS infrastructures in half the time it takes internally.
+
+[**Book a technical consultation with the creators**](mail:tsemachh@shefing.com)
+
 ### 🔌 **Available Plugins** (Compatible with Payload 3.0)
 
 ---
