@@ -65,3 +65,24 @@ admin: {
 ```
 
 💡 **Now you can edit relationships smoothly, without interruptions!** ✨
+
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#right-panel) at the repo root and the live [`RoadMap` issues for Right Panel](https://github.com/shefing/payload-tools/labels/plugin%3Aright-panel).
+
+### P0 — user-requested
+
+- **Bottom panel mode** — `position: 'right' | 'bottom' | 'left'` (collection-level override). Reuse the existing drawer container.
+- **Enable on more views** — explicit support for `listView` and `versionsView`, not only edit view.
+
+### P1
+
+- Pinned / resizable / collapsible panel with size persisted to user preferences.
+- Multi-tab panel — stack several related collections as tabs in one drawer.
+- Custom panel content slot — `admin.custom.rightPanel.component` accepting a React component (useful for embedding `Changes`, `Comments`, or `Authors Info`).
+- Deep-link — encode the open record id in the URL hash.
+
+### P2
+
+- Keyboard shortcuts (`⌘\` toggle, `Esc` close).
+- Mobile fallback (full-screen sheet).

@@ -133,6 +133,30 @@ When PR #16499 ships, additionally:
 1. Re-add `config.admin.serverFunctions` self-registration in `ChangesButtonPlugin.ts` (see git history).
 2. Drop the `wrapServerFunctions` step from this README — the plugin will be a single-line install again.
 
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#changes-button) at the repo root and the live [`RoadMap` issues for Changes Button](https://github.com/shefing/payload-tools/labels/plugin%3Achanges-button).
+
+### P0 — user-requested
+
+- **AI-generated change summary** at the top of the drawer:
+  - Pluggable `summarize` adapter (`openai`, `anthropic`, `custom`). The plugin sends the structured diff + collection field metadata; receives a markdown summary + bullet list of risky changes.
+  - Server-side via a new Payload endpoint registered by the plugin, so API keys stay on the server.
+  - Cached per `(docId, fromVersion, toVersion)`.
+  - Per-collection toggle via `admin.custom.changesButton.aiSummary`.
+
+### P1
+
+- Inline approval workflow — "Request review" button creating a `change-request` record (or hooking into `authorization` roles).
+- Comment-on-diff — reuse the `comments` plugin's Lexical mark on changed fields.
+- Filter the diff (only changed / added / removed; by tab/group).
+- Copy summary / export diff as Markdown or PDF.
+
+### P2
+
+- Once upstream Payload PRs [#16498](https://github.com/payloadcms/payload/pull/16498) / [#16499](https://github.com/payloadcms/payload/pull/16499) land, drop `src/vendor/diff` and the `(payload)/layout.tsx` edit.
+- Granular i18n for AI summaries (locale passed to adapter).
+
 ## License
 
 MIT — © shefing

@@ -73,3 +73,25 @@ fields: [
 ```
 
  **Now your users can add, reply to, and manage comments directly within the RichText field!** 🎉
+
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#comments) at the repo root and the live [`RoadMap` issues for Comments](https://github.com/shefing/payload-tools/labels/plugin%3Acomments).
+
+### P0
+
+- **Mentions** (`@user`) resolving from the Users collection + Payload notification / email.
+- **Resolve / reopen** state on threads (not just delete), with a "Show resolved" filter.
+- **Document-level comments** (not tied to a Lexical mark) for `text` / `number` / `select` fields.
+
+### P1
+
+- Reactions (👍 ❤️ 👀) on a comment.
+- Email / webhook digest of unresolved threads per document.
+- Permission integration with the `authorization` plugin (`comment-read` / `comment-write`).
+- Markdown + attachments in comment body.
+
+### P2
+
+- Real-time presence indicators ("Alice is viewing") via SSE/WebSocket.
+- Export thread to PDF for audit.

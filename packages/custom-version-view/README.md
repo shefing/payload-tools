@@ -38,3 +38,24 @@ Add the following configuration to enable versions for a collection:
     drafts: true,
   }
 ```
+
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#custom-version-view) at the repo root and the live [`RoadMap` issues for Custom Version View](https://github.com/shefing/payload-tools/labels/plugin%3Acustom-version-view).
+
+### P0 — user-requested
+
+- **Configurable list columns** — `listFields: string[]` (plugin-level default) + `collection.custom.versionListFields` (per-collection override). Resolves dotted paths the same way QuickFilter will.
+- **Per-column renderers** — `{ name, label, width, Cell }` objects so users can drop in custom React cells (status pill, avatar, etc.).
+
+### P1
+
+- Filtering & search on the versions list (status, author, date range) — natural pairing with QuickFilter.
+- Compare any two versions (currently only "vs published"); restore-with-diff confirmation.
+- Group by day / author toggle.
+- Pagination + virtualization for collections with thousands of versions.
+
+### P2
+
+- Export a single version as JSON.
+- Color-coded change indicator (added / removed / changed counts) per row, reusing the `changes-button` diff pipeline.

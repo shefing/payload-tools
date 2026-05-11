@@ -557,6 +557,37 @@ The plugin is designed to be extensible. To add new filter types:
 3. Update `FilterField.tsx` to handle the new type
 4. Add translations in `labels.ts`
 
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#quick-filter) at the repo root and the live [`RoadMap` issues for QuickFilter](https://github.com/shefing/payload-tools/labels/plugin%3Aquickfilter).
+
+### Guiding principles
+
+1. **Always align with Payload's built-in advanced filter** — filter state must round-trip with Payload's `where` query and reuse Payload's operator set, so QuickFilter selections appear in Payload's advanced filter panel (and vice-versa).
+2. **Match Payload's UI styling, drop the per-project Tailwind requirement** — re-skin components with Payload's CSS variables / SCSS modules. If Payload 3.x style internals aren't exportable enough, ship a scoped CSS bundle as interim and target Payload 4.0 for the deep rewrite.
+
+### P0 — user-requested
+
+- Alignment with Payload's built-in advanced filter (shared `where` state, shared operators, integration test in `test-app/`).
+- Tailwind removal / Payload-native styling (with the Payload-4.0 fallback noted).
+- `defaultOpen` option (plugin-level + per-collection `collection.custom.filterList.options`).
+- Relationship filter field type (async search, `useAsTitle`, `where`/`filterOptions` passthrough).
+- Nested / group / array / blocks fields support in the dotted-path resolver.
+
+### P1
+
+- Saved filter presets persisted to user `preferences`; share-via-URL.
+- URL-as-source-of-truth (hydrate / push the same `where` query string Payload uses).
+- Number / range filter and text-contains filter, mapped to Payload's `greater_than_equal` / `less_than_equal` / `like`.
+- Conditional visibility (`showWhen: (state) => boolean`).
+- Clear-all / per-row clear and an active-filter-count badge.
+
+### P2
+
+- Mobile / narrow-viewport layout (auto-collapse rows to a sheet).
+- Public `useQuickFilter()` hook.
+- Post-Payload-4.0 visual refresh.
+
 ## License
 
 This plugin is licensed under the Apache License, Version 2.0.

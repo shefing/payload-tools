@@ -82,6 +82,24 @@ CollectionResetPreferencesPlugin({
 
 The plugin adds a "Reset Preferences" button to the list view menu of collections. When clicked, the button makes a DELETE request to the Payload API to delete the user's preferences for that collection's list view, and then reloads the page. This resets the list view to its default state, clearing any custom column configurations, filters, pagination settings, etc.
 
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#reset-list-view) at the repo root and the live [`RoadMap` issues for Reset List View](https://github.com/shefing/payload-tools/labels/plugin%3Areset-list-view).
+
+### P0
+
+- **Granular reset menu** — split into `Reset columns`, `Reset filters`, `Reset sort`, `Reset page size`, `Reset all`.
+- **Per-user default preset** — admin can save a view and force it as the default for everyone.
+
+### P1
+
+- Named saved views per user with a quick switcher — pairs with QuickFilter saved presets.
+- Auto-reset on logout option for shared workstations.
+
+### P2
+
+- Admin button to bulk-reset preferences for all users (e.g., after a schema change).
+
 ## License
 
 MIT

@@ -108,6 +108,27 @@ COPY --from=builder /app/node_modules/ffmpeg-static/ ./node_modules/ffmpeg-stati
 
 ---
 
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#cover-image) at the repo root and the live [`RoadMap` issues for Cover Image](https://github.com/shefing/payload-tools/labels/plugin%3Acover-image).
+
+### P0
+
+- **Cross-platform support** — detect ffmpeg from `process.env.FFMPEG_PATH` first, fall back to `ffmpeg-static`; document macOS/Windows/Docker setup.
+- **Multiple frames / sprite sheet** — `frames: number | number[]` for hover previews & chapter thumbnails.
+- **Async / background generation** via a Payload job/queue.
+
+### P1
+
+- Auto-poster + GIF preview outputs.
+- Image processing options (target size, quality, blur, watermark overlay).
+- **Regenerate** action available on each video document.
+
+### P2
+
+- Pluggable extractor (`extractor: 'ffmpeg' | 'cloudinary' | custom`).
+- Deprecation guide once Payload's native video cover covers all use-cases.
+
 ## License
 
 MIT © Shefing

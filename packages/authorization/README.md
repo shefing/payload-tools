@@ -115,3 +115,26 @@ When `isGenerator` is **enabled**, the user can only generate static content **w
 },
 ```
 
+
+
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#authorization) at the repo root and the live [`RoadMap` issues for Authorization](https://github.com/shefing/payload-tools/labels/plugin%3Aauthorization).
+
+### P0
+
+- **Deny-list mode** for field permissions (today only allow-list). Many teams want "all fields except `internalNotes`".
+- **Row-level / `where`-based permissions** — permission entries carry a `where` clause merged into Payload's access functions.
+- **Role inheritance** — `extends: ['editor']`.
+
+### P1
+
+- Per-locale permissions for localized collections.
+- Time-boxed permissions (`validFrom` / `validUntil`).
+- Audit log of role/permission changes — surfaces nicely alongside `authors-info`.
+- Admin UI matrix view — collections × roles × permissions, batch-edit.
+
+### P2
+
+- Import/export roles as JSON for environment promotion.
+- CLI helper: `pnpm shefing-auth check <user> <collection>`.

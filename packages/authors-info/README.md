@@ -32,3 +32,23 @@ plugins: [
 ```
 
 
+
+
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#authors-info) at the repo root and the live [`RoadMap` issues for Authors Info](https://github.com/shefing/payload-tools/labels/plugin%3Aauthors-info).
+
+### P0
+
+- **Activity timeline** tab reusing `custom-version-view` data (created → edited → published → reverted).
+- **Configurable display fields** — choose which author attributes show in the tab and list columns.
+- **Surface in list views** — opt-in column adapter for `Updated By` / `Published By` in any collection list.
+
+### P1
+
+- Editor presence ("currently being edited by …") with stale-lock cleanup.
+- Email author on publish hook (configurable template).
+
+### P2
+
+- CSV / JSON export of activity for compliance.

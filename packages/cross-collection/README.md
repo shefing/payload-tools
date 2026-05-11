@@ -43,3 +43,18 @@ CrossCollectionConfig({
 - **Flexible**: Override any default view across the CMS.
 
 With this plugin, you have **full control** over how every component view in Payload CMS appears! ✨
+
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#cross-collection-config) at the repo root and the live [`RoadMap` issues for Cross-Collection](https://github.com/shefing/payload-tools/labels/plugin%3Across-collection).
+
+### P0
+
+- **Type-safe override keys** — TS union for the supported `admin.components.views.*` paths.
+- **Conditional overrides** — apply only when `(collection, user, locale) => boolean` returns true.
+- **Merge instead of replace** mode for nested admin components.
+
+### P1
+
+- Override `admin.components.beforeList` / `afterList` / `beforeFields` / `afterFields` across many collections.
+- Per-collection allow-list (inverse of `excludedCollections`).

@@ -67,3 +67,22 @@ This ensures that local field definitions always take precedence over global ove
 
 With this plugin, you gain **full control** over how Payload CMS fields behave and appear—without the need for repetitive manual overrides! ✨
 
+## Roadmap
+
+See the consolidated [`ROADMAP.md`](../../ROADMAP.md#field-type-component-override) at the repo root and the live [`RoadMap` issues for Field-type Override](https://github.com/shefing/payload-tools/labels/plugin%3Afield-type-components-override).
+
+### P0
+
+- **Predicate matcher** — `match: (field, ctx) => boolean` supporting name/regex/`admin.condition` matching.
+- **Override ordering & merge** — deterministic precedence; deep-merge `admin.components` instead of replace.
+- **Scope to collections / globals** — `includedCollections` / `excludedCollections`.
+
+### P1
+
+- Built-in override presets bundle (date pickers, slugify-on-blur, masked inputs) as opt-in helpers.
+- Dev-time logger printing which override hit which field on boot.
+
+### P2
+
+- Storybook-style playground page (`/admin/_internal/field-overrides`) listing every override + live preview.
+
