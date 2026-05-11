@@ -2,7 +2,7 @@
 
 This roadmap covers all in-scope plugins in this monorepo (everything except the 🎨 *Custom Fields* group: `color-picker`, `icon-select`). It is the canonical place for community contributors to discover work items and pick something up.
 
-> 💬 **Want to help?** Every bullet in this roadmap is mirrored as a public GitHub issue with the **`RoadMap`** label. Filter them here: [`label:RoadMap`](https://github.com/shefing/payload-tools/labels/RoadMap). Come say hi on the [Payload Discord #plugins channel](https://discord.com/channels/967097582721572934).
+> 💬 **Want to help?** Every bullet in this roadmap is mirrored as a public GitHub issue with the **`RoadMap`** label. Filter them here: [`label:RoadMap`](https://github.com/shefing/payload-tools/labels/RoadMap). Come say hi on the [Payload Discord #plugins channel](https://discord.com/channels/967097582721572934/1004009734115966976).
 
 ## Legend
 
@@ -337,7 +337,7 @@ We track every roadmap bullet as a public GitHub issue so anyone can pick one up
 1. Browse the open list: [`label:RoadMap`](https://github.com/shefing/payload-tools/labels/RoadMap). Filter further by `plugin:<name>` or `priority:P0|P1|P2`.
 2. **Claim an item** by commenting on the issue (e.g. *"I'd like to work on this"*). A maintainer will assign it to you to avoid duplicate work.
 3. **Open a PR** referencing the issue (`Closes #<n>`). Match the existing code style of the plugin and add/update tests under `test-app/` where applicable.
-4. **Discuss design questions** on the issue or in the [Payload Discord #plugins channel](https://discord.com/channels/967097582721572934) before doing large rewrites.
+4. **Discuss design questions** on the issue or in the [Payload Discord #plugins channel](https://discord.com/channels/967097582721572934/1004009734115966976) before doing large rewrites.
 
 Each `RoadMap` issue follows a short template:
 
