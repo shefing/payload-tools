@@ -10,6 +10,8 @@ We built these tools to solve complex Payload UX problems. Need a custom Next.js
 
 ### 🔌 **Available Plugins** (Compatible with Payload 3.0)
 
+> 🗺️ **Roadmap & community contributions** — see [`ROADMAP.md`](./ROADMAP.md) for the per-plugin roadmap. Every item is also tracked as a public GitHub issue under the [`RoadMap`](https://github.com/shefing/payload-tools/labels/RoadMap) label — pick one up and join the discussion on the [Payload Discord #plugins channel](https://discord.com/channels/967097582721572934).
+
 ---
 
 #### 📋 List
