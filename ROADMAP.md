@@ -290,6 +290,7 @@ See [`packages/cover-image/README.md`](packages/cover-image/README.md).
 
 Shared improvements that benefit every plugin:
 
+- **Attribute-Based Authorization (ABAC)** — pluggable attribute providers (`geo`, `tenant`, `clearance`, …) that compile to Payload `where` clauses and merge with the existing `authorization` plugin's RBAC. One small extension point (`AttributeProvider`), no parallel permission engine. Tracking issue: [#203](https://github.com/shefing/payload-tools/issues/203).
 - **Unified options shape** — extend every plugin's `excludedCollections` / `excludedGlobals` with `includedCollections` and `predicate: (collection) => boolean` for parity.
 - **Per-collection opt-in via `admin.custom.<pluginKey>`** documented in one place.
 - **Centralized i18n** — lift per-plugin `labels.ts` (en/ar/es/fr/he/zh) into a shared `@shefing/i18n` package.
