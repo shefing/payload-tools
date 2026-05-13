@@ -1,0 +1,44 @@
+{
+  "name": "@shefing/abac",
+  "version": "0.0.1",
+  "private": false,
+  "bugs": "https://github.com/shefing/payload-tools/issues",
+  "repository": "https://github.com/shefing/payload-tools",
+  "license": "MIT",
+  "author": "shefing",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "pnpm copyfiles && pnpm build:swc && pnpm build:types",
+    "build:swc": "swc ./src -d ./dist --config-file .swcrc",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist",
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
+    "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png,json}\" dist/",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx src",
+    "prepublishOnly": "pnpm clean && pnpm build",
+    "reinstall": "rm -rf node_modules .next && rm -rf .next && rm pnpm-lock.yaml  && pnpm install",
+    "test": "vitest run --config ./vitest.config.mts"
+  },
+  "peerDependencies": {
+    "payload": ">=3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2",
+    "vitest": "^3.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

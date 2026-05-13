@@ -6,6 +6,7 @@ import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 // ── Plugin imports ────────────────────────────────────────────────────────────
+import { abacPlugin, roleAttribute, tenantAttribute } from '@shefing/abac'
 import { addAccess, Roles, userFields } from '@shefing/authorization'
 import { addAuthorsFields as addAuthorsInfo } from '@shefing/authors-info'
 import { createColorField, createBackgroundColorField } from '@shefing/color-picker'
@@ -41,6 +42,20 @@ export default buildConfig({
   },
 
   collections: [
+    {
+      slug: 'tenants',
+      admin: {
+        useAsTitle: 'name',
+      },
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+        },
+      ],
+    },
+
     // ── Users (required by authorization plugin) ──────────────────────────
     {
       slug: 'users',
@@ -50,7 +65,15 @@ export default buildConfig({
       auth: {
         useAPIKey: true,
       },
-      fields: [...userFields],
+      fields: [
+        ...userFields,
+        {
+          name: 'tenant',
+          type: 'relationship',
+          relationTo: 'tenants',
+          saveToJWT: true,
+        },
+      ],
     },
 
     // ── Roles (from authorization plugin) ───────────────────────────────────
@@ -60,7 +83,14 @@ export default buildConfig({
     {
       slug: 'articles',
       admin: {
-        defaultColumns: ['title', 'bgColor', 'textColor', 'icon'],
+        defaultColumns: ['title', 'tenant', 'bgColor', 'textColor', 'icon'],
+      },
+      custom: {
+        abac: {
+          tenant: {
+            docField: 'tenant',
+          },
+        },
       },
       versions: {
         drafts: true,
@@ -75,6 +105,11 @@ export default buildConfig({
         createColorField({ name: 'textColor', label: 'Text Color' }),
         createBackgroundColorField({ name: 'bgColor', label: 'Background Color' }),
         createIconSelectField({ name: 'icon', label: 'Icon' }),
+        {
+          name: 'tenant',
+          type: 'relationship',
+          relationTo: 'tenants',
+        },
       ],
     },
 
@@ -132,6 +167,10 @@ export default buildConfig({
     addAccess({
       rolesCollection: 'roles',
       permissionsField: 'permissions',
+      excludedCollections: ['media'],
+    }),
+    abacPlugin({
+      attributes: [tenantAttribute(), roleAttribute()],
       excludedCollections: ['media'],
     }),
     // CommentsPlugin({}),

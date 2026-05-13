@@ -41,6 +41,27 @@ describe('canUserAccessAction', () => {
     expect(result).toBe(false)
   })
 
+  it('supports role ids stored directly in the JWT payload', async () => {
+    const user: any = { isAdmin: false, userRoles: ['1'] }
+    const roles = [
+      {
+        permissions: [{ entity: ['articles'], type: ['read'] }],
+      },
+    ]
+
+    const payload = makePayload(roles)
+    const result = await canUserAccessAction(user, 'articles', 'read', payload, pluginConfig)
+
+    expect(result).toBe(true)
+    expect(payload.find).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          id: { in: ['1'] },
+        },
+      }),
+    )
+  })
+
   it('returns true when role grants read permission on the slug', async () => {
     const user: any = { isAdmin: false, userRoles: [{ id: '1' }] }
     const roles = [
