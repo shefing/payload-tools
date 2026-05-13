@@ -12,8 +12,12 @@
  */
 export type RolePermissions =
   | {
-      entity: ('users' | 'roles' | 'articles' | 'pages')[];
+      entity: ('tenants' | 'users' | 'roles' | 'articles' | 'pages')[];
       type: ('write' | 'read' | 'publish')[];
+      /**
+       * Restrict this permission to specific fields (leave empty for all fields)
+       */
+      fields?: string[] | null;
       id?: string | null;
     }[]
   | null;
@@ -78,6 +82,7 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    tenants: Tenant;
     users: User;
     roles: Role;
     articles: Article;
@@ -90,6 +95,7 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    tenants: TenantsSelect<false> | TenantsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     roles: RolesSelect<false> | RolesSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
@@ -136,6 +142,19 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenants".
+ */
+export interface Tenant {
+  id: string;
+  name: string;
+  creator?: string | null;
+  updator?: string | null;
+  process?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -143,6 +162,7 @@ export interface User {
   isAdmin?: boolean | null;
   isGeneratorUser?: boolean | null;
   userRoles?: (string | Role)[] | null;
+  tenant?: (string | null) | Tenant;
   creator?: string | null;
   updator?: string | null;
   process?: string | null;
@@ -192,6 +212,7 @@ export interface Article {
   textColor?: string | null;
   bgColor?: string | null;
   icon?: string | null;
+  tenant?: (string | null) | Tenant;
   creator?: string | null;
   updator?: string | null;
   process?: string | null;
@@ -262,6 +283,10 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
+        relationTo: 'tenants';
+        value: string | Tenant;
+      } | null)
+    | ({
         relationTo: 'users';
         value: string | User;
       } | null)
@@ -325,12 +350,25 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenants_select".
+ */
+export interface TenantsSelect<T extends boolean = true> {
+  name?: T;
+  creator?: T;
+  updator?: T;
+  process?: T;
+  createdAt?: T;
+  updatedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
   isAdmin?: T;
   isGeneratorUser?: T;
   userRoles?: T;
+  tenant?: T;
   creator?: T;
   updator?: T;
   process?: T;
@@ -374,6 +412,7 @@ export interface RolesSelect<T extends boolean = true> {
 export interface RolePermissionsSelect<T extends boolean = true> {
   entity?: T;
   type?: T;
+  fields?: T;
   id?: T;
 }
 /**
@@ -385,6 +424,7 @@ export interface ArticlesSelect<T extends boolean = true> {
   textColor?: T;
   bgColor?: T;
   icon?: T;
+  tenant?: T;
   creator?: T;
   updator?: T;
   process?: T;

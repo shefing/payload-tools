@@ -7,6 +7,22 @@ const PERMISSION_HIERARCHY: Record<string, string[]> = {
   read: ['read'],
 };
 
+const getUserRoleIds = (user: User): Array<number | string> => {
+  return user.userRoles
+    .map((role: any) => {
+      if (role && typeof role === 'object' && 'id' in role) {
+        return role.id ?? null;
+      }
+
+      if (typeof role === 'string' || typeof role === 'number') {
+        return role;
+      }
+
+      return null;
+    })
+    .filter((roleId): roleId is number | string => roleId !== null);
+};
+
 /**
  * Checks if a user has access to a specific action on a collection slug.
  * Optionally checks for field-level access if a fieldName is provided.
@@ -33,10 +49,14 @@ export const canUserAccessAction = async (
 
   if (!user.userRoles || user.userRoles.length === 0) return false;
 
+  const roleIds = getUserRoleIds(user);
+
+  if (roleIds.length === 0) return false;
+
   const roles = await payload.find({
     collection: config.rolesCollection,
     where: {
-      id: { in: user.userRoles.map((role: any) => role.id) },
+      id: { in: roleIds },
     },
   });
 
