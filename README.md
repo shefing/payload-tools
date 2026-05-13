@@ -13,6 +13,18 @@ We built these tools to solve complex Payload UX problems. Need a custom Next.js
 > 🗺️ **Roadmap & community contributions** — see [`ROADMAP.md`](./ROADMAP.md) for the per-plugin roadmap. Every item is also tracked as a public GitHub issue under the [`RoadMap`](https://github.com/shefing/payload-tools/labels/RoadMap) label — pick one up and join the discussion on the [Payload Discord #plugins channel](https://discord.com/channels/967097582721572934/1004009734115966976).
 
 ---
+#### 🔒 Audit & Auth
+
+- **🔐 [Authorization - RBAC](packages/authorization/)**  
+  Implement flexible **role-based access control (RBAC)** for your content. Define roles based on **read/write/publish** permissions for collections and globals. Easily assign custom permissions to users for granular content security.
+
+- **🧭 [ABAC](packages/abac/)**  
+  Add Payload-native **attribute-based access control (ABAC)** on top of your existing collection access rules. Register providers such as **tenant**, **geo**, or other custom attributes, compile them into Payload `where` clauses, and combine them with RBAC from the authorization plugin.
+
+- **👤 [Authors Info](packages/authors-info/)**  
+  Automatically display **author information** in the authoring interface, including details like **creator, updaters, publishers**, and the **last publish date**.
+
+---
 
 #### 📋 List
 
@@ -37,15 +49,6 @@ We built these tools to solve complex Payload UX problems. Need a custom Next.js
 
 ---
 
-#### 🔒 Audit & Auth
-
-- **🔐 [Authorization](packages/authorization/)**  
-  Implement flexible **role-based access control (RBAC)** for your content. Define roles based on **read/write/publish** permissions for collections and globals. Easily assign custom permissions to users for granular content security.
-
-- **👤 [Authors Info](packages/authors-info/)**  
-  Automatically display **author information** in the authoring interface, including details like **creator, updaters, publishers**, and the **last publish date**.
-
----
 
 #### ⚙️ Config
 
