@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+import { login } from './helpers'
+
 const tenantUsers = {
   alice: {
     email: 'alice@tenant-a.dev',
@@ -101,8 +103,7 @@ test.describe('abac plugin (@shefing/abac)', () => {
   }
 
   test('admin UI list remains reachable and shows article rows', async ({ page }) => {
-    await page.goto('/admin')
-    await page.waitForURL((url) => url.pathname === '/admin', { timeout: 30000 })
+    await login(page)
 
     await page.goto('/admin/collections/articles')
     await page.waitForLoadState('networkidle', { timeout: 30000 })

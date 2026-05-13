@@ -291,6 +291,7 @@ See [`packages/cover-image/README.md`](packages/cover-image/README.md).
 Shared improvements that benefit every plugin:
 
 - **Attribute-Based Authorization (ABAC)** — pluggable attribute providers (`geo`, `tenant`, `clearance`, …) that compile to Payload `where` clauses and merge with the existing `authorization` plugin's RBAC. One small extension point (`AttributeProvider`), no parallel permission engine. Tracking issue: [#203](https://github.com/shefing/payload-tools/issues/203).
+  - **v0.2 — Multi-value attribute support** *(next iteration)*: extend `tenantAttribute` (and the engine) to handle users that belong to **multiple values** of an attribute simultaneously (e.g. `user.tenants = ['tenant-a', 'tenant-b']`). The `toWhere` output becomes `{ tenant: { in: [...ids] } }` and `match` checks array membership. Closes the main gap vs. Payload's official `plugin-multi-tenant` which supports a `tenants[]` array per user with per-tenant roles. Also covers multi-region, multi-clearance, and any other set-valued attribute.
 - **Unified options shape** — extend every plugin's `excludedCollections` / `excludedGlobals` with `includedCollections` and `predicate: (collection) => boolean` for parity.
 - **Per-collection opt-in via `admin.custom.<pluginKey>`** documented in one place.
 - **Centralized i18n** — lift per-plugin `labels.ts` (en/ar/es/fr/he/zh) into a shared `@shefing/i18n` package.
@@ -312,6 +313,7 @@ Shared improvements that benefit every plugin:
 
 ### Wave 2 — High-value P0
 
+- ABAC: multi-value attribute support (`tenants[]` array, `{ in: [...] }` WHERE, array `match`) — closes gap vs. official `plugin-multi-tenant`.
 - Authorization: deny-list & row-level (`where`) permissions, role inheritance.
 - Comments: mentions, resolve state, document-level comments.
 - Reset List View: granular reset menu + admin-saved default view.
