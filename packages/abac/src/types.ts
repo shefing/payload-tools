@@ -14,11 +14,11 @@ export type AttributeProvider<
   User extends AbacUser = AbacUser,
 > = {
   key: string
-  fromUser: (user: User, req: PayloadRequest) => UserValue | Promise<UserValue>
+  fromUser(user: User, req: PayloadRequest): UserValue | Promise<UserValue>
   fromDoc?: Partial<Record<CollectionSlug, (doc: AbacDocument) => DocumentValue>>
-  match: (userValue: UserValue, docValue: DocumentValue) => boolean | Promise<boolean>
-  toWhere?: (userValue: UserValue) => Where
-  enrichJWT?: (user: User) => Record<string, unknown> | Promise<Record<string, unknown>>
+  match(userValue: UserValue, docValue: DocumentValue): boolean | Promise<boolean>
+  toWhere?(userValue: UserValue): Where
+  enrichJWT?(user: User): Record<string, unknown> | Promise<Record<string, unknown>>
 }
 
 export type AbacCollectionAttributeConfig = {

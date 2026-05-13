@@ -1,5 +1,7 @@
 import type { Payload } from 'payload'
 
+import type { RolePermissions } from './payload-types'
+
 export const adminUser = {
   email: 'admin@payload-tools.dev',
   password: 'Password1!',
@@ -22,10 +24,10 @@ export const seed = async (payload: Payload) => {
   // ── Roles ───────────────────────────────────────────────────────────────────
   let adminRoleId: string | undefined
   let editorRoleId: string | undefined
-  const editorPermissions = [
+  const editorPermissions: RolePermissions = [
     { entity: ['articles', 'pages'], type: ['read', 'write', 'publish'] },
   ]
-  const viewerPermissions = [{ entity: ['articles', 'pages'], type: ['read'] }]
+  const viewerPermissions: RolePermissions = [{ entity: ['articles', 'pages'], type: ['read'] }]
   const { totalDocs: roleCount } = await payload.count({ collection: 'roles', overrideAccess: true })
   if (!roleCount) {
     const adminRole = await payload.create({
