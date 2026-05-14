@@ -1,13 +1,21 @@
 import type { CollectionConfig } from 'payload'
+import { userFields } from '@shefing/authorization'
 
 export const Users: CollectionConfig = {
   slug: 'users',
   admin: {
     useAsTitle: 'email',
   },
-  auth: true,
+  auth: {
+    useAPIKey: true,
+  },
   fields: [
-    // Email added by default
-    // Add more fields as needed
+    ...userFields,
+    {
+      name: 'tenant',
+      type: 'relationship',
+      relationTo: 'tenants',
+      saveToJWT: true,
+    },
   ],
 }

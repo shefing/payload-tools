@@ -73,14 +73,28 @@ export async function navigateToArticleById(page: Page, id: string) {
  * If already logged in (redirected away from login), does nothing.
  */
 export async function login(page: Page) {
+  await loginAs(page, adminUser.email, adminUser.password)
+}
+
+/**
+ * Log in to the Payload admin panel as any user.
+ * Always navigates to /admin/login and fills credentials.
+ */
+export async function loginAs(page: Page, email: string, password: string) {
   await page.goto('/admin/login')
   await page.waitForLoadState('domcontentloaded')
 
-  // If already authenticated, Payload redirects away from /admin/login
-  if (!page.url().includes('/admin/login')) return
+  // If already authenticated as the right user, skip
+  if (!page.url().includes('/admin/login')) {
+    // Force re-login by going to logout first
+    await page.goto('/admin/logout')
+    await page.waitForLoadState('domcontentloaded')
+    await page.goto('/admin/login')
+    await page.waitForLoadState('domcontentloaded')
+  }
 
-  await page.fill('input[type="email"]', adminUser.email)
-  await page.fill('input[type="password"]', adminUser.password)
+  await page.fill('input[type="email"]', email)
+  await page.fill('input[type="password"]', password)
   await page.locator('button[type="submit"]').click()
   await page.waitForURL((url) => !url.href.includes('/admin/login'), { timeout: 30000 })
   await page.waitForLoadState('domcontentloaded')

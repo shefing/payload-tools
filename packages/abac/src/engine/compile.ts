@@ -140,6 +140,12 @@ export const decideCreate = async (
       }
 
       const docValue = normalizeValue(getFallbackDocValue(data, resolvedProvider))
+
+      // If the doc field is not yet set, allow creation — the beforeChange hook will stamp it.
+      if (!hasValue(docValue)) {
+        continue
+      }
+
       const matches = await resolvedProvider.provider.match(userValue, docValue)
 
       if (!matches) {

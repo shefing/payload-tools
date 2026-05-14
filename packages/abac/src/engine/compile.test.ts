@@ -172,6 +172,12 @@ describe('decideCreate', () => {
     ).resolves.toBe(false)
   })
 
+  it('allows creation when the doc field is empty (will be stamped by beforeChange)', async () => {
+    await expect(
+      decideCreate([makeProvider()], { id: '1', tenant: 'tenant-a' }, {}),
+    ).resolves.toBe(true)
+  })
+
   it('returns false when a required user value is missing', async () => {
     await expect(decideCreate([makeProvider()], { id: '1', tenant: undefined }, { tenant: 'tenant-a' })).resolves.toBe(false)
   })

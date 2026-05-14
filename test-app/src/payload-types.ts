@@ -12,7 +12,7 @@
  */
 export type RolePermissions =
   | {
-      entity: ('tenants' | 'users' | 'roles' | 'articles' | 'pages')[];
+      entity: ('users' | 'roles' | 'articles' | 'pages')[];
       type: ('write' | 'read' | 'publish')[];
       /**
        * Restrict this permission to specific fields (leave empty for all fields)

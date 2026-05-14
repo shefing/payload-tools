@@ -4,6 +4,7 @@ import config from '@/payload.config'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 import { adminUser, tenantUsers } from '@/seed'
+import type { User, Role, Tenant } from '@/payload-types'
 
 let payload: Payload
 let payloadConfig: Awaited<typeof config>
@@ -34,14 +35,18 @@ const getArticlesCollection = () => {
   return payloadConfig.collections?.find((collection) => collection.slug === 'articles')
 }
 
-const createReqForUser = async (user: Record<string, any>, urlSuffix = '') => {
+const createReqForUser = async (user: User, urlSuffix = '') => {
   const req = await createLocalReq({ user, urlSuffix }, payload)
 
   req.user = user
   req.payload = payload
 
   if (req.url) {
-    req.searchParams = new URL(req.url).searchParams
+    Object.defineProperty(req, 'searchParams', {
+      value: new URL(req.url).searchParams,
+      writable: true,
+      configurable: true,
+    })
   }
 
   return req
@@ -64,7 +69,9 @@ describe('ABAC integration', () => {
       collection: 'roles',
       where: {
         id: {
-          in: alice.userRoles.map((role: { id: string }) => role.id),
+          in: (alice.userRoles ?? []).map((role) =>
+            typeof role === 'string' ? role : (role as Role).id,
+          ),
         },
       },
       overrideAccess: true,
@@ -72,8 +79,12 @@ describe('ABAC integration', () => {
 
     expect(rolesCheck.docs.length).toBeGreaterThan(0)
 
+    const tenantId = alice.tenant && typeof alice.tenant !== 'string'
+      ? (alice.tenant as Tenant).id
+      : String(alice.tenant)
+
     await expect(articlesCollection!.access!.read!({ req })).resolves.toEqual({
-      tenant: { equals: String(alice.tenant.id) },
+      tenant: { equals: String(tenantId) },
     })
   })
 
@@ -85,14 +96,19 @@ describe('ABAC integration', () => {
 
     expect(articlesCollection).toBeDefined()
 
+    const articleTenantId =
+      tenantBArticle.tenant && typeof tenantBArticle.tenant !== 'string'
+        ? (tenantBArticle.tenant as Tenant).id
+        : String(tenantBArticle.tenant)
+
     await expect(
       articlesCollection!.access!.create!({
         req,
         data: {
           title: 'Cross Tenant Create',
-          tenant: tenantBArticle.tenant.id,
+          tenant: articleTenantId,
         },
-      }),
+      } as any),
     ).resolves.toBe(false)
   })
 
@@ -109,10 +125,14 @@ describe('ABAC integration', () => {
       data: {
         title: `Stamped Tenant Article ${Date.now()}`,
       },
-    })
+    } as any)
+
+    const tenantId = alice.tenant && typeof alice.tenant !== 'string'
+      ? (alice.tenant as Tenant).id
+      : String(alice.tenant)
 
     expect(beforeChangeResult).toMatchObject({
-      tenant: String(alice.tenant.id),
+      tenant: String(tenantId),
     })
   })
 
