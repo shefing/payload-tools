@@ -141,8 +141,13 @@ export const decideCreate = async (
 
       const docValue = normalizeValue(getFallbackDocValue(data, resolvedProvider))
 
-      // If the doc field is not yet set, allow creation — the beforeChange hook will stamp it.
+      // If the doc field is not yet set and stampOnCreate is enabled (the default),
+      // allow creation — the beforeChange hook will stamp the field automatically.
+      // If stampOnCreate is explicitly disabled, an empty docField must be treated as a mismatch.
       if (!hasValue(docValue)) {
+        if (resolvedProvider.config.stampOnCreate === false) {
+          return false
+        }
         continue
       }
 

@@ -162,7 +162,7 @@ test.describe('abac plugin (@shefing/abac)', () => {
     await expect(tenantField).toContainText('tenant-a', { ignoreCase: true, timeout: 15000 })
 
     // ── 8. Cleanup: delete the article via REST as admin ─────────────────────
-    const adminApiKey = '3dbb49cb-ce8f-4032-a3df-4ed088d4234c'
+    const adminApiKey = process.env.AUTOMATION_SEED_API_KEY
     await page.request.delete(`/api/articles/${articleId}`, {
       headers: { Authorization: `users API-Key ${adminApiKey}` },
     })

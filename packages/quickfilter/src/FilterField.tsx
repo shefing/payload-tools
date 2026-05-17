@@ -75,8 +75,8 @@ const FilterField = ({
             label={field.label}
             key={field.name}
             options={(field.options || []).map((option: any) => ({
-              label: option.label ? getTranslation(option.label, i18n) : option,
-              value: option.value ? option.value : option,
+              label: option.label !== undefined ? getTranslation(option.label, i18n) : option,
+              value: option.value !== undefined ? option.value : option,
             }))}
             onChange={handleSelectFilterChange}
             value={controlledValue}
@@ -90,8 +90,8 @@ const FilterField = ({
           label={field.label}
           key={field.name}
           options={(field.options || []).map((option: any) => ({
-            label: option.label ? getTranslation(option.label, i18n) : option,
-            value: option.value ? option.value : option,
+            label: option.label !== undefined ? getTranslation(option.label, i18n) : option,
+            value: option.value !== undefined ? option.value : option,
           }))}
           onChange={handleSelectFilterChange}
           value={controlledValue}

@@ -178,6 +178,20 @@ describe('decideCreate', () => {
     ).resolves.toBe(true)
   })
 
+  it('denies creation when the doc field is empty and stampOnCreate is false', async () => {
+    const provider = makeProvider({
+      config: {
+        key: 'tenant',
+        docField: 'tenant',
+        actions: ['create'],
+        stampOnCreate: false,
+      },
+    })
+    await expect(
+      decideCreate([provider], { id: '1', tenant: 'tenant-a' }, {}),
+    ).resolves.toBe(false)
+  })
+
   it('returns false when a required user value is missing', async () => {
     await expect(decideCreate([makeProvider()], { id: '1', tenant: undefined }, { tenant: 'tenant-a' })).resolves.toBe(false)
   })

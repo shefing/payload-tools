@@ -132,7 +132,7 @@ export const seed = async (payload: Payload) => {
         isAdmin: true,
         userRoles: adminRoleId ? [adminRoleId] : [],
         enableAPIKey: true,
-        apiKey: '3dbb49cb-ce8f-4032-a3df-4ed088d4234c',
+        apiKey: process.env.AUTOMATION_SEED_API_KEY,
       },
       overrideAccess: true,
     })
@@ -144,7 +144,7 @@ export const seed = async (payload: Payload) => {
         isAdmin: true,
         userRoles: adminRoleId ? [adminRoleId] : [],
         enableAPIKey: true,
-        apiKey: '3dbb49cb-ce8f-4032-a3df-4ed088d4234c',
+        apiKey: process.env.AUTOMATION_SEED_API_KEY,
       },
       where: { email: { equals: adminUser.email } },
       overrideAccess: true,
