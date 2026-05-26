@@ -24,6 +24,8 @@ import { Users } from './collections/Users'
 import { Articles } from './collections/Articles'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
+import { Geos } from './collections/Geos'
+import { Posts } from './collections/Posts'
 
 // Admin credentials (matches seed.ts)
 const ADMIN_EMAIL = 'admin@payload-tools.dev'
@@ -45,10 +47,12 @@ export default buildConfig({
 
   collections: [
     Tenants,
+    Geos,
     Users,
     // ── Roles (from authorization plugin) ───────────────────────────────────
     Roles,
     Articles,
+    Posts,
     Media,
     Pages,
   ],
@@ -66,11 +70,17 @@ export default buildConfig({
     addAccess({
       rolesCollection: 'roles',
       permissionsField: 'permissions',
-      excludedCollections: ['media', 'tenants'],
+      excludedCollections: ['media', 'tenants', 'geos', 'users'],
     }),
     abacPlugin({
-      attributes: [tenantAttribute(), tenantAttribute({ key: 'tenants', userField: 'tenants', multiValue: true }), roleAttribute()],
-      excludedCollections: ['media', 'tenants'],
+      attributes: [
+        tenantAttribute(),
+        tenantAttribute({ key: 'tenants', userField: 'tenants', multiValue: true }),
+        // geos: multi-value attribute on the user, matched against `posts.geo`.
+        tenantAttribute({ key: 'geo', userField: 'geos', docField: 'geo', multiValue: true }),
+        roleAttribute(),
+      ],
+      excludedCollections: ['media', 'tenants', 'geos'],
     }),
     // CommentsPlugin({}),
     // CoverImagePlugin({}),

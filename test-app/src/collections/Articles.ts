@@ -11,6 +11,10 @@ export const Articles: CollectionConfig = {
     abac: {
       tenant: {
         docField: 'tenant',
+        // Limit to document-level actions; `readVersions` would compile to
+        // `{ tenant: { equals: ... } }` against the versions collection where
+        // the actual path is `version.tenant`, causing 500s for non-admins.
+        actions: ['read', 'update', 'delete', 'create'],
       },
     },
   },

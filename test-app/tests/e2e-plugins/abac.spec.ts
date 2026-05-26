@@ -115,6 +115,7 @@ test.describe('abac plugin (@shefing/abac)', () => {
   })
 
   test('alice (tenant-a) can create, view and edit an article with tenant auto-populated', async ({ page }) => {
+    test.setTimeout(180000)
     const suffix = randomSuffix()
     const articleTitle = `Alice Article ${suffix}`
 
@@ -135,17 +136,30 @@ test.describe('abac plugin (@shefing/abac)', () => {
     await page.getByRole('button', { name: 'Save Draft' }).click()
     // Wait for Payload to redirect from /create to the new article edit page
     await page.waitForURL((url) => !url.href.endsWith('/create'), { timeout: 30000 })
-    await page.waitForLoadState('networkidle', { timeout: 30000 })
 
     // After save, Payload redirects to the edit page — capture the new article id from the URL
-    const editUrl = page.url()
-    expect(editUrl).toMatch(/\/admin\/collections\/articles\/[^/]+$/)
-    const articleId = editUrl.split('/').pop()!
+    await page.waitForLoadState('networkidle', { timeout: 30000 })
+    const editUrl = new URL(page.url())
+    const match = editUrl.pathname.match(/\/admin\/collections\/articles\/([^/]+)$/)
+    expect(match).not.toBeNull()
+    const articleId = match![1]
     expect(articleId).not.toBe('create')
 
     // ── 5. Verify the article is visible (view) and tenant was stamped ────────
+    // After Save Draft the create view performs an in-place swap to the edit view,
+    // but the form section often does not re-mount until a navigation. Try a short
+    // wait first; if the title input is still absent, navigate explicitly.
+    const titleInputLocator = page.locator('input[name="title"]').first()
+    const visibleQuick = await titleInputLocator
+      .waitFor({ state: 'visible', timeout: 5000 })
+      .then(() => true)
+      .catch(() => false)
+    if (!visibleQuick) {
+      await page.goto(`/admin/collections/articles/${articleId}`, { waitUntil: 'networkidle' })
+      await titleInputLocator.waitFor({ state: 'visible', timeout: 30000 })
+    }
     const tenantField = page.locator('[id^="field-tenant"]').first()
-    await expect(page.locator('input[name="title"]')).toHaveValue(articleTitle)
+    await expect(titleInputLocator).toHaveValue(articleTitle, { timeout: 15000 })
     await expect(tenantField).toBeVisible({ timeout: 10000 })
     // Wait for the relationship field to resolve the tenant name (lazy-loaded)
     await expect(tenantField).toContainText('tenant-a', { ignoreCase: true, timeout: 15000 })

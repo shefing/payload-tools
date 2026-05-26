@@ -24,5 +24,12 @@ export const Users: CollectionConfig = {
       hasMany: true,
       saveToJWT: true,
     },
+    {
+      name: 'geos',
+      type: 'relationship',
+      relationTo: 'geos',
+      hasMany: true,
+      saveToJWT: true,
+    },
   ],
 }
