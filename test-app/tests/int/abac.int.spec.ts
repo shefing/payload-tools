@@ -52,6 +52,10 @@ const createReqForUser = async (user: User, urlSuffix = '') => {
   return req
 }
 
+const getPagesCollection = () => {
+  return payloadConfig.collections?.find((collection) => collection.slug === 'pages')
+}
+
 describe('ABAC integration', () => {
   beforeAll(async () => {
     payloadConfig = await config
@@ -162,5 +166,32 @@ describe('ABAC integration', () => {
     expect(articlesCollection).toBeDefined()
 
     await expect(articlesCollection!.access!.read!({ req })).resolves.toBe(true)
+  })
+
+  it('handles multi-value attributes in Pages collection', async () => {
+    const tenants = await payload.find({
+      collection: 'tenants',
+      limit: 2,
+      overrideAccess: true,
+    })
+
+    const tenantIds = tenants.docs.map((t) => t.id)
+    expect(tenantIds.length).toBe(2)
+
+    const user = await findUserByEmail(tenantUsers.alice.email)
+    // Manually set multi-tenants for testing
+    const testUser = {
+      ...user,
+      tenants: tenantIds,
+    }
+
+    const req = await createReqForUser(testUser as any)
+    const pagesCollection = getPagesCollection()
+
+    expect(pagesCollection).toBeDefined()
+
+    await expect(pagesCollection!.access!.read!({ req })).resolves.toEqual({
+      tenant: { in: tenantIds },
+    })
   })
 })

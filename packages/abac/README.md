@@ -113,9 +113,9 @@ This closes the main gap vs. Payload's official `plugin-multi-tenant`, which sto
 | v1 | `GET /api/me/permissions` endpoint | ✅ Shipped |
 | v1 | `abacFilterOptions` relationship field helper | ✅ Shipped |
 | v1 | Fail-closed safety + startup config validation | ✅ Shipped |
-| **v0.2** | **Multi-value attribute support** (`tenants[]`, `{ in: [...] }` WHERE, array `match`) | 🔜 Next |
-| v0.2 | `readVersions` / `unlock` action guards | 🔜 Next |
-| v0.2 | `pluginContext` singleton → closure (test isolation) | 🔜 Next |
+| **v0.2** | **Multi-value attribute support** (`tenants[]`, `{ in: [...] }` WHERE, array `match`) | ✅ Shipped |
+| **v0.2** | **`readVersions` / `unlock` action guards** | ✅ Shipped |
+| **v0.2** | **`pluginContext` singleton → factory (test isolation)** | ✅ Shipped |
 | v0.3 | Optional admin UI: tenant switcher component | 💡 Planned |
 | v0.3 | `isGlobal` collection mode (per-tenant globals) | 💡 Planned |
 | v0.3 | Per-tenant roles (`tenantRoleAttribute`) | 💡 Planned |

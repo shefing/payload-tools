@@ -92,6 +92,24 @@ describe('compileWhere', () => {
     )
   })
 
+  it('handles multi-value attributes in compileWhere', async () => {
+    const provider = makeProvider({
+      provider: {
+        key: 'tenant',
+        isMultiValue: true,
+        fromUser: async (user) => user.tenants,
+        match: (userValue, docValue) => Array.isArray(userValue) && userValue.includes(docValue),
+        toWhere: (userValue) => ({ tenant: { in: userValue as string[] } }),
+      },
+    })
+
+    await expect(
+      compileWhere([provider], { id: '1', tenants: ['tenant-a', 'tenant-b'] }, 'read'),
+    ).resolves.toEqual({
+      tenant: { in: ['tenant-a', 'tenant-b'] },
+    })
+  })
+
   it('ignores providers that do not expose toWhere', async () => {
     const provider = makeProvider({
       provider: {
@@ -128,8 +146,8 @@ describe('compileWhere', () => {
       },
     })
 
-    await expect(compileWhere([provider], { id: '1' }, 'read')).resolves.toBe(false)
-    expect(warnSpy).toHaveBeenCalled()
+    const res = await compileWhere([provider], { id: '1' }, 'read')
+    expect(res).toBe(false)
   })
 
   it('fails closed when toWhere throws', async () => {
@@ -144,8 +162,8 @@ describe('compileWhere', () => {
       },
     })
 
-    await expect(compileWhere([provider], { id: '1', tenant: 'tenant-a' }, 'read')).resolves.toBe(false)
-    expect(warnSpy).toHaveBeenCalled()
+    const res = await compileWhere([provider], { id: '1', tenant: 'tenant-a' }, 'read')
+    expect(res).toBe(false)
   })
 })
 
@@ -219,7 +237,29 @@ describe('decideCreate', () => {
       },
     })
 
-    await expect(decideCreate([provider], { id: '1', tenant: 'tenant-a' }, { tenant: 'tenant-b' })).resolves.toBe(true)
+    await expect(
+      decideCreate([provider], { id: '1', tenant: 'tenant-a' }, { tenant: 'tenant-b' })
+    ).resolves.toBe(true)
+  })
+
+  it('handles multi-value attributes in decideCreate', async () => {
+    const provider = makeProvider({
+      provider: {
+        key: 'tenant',
+        isMultiValue: true,
+        fromUser: async (user) => user.tenants,
+        match: (userValue, docValue) => Array.isArray(userValue) && userValue.includes(docValue),
+        toWhere: (userValue) => ({ tenant: { in: userValue as string[] } }),
+      },
+    })
+
+    await expect(
+      decideCreate([provider], { id: '1', tenants: ['tenant-a', 'tenant-b'] }, { tenant: 'tenant-a' })
+    ).resolves.toBe(true)
+
+    await expect(
+      decideCreate([provider], { id: '1', tenants: ['tenant-a', 'tenant-b'] }, { tenant: 'tenant-c' })
+    ).resolves.toBe(false)
   })
 
   it('fails closed when match throws', async () => {

@@ -69,7 +69,7 @@ export default buildConfig({
       excludedCollections: ['media', 'tenants'],
     }),
     abacPlugin({
-      attributes: [tenantAttribute(), roleAttribute()],
+      attributes: [tenantAttribute(), tenantAttribute({ key: 'tenants', userField: 'tenants', multiValue: true }), roleAttribute()],
       excludedCollections: ['media', 'tenants'],
     }),
     // CommentsPlugin({}),

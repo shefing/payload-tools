@@ -48,6 +48,7 @@ const getFallbackDocValue = (doc: AbacDocument, provider: ResolvedProvider): unk
 }
 
 const warnAndReturn = <T>(error: unknown, fallback: T): T => {
+  // eslint-disable-next-line no-console
   console.warn('[abac] provider evaluation failed, denying access', error)
   return fallback
 }

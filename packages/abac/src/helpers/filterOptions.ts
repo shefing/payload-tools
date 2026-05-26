@@ -1,10 +1,11 @@
 import type { PayloadRequest, Where } from 'payload'
 
-import { getRegisteredProvider } from '../pluginContext.js'
+import type { PluginContext } from '../pluginContext.js'
 
 export const abacFilterOptions = (key: string) => {
   return async ({ req }: { req: PayloadRequest }): Promise<Where | boolean> => {
-    const provider = getRegisteredProvider(key)
+    const ctx = (req as any).abacContext as PluginContext
+    const provider = ctx?.getProvider(key)
 
     if (!provider || !provider.toWhere || !req.user) {
       return true

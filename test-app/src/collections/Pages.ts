@@ -7,6 +7,11 @@ export const Pages: CollectionConfig = {
   },
   custom: {
     filterList: [['status']],
+    abac: {
+      tenants: {
+        docField: 'tenant',
+      },
+    },
   },
   fields: [
     {
@@ -18,6 +23,12 @@ export const Pages: CollectionConfig = {
       name: 'status',
       type: 'select',
       options: ['draft', 'published', 'archived'],
+    },
+    {
+      name: 'tenant',
+      type: 'relationship',
+      relationTo: 'tenants',
+      required: true,
     },
   ],
 }

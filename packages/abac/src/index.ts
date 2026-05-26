@@ -4,7 +4,7 @@ import { compileWhere, decideCreate } from './engine/compile.js'
 import { enrichJWT } from './engine/enrichJWT.js'
 import { createMePermissionsEndpoint } from './endpoints/mePermissions.js'
 import { abacFilterOptions } from './helpers/filterOptions.js'
-import { registerProviders } from './pluginContext.js'
+import { createPluginContext } from './pluginContext.js'
 import type { AbacPluginConfig } from './types.js'
 export { tenantAttribute } from './providers/tenant.js'
 export { roleAttribute } from './providers/role.js'
@@ -23,7 +23,7 @@ export type {
   ResolvedProvider,
 } from './types.js'
 
-const ACTIONS = ['read', 'create', 'update', 'delete'] as const
+const ACTIONS = ['read', 'create', 'update', 'delete', 'readVersions', 'unlock'] as const
 
 type AbacAction = (typeof ACTIONS)[number]
 
@@ -126,7 +126,7 @@ const composeAccess = (
 }
 
 export const abacPlugin = (pluginConfig: AbacPluginConfig) => (incomingConfig: Config): Config => {
-  registerProviders(pluginConfig.attributes)
+  const ctx = createPluginContext(pluginConfig.attributes)
 
   const providersByKey = new Map(pluginConfig.attributes.map((provider) => [provider.key, provider]))
   const collectionProviderMap = new Map<string, { collection: AbacCollectionLike; providers: import('./types.js').ResolvedProvider[] }>()
@@ -171,11 +171,29 @@ export const abacPlugin = (pluginConfig: AbacPluginConfig) => (incomingConfig: C
 
     nextCollection.access = {
       ...previousAccess,
-      read: composeAccess(previousAccess.read, async (req) => compileWhere(resolvedProviders, req.user, 'read', req)),
-      update: composeAccess(previousAccess.update, async (req) => compileWhere(resolvedProviders, req.user, 'update', req)),
-      delete: composeAccess(previousAccess.delete, async (req) => compileWhere(resolvedProviders, req.user, 'delete', req)),
+      read: composeAccess(previousAccess.read, async (req) => {
+        if (req) (req as any).abacContext = ctx
+        return compileWhere(resolvedProviders, req?.user, 'read', req)
+      }),
+      update: composeAccess(previousAccess.update, async (req) => {
+        if (req) (req as any).abacContext = ctx
+        return compileWhere(resolvedProviders, req?.user, 'update', req)
+      }),
+      delete: composeAccess(previousAccess.delete, async (req) => {
+        if (req) (req as any).abacContext = ctx
+        return compileWhere(resolvedProviders, req?.user, 'delete', req)
+      }),
+      readVersions: composeAccess(previousAccess.readVersions, async (req) => {
+        if (req) (req as any).abacContext = ctx
+        return compileWhere(resolvedProviders, req?.user, 'readVersions', req)
+      }),
+      unlock: composeAccess(previousAccess.unlock, async (req) => {
+        if (req) (req as any).abacContext = ctx
+        return compileWhere(resolvedProviders, req?.user, 'unlock', req)
+      }),
       create: composeAccess(previousAccess.create, async (req, data) => {
-        return (await decideCreate(resolvedProviders, req.user, data ?? {}, req)) ? true : false
+        if (req) (req as any).abacContext = ctx
+        return (await decideCreate(resolvedProviders, req?.user, data ?? {}, req)) ? true : false
       }),
     }
 
@@ -214,6 +232,7 @@ export const abacPlugin = (pluginConfig: AbacPluginConfig) => (incomingConfig: C
 
     if (nextCollection.auth) {
       const afterLogin = async ({ req, user }: { req: PayloadRequest; user: Record<string, unknown> }) => {
+        (req as any).abacContext = ctx
         req.user = {
           ...(req.user ?? {}),
           ...user,
@@ -229,6 +248,15 @@ export const abacPlugin = (pluginConfig: AbacPluginConfig) => (incomingConfig: C
 
     return nextCollection
   })
+
+  if (incomingConfig.onInit) {
+    const previousOnInit = incomingConfig.onInit
+    incomingConfig.onInit = async (payload) => {
+      await previousOnInit(payload)
+      // Inject ctx into a place that persists if needed, or rely on it being closed over in access fns.
+      // For now, the closure in access fns is the primary way.
+    }
+  }
 
   const endpoint: Endpoint = createMePermissionsEndpoint({
     getProvidersForCollection: (slug) => collectionProviderMap.get(slug)?.providers ?? [],

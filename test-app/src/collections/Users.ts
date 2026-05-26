@@ -17,5 +17,12 @@ export const Users: CollectionConfig = {
       relationTo: 'tenants',
       saveToJWT: true,
     },
+    {
+      name: 'tenants',
+      type: 'relationship',
+      relationTo: 'tenants',
+      hasMany: true,
+      saveToJWT: true,
+    },
   ],
 }
