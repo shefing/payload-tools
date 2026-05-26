@@ -48,6 +48,7 @@ const getFallbackDocValue = (doc: AbacDocument, provider: ResolvedProvider): unk
 }
 
 const warnAndReturn = <T>(error: unknown, fallback: T): T => {
+  // eslint-disable-next-line no-console
   console.warn('[abac] provider evaluation failed, denying access', error)
   return fallback
 }
@@ -140,6 +141,17 @@ export const decideCreate = async (
       }
 
       const docValue = normalizeValue(getFallbackDocValue(data, resolvedProvider))
+
+      // If the doc field is not yet set and stampOnCreate is enabled (the default),
+      // allow creation — the beforeChange hook will stamp the field automatically.
+      // If stampOnCreate is explicitly disabled, an empty docField must be treated as a mismatch.
+      if (!hasValue(docValue)) {
+        if (resolvedProvider.config.stampOnCreate === false) {
+          return false
+        }
+        continue
+      }
+
       const matches = await resolvedProvider.provider.match(userValue, docValue)
 
       if (!matches) {
