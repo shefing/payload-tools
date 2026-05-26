@@ -39,6 +39,17 @@ export const geoUsers = {
 }
 
 export const seed = async (payload: Payload) => {
+  // ── Env guard ───────────────────────────────────────────────────────────────
+  // The admin user's API key is sourced from AUTOMATION_SEED_API_KEY. If it's
+  // missing, the seed would silently write `undefined` and all E2E tests that
+  // authenticate as admin would fail with confusing 401s. Fail loudly instead.
+  if (!process.env.AUTOMATION_SEED_API_KEY) {
+    throw new Error(
+      'AUTOMATION_SEED_API_KEY is not set. The seed step requires this env var to provision the admin API key. ' +
+        'Set it locally (e.g. `AUTOMATION_SEED_API_KEY=admin-automation-key pnpm dev`) and configure it as a CI secret.',
+    )
+  }
+
   // ── Roles ───────────────────────────────────────────────────────────────────
   let adminRoleId: string | undefined
   let editorRoleId: string | undefined

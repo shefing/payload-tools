@@ -172,27 +172,27 @@ export const abacPlugin = (pluginConfig: AbacPluginConfig) => (incomingConfig: C
     nextCollection.access = {
       ...previousAccess,
       read: composeAccess(previousAccess.read, async (req) => {
-        if (req) (req as any).abacContext = ctx
+        if (req) req.abacContext = ctx
         return compileWhere(resolvedProviders, req?.user, 'read', req)
       }),
       update: composeAccess(previousAccess.update, async (req) => {
-        if (req) (req as any).abacContext = ctx
+        if (req) req.abacContext = ctx
         return compileWhere(resolvedProviders, req?.user, 'update', req)
       }),
       delete: composeAccess(previousAccess.delete, async (req) => {
-        if (req) (req as any).abacContext = ctx
+        if (req) req.abacContext = ctx
         return compileWhere(resolvedProviders, req?.user, 'delete', req)
       }),
       readVersions: composeAccess(previousAccess.readVersions, async (req) => {
-        if (req) (req as any).abacContext = ctx
+        if (req) req.abacContext = ctx
         return compileWhere(resolvedProviders, req?.user, 'readVersions', req)
       }),
       unlock: composeAccess(previousAccess.unlock, async (req) => {
-        if (req) (req as any).abacContext = ctx
+        if (req) req.abacContext = ctx
         return compileWhere(resolvedProviders, req?.user, 'unlock', req)
       }),
       create: composeAccess(previousAccess.create, async (req, data) => {
-        if (req) (req as any).abacContext = ctx
+        if (req) req.abacContext = ctx
         return (await decideCreate(resolvedProviders, req?.user, data ?? {}, req)) ? true : false
       }),
     }
@@ -232,7 +232,7 @@ export const abacPlugin = (pluginConfig: AbacPluginConfig) => (incomingConfig: C
 
     if (nextCollection.auth) {
       const afterLogin = async ({ req, user }: { req: PayloadRequest; user: Record<string, unknown> }) => {
-        (req as any).abacContext = ctx
+        req.abacContext = ctx
         req.user = {
           ...(req.user ?? {}),
           ...user,

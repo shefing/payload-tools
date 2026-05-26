@@ -10,7 +10,13 @@ export const adminUser = {
  * The admin user is seeded with this key via seed.ts.
  */
 export function getToken(_request?: APIRequestContext): Promise<string> {
-  const apiKey = process.env.AUTOMATION_SEED_API_KEY || '3dbb49cb-ce8f-4032-a3df-4ed088d4234c'
+  const apiKey = process.env.AUTOMATION_SEED_API_KEY
+  if (!apiKey) {
+    throw new Error(
+      'AUTOMATION_SEED_API_KEY is not set. E2E tests require this env var to authenticate as the seeded admin user. ' +
+        'Set it locally (e.g. `AUTOMATION_SEED_API_KEY=admin-automation-key pnpm dev`) and ensure the same value is configured as a CI secret.',
+    )
+  }
   return Promise.resolve(`users API-Key ${apiKey}`)
 }
 
