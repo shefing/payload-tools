@@ -28,6 +28,7 @@ import {
   parseWhereClauseToFilterValues,
   splitDualDateConditions,
 } from './lib/utils';
+import { resolveFieldByPath } from './lib/resolveFieldByPath';
 
 // Helper function to get localized label
 const getLocalizedLabel = (label: any, locale: SupportedLocale): string => {
@@ -141,8 +142,24 @@ const QuickFilter = ({
       typeof field === 'string' ? field : field.virtualName ? field.virtualName : field.name,
     );
 
-    const matchedFields = findFieldsByName(collection?.fields || [], fieldNames);
-    const simplifiedFields: FilterDetaild[] = matchedFields.map((field) => {
+    // Separate dotted paths from flat names
+    const collectionFields = collection?.fields || [];
+    const flatFieldNames: string[] = [];
+    const dottedPathEntries: { name: string; configIndex: number }[] = [];
+
+    fieldNames.forEach((name, index) => {
+      if (name.includes('.')) {
+        dottedPathEntries.push({ name, configIndex: index });
+      } else {
+        flatFieldNames.push(name);
+      }
+    });
+
+    // Resolve flat fields using existing logic
+    const matchedFlatFields = findFieldsByName(collectionFields, flatFieldNames);
+
+    // Build simplified fields for flat matches
+    const simplifiedFields: FilterDetaild[] = matchedFlatFields.map((field) => {
       const label = (field as FieldAffectingData).label;
       const translatedLabel = getTranslation(label as string, i18n);
       const fieldName = (field as FieldAffectingData).name as string;
@@ -163,14 +180,47 @@ const QuickFilter = ({
             : undefined,
       };
     });
+
+    // Resolve dotted-path fields using the path resolver
+    const dottedPathFields: FilterDetaild[] = [];
+    for (const { name: dottedPath, configIndex } of dottedPathEntries) {
+      const resolved = resolveFieldByPath(collectionFields as any, dottedPath);
+      if (!resolved) continue;
+
+      const leafField = resolved.field;
+      const label = (leafField as FieldAffectingData).label;
+      const translatedLabel = getTranslation(label as string, i18n);
+      const fieldConfig = flattenedFieldConfigs[configIndex];
+
+      dottedPathFields.push({
+        name: dottedPath,
+        label: translatedLabel as string,
+        type: leafField.type,
+        options: (leafField as SelectField).options as OptionObject[],
+        row: fieldConfig ? fieldConfig.rowIndex : 0,
+        virtual: undefined,
+        width:
+          typeof fieldConfig?.field === 'object' && 'width' in fieldConfig.field
+            ? fieldConfig.field.width
+            : undefined,
+        path: resolved.path,
+      });
+    }
+
+    // Combine all resolved fields
+    const allResolvedFields = [...simplifiedFields, ...dottedPathFields];
+
+    // Sort by original filterList order
     const sortedFields = flattenedFieldConfigs
       .map(({ field }) => {
         const fieldName = typeof field === 'string' ? field : field.name;
-        return simplifiedFields.find((f) => {
+        return allResolvedFields.find((f) => {
+          if (f.path && f.path === fieldName) return true;
+          if (f.name === fieldName) return true;
           if (typeof f.virtual === 'string') {
             return f.virtual === fieldName;
           }
-          return f.name === fieldName;
+          return false;
         });
       })
       .filter((f): f is FilterDetaild => !!f);
@@ -212,12 +262,14 @@ const QuickFilter = ({
     const quickFilterConditions = buildQuickFilterConditions(filterValues, fields, locale);
 
     const quickFilterFieldNames = new Set(
-      fields.map((f) => {
-        let name = f.name;
+      fields.flatMap((f) => {
+        const names: string[] = [];
+        if (f.path) names.push(f.path);
         if (typeof f.virtual === 'string') {
-          name = f.virtual;
+          names.push(f.virtual);
         }
-        return name;
+        names.push(f.name);
+        return names;
       }),
     );
     const otherFilters = cleanWhereClause(query.where, quickFilterFieldNames);
@@ -277,6 +329,7 @@ const QuickFilter = ({
     const locale = i18n.language as SupportedLocale;
     Object.entries(filterValues).forEach(([fieldName, value]) => {
       const field = fields.find((f) => {
+        if (f.path) return f.path === fieldName;
         let name = f.name;
         if (typeof f.virtual === 'string') {
           name = f.virtual;
@@ -354,8 +407,8 @@ const QuickFilter = ({
       <div key={row.rowNumber}>
         <div className='flex flex-wrap gap-6 mb-4'>
           {row.filters.map((field) => {
-            let fieldName = field.name;
-            if (typeof field.virtual === 'string') {
+            let fieldName = field.path || field.name;
+            if (!field.path && typeof field.virtual === 'string') {
               fieldName = field.virtual;
             }
             return (

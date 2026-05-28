@@ -25,35 +25,35 @@ const FilterField = ({
 
   const handleDateFilterChange = useCallback(
     (value: any) => {
-      let fieldName = field.name;
-      if (typeof field.virtual === 'string') {
+      let fieldName = field.path || field.name;
+      if (!field.path && typeof field.virtual === 'string') {
         fieldName = field.virtual;
       }
       onFilterChange(fieldName, value);
     },
-    [onFilterChange, field.name, field.virtual],
+    [onFilterChange, field.name, field.virtual, field.path],
   );
 
   const handleSelectFilterChange = useCallback(
     (value: any) => {
-      let fieldName = field.name;
-      if (typeof field.virtual === 'string') {
+      let fieldName = field.path || field.name;
+      if (!field.path && typeof field.virtual === 'string') {
         fieldName = field.virtual;
       }
       onFilterChange(fieldName, value);
     },
-    [onFilterChange, field.name, field.virtual],
+    [onFilterChange, field.name, field.virtual, field.path],
   );
 
   const handleCheckboxFilterChange = useCallback(
     (state: any) => {
-      let fieldName = field.name;
-      if (typeof field.virtual === 'string') {
+      let fieldName = field.path || field.name;
+      if (!field.path && typeof field.virtual === 'string') {
         fieldName = field.virtual;
       }
       onFilterChange(fieldName, state);
     },
-    [onFilterChange, field.name, field.virtual],
+    [onFilterChange, field.name, field.virtual, field.path],
   );
 
   switch (field.type) {

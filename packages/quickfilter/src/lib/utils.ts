@@ -107,13 +107,17 @@ export const parseWhereClauseToFilterValues = (
 ): Record<string, any> => {
   const values: Record<string, any> = {};
 
-  // Collect all possible field names (including virtual ones)
+  // Collect all possible field names (including virtual ones and paths)
   const fieldNames = new Set(
     fields.flatMap((f) => {
+      const names: string[] = [f.name];
       if (typeof f.virtual === 'string') {
-        return [f.virtual, f.name];
+        names.push(f.virtual);
       }
-      return [f.name];
+      if (f.path) {
+        names.push(f.path);
+      }
+      return names;
     }),
   );
 
@@ -161,17 +165,22 @@ export const parseWhereClauseToFilterValues = (
   // Now process each collected field condition
   for (const [fieldName, condition] of Object.entries(collectedConditions)) {
     const fieldDef = fields.find((f) => {
+      if (f.path && f.path === fieldName) return true;
       const name = typeof f.virtual === 'string' ? f.virtual : f.name;
       return name === fieldName;
     });
 
     if (!fieldDef) continue;
 
+    // Use the canonical key for storing the value (path > virtual > name)
+    const storeKey =
+      fieldDef.path ?? (typeof fieldDef.virtual === 'string' ? fieldDef.virtual : fieldDef.name);
+
     // Case 1: Direct string value like "today", "thisWeek", etc.
     if (typeof condition === 'string') {
       const predefinedValue = condition;
       if ([...pastOptionKeys, ...futureOptionKeys].includes(predefinedValue as any)) {
-        values[fieldName] = { type: 'predefined', predefinedValue };
+        values[storeKey] = { type: 'predefined', predefinedValue };
       }
       continue;
     }
@@ -179,10 +188,10 @@ export const parseWhereClauseToFilterValues = (
     // Case 2: Checkbox or single-value select (equals)
     if ('equals' in condition) {
       if (fieldDef.type === 'checkbox') {
-        values[fieldName] =
+        values[storeKey] =
           condition.equals === true || condition.equals === 'true' ? 'checked' : 'unchecked';
       } else if (fieldDef.type === 'select') {
-        values[fieldName] = { selectedValues: [condition.equals] };
+        values[storeKey] = { selectedValues: [condition.equals] };
       }
       continue;
     }
@@ -190,7 +199,7 @@ export const parseWhereClauseToFilterValues = (
     // Case 3: Multi-select (in: [...])
     if ('in' in condition && Array.isArray(condition.in)) {
       if (fieldDef.type === 'select') {
-        values[fieldName] = { selectedValues: condition.in };
+        values[storeKey] = { selectedValues: condition.in };
       }
       continue;
     }
@@ -225,12 +234,12 @@ export const parseWhereClauseToFilterValues = (
       }
 
       if (matchedOption) {
-        values[fieldName] = {
+        values[storeKey] = {
           type: 'predefined',
           predefinedValue: matchedOption,
         };
       } else {
-        values[fieldName] = {
+        values[storeKey] = {
           type: 'custom',
           customRange: {
             from: fromDate,
@@ -255,6 +264,7 @@ export const buildQuickFilterConditions = (
   Object.entries(values).forEach(([fieldName, value]) => {
     if (!value) return;
     const fieldDef = fieldDefs.find((f) => {
+      if (f.path) return f.path === fieldName;
       let name = f.name;
       if (typeof f.virtual === 'string') {
         name = f.virtual;
@@ -262,6 +272,10 @@ export const buildQuickFilterConditions = (
       return name === fieldName;
     });
     if (!fieldDef) return;
+
+    // Use path as the where clause key if available, otherwise fall back to virtual/name
+    const whereKey =
+      fieldDef.path ?? (typeof fieldDef.virtual === 'string' ? fieldDef.virtual : fieldDef.name);
 
     let condition: Record<string, any> | null = null;
 
@@ -285,7 +299,7 @@ export const buildQuickFilterConditions = (
           if (from) dateQuery.greater_than_equal = from;
           if (to) dateQuery.less_than_equal = to;
           if (Object.keys(dateQuery).length > 0) {
-            condition = { [fieldName]: dateQuery };
+            condition = { [whereKey]: dateQuery };
           }
         }
         break;
@@ -294,9 +308,9 @@ export const buildQuickFilterConditions = (
         const selectValue = value as SelectFilterValue;
         if (selectValue.selectedValues && selectValue.selectedValues.length > 0) {
           if (selectValue.selectedValues.length === 1) {
-            condition = { [fieldName]: { equals: selectValue.selectedValues[0] } };
+            condition = { [whereKey]: { equals: selectValue.selectedValues[0] } };
           } else {
-            condition = { [fieldName]: { in: selectValue.selectedValues } };
+            condition = { [whereKey]: { in: selectValue.selectedValues } };
           }
         }
         break;
@@ -304,9 +318,9 @@ export const buildQuickFilterConditions = (
       case 'checkbox': {
         const checkboxState = value as CheckboxFilterState;
         if (checkboxState === 'checked') {
-          condition = { [fieldName]: { equals: 'true' } };
+          condition = { [whereKey]: { equals: 'true' } };
         } else if (checkboxState === 'unchecked') {
-          condition = { [fieldName]: { equals: 'false' } };
+          condition = { [whereKey]: { equals: 'false' } };
         }
         break;
       }

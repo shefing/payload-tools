@@ -1,33 +1,33 @@
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import path from 'path'
-import { buildConfig } from 'payload'
-import sharp from 'sharp'
-import { fileURLToPath } from 'url'
+import { mongooseAdapter } from '@payloadcms/db-mongodb';
+import { lexicalEditor } from '@payloadcms/richtext-lexical';
+import path from 'path';
+import { buildConfig } from 'payload';
+import sharp from 'sharp';
+import { fileURLToPath } from 'url';
 
 // ── Plugin imports ────────────────────────────────────────────────────────────
-import { abacPlugin, roleAttribute, tenantAttribute } from '@shefing/abac'
-import { addAccess, Roles, userFields } from '@shefing/authorization'
-import { addAuthorsFields as addAuthorsInfo } from '@shefing/authors-info'
-import { createColorField, createBackgroundColorField } from '@shefing/color-picker'
-import CommentsPlugin from '@shefing/comments'
-import { videoCoverPlugin as CoverImagePlugin } from '@shefing/cover-image'
-import CrossCollectionConfig from '@shefing/cross-collection'
-import versionsPlugin from '@shefing/custom-version-view'
-import DynamicFieldOverrides from '@shefing/field-type-component-override'
-import { createIconSelectField } from '@shefing/icon-select'
-import CollectionQuickFilterPlugin from '@shefing/quickfilter'
-import { CollectionResetPreferencesPlugin } from '@shefing/reset-list-view'
-import { changesButtonPlugin } from '@shefing/changes-button'
-import RightPanelPlugin from '@shefing/right-panel'
-import { seed } from './seed'
+import { abacPlugin, roleAttribute, tenantAttribute } from '@shefing/abac';
+import { addAccess, Roles, userFields } from '@shefing/authorization';
+import { addAuthorsFields as addAuthorsInfo } from '@shefing/authors-info';
+import { createColorField, createBackgroundColorField } from '@shefing/color-picker';
+import CommentsPlugin from '@shefing/comments';
+import { videoCoverPlugin as CoverImagePlugin } from '@shefing/cover-image';
+import CrossCollectionConfig from '@shefing/cross-collection';
+import versionsPlugin from '@shefing/custom-version-view';
+import DynamicFieldOverrides from '@shefing/field-type-component-override';
+import { createIconSelectField } from '@shefing/icon-select';
+import CollectionQuickFilterPlugin from '@shefing/quickfilter';
+import { CollectionResetPreferencesPlugin } from '@shefing/reset-list-view';
+import { changesButtonPlugin } from '@shefing/changes-button';
+import RightPanelPlugin from '@shefing/right-panel';
+import { seed } from './seed';
 
 // Admin credentials (matches seed.ts)
-const ADMIN_EMAIL = 'admin@payload-tools.dev'
-const ADMIN_PASSWORD = 'Password1!'
+const ADMIN_EMAIL = 'admin@payload-tools.dev';
+const ADMIN_PASSWORD = 'Password1!';
 
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 export default buildConfig({
   admin: {
@@ -137,7 +137,7 @@ export default buildConfig({
         useAsTitle: 'title',
       },
       custom: {
-        filterList: [['status']],
+        filterList: [['status', 'meta.category', 'tags.label']],
       },
       fields: [
         {
@@ -149,6 +149,40 @@ export default buildConfig({
           name: 'status',
           type: 'select',
           options: ['draft', 'published', 'archived'],
+        },
+        {
+          name: 'meta',
+          type: 'group',
+          fields: [
+            {
+              name: 'category',
+              type: 'select',
+              options: [
+                { label: 'Blog', value: 'blog' },
+                { label: 'Landing', value: 'landing' },
+                { label: 'Documentation', value: 'docs' },
+              ],
+            },
+            {
+              name: 'publishedDate',
+              type: 'date',
+            },
+          ],
+        },
+        {
+          name: 'tags',
+          type: 'array',
+          fields: [
+            {
+              name: 'label',
+              type: 'select',
+              options: [
+                { label: 'Featured', value: 'featured' },
+                { label: 'New', value: 'new' },
+                { label: 'Popular', value: 'popular' },
+              ],
+            },
+          ],
         },
       ],
     },
@@ -186,7 +220,7 @@ export default buildConfig({
   ],
 
   onInit: async (payload) => {
-    await seed(payload)
+    await seed(payload);
   },
   secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-me',
   sharp,
@@ -194,4 +228,4 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-})
+});
