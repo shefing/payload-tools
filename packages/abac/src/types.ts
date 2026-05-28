@@ -1,6 +1,6 @@
 import type { CollectionSlug, PayloadRequest, Where } from 'payload'
 
-export type AbacAction = 'read' | 'create' | 'update' | 'delete'
+export type AbacAction = 'read' | 'create' | 'update' | 'delete' | 'readVersions' | 'unlock'
 
 export type AbacDocument = Record<string, unknown>
 
@@ -14,6 +14,7 @@ export type AttributeProvider<
   User extends AbacUser = AbacUser,
 > = {
   key: string
+  isMultiValue?: boolean
   fromUser(user: User, req: PayloadRequest): UserValue | Promise<UserValue>
   fromDoc?: Partial<Record<CollectionSlug, (doc: AbacDocument) => DocumentValue>>
   match(userValue: UserValue, docValue: DocumentValue): boolean | Promise<boolean>

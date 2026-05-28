@@ -1,10 +1,19 @@
 import type { PayloadRequest, Where } from 'payload'
 
-import { getRegisteredProvider } from '../pluginContext.js'
+import '../pluginContext.js'
 
 export const abacFilterOptions = (key: string) => {
   return async ({ req }: { req: PayloadRequest }): Promise<Where | boolean> => {
-    const provider = getRegisteredProvider(key)
+    const ctx = req.abacContext
+
+    // Fail-closed: if the plugin context is not attached to the request, we cannot
+    // resolve providers. Returning `true` here would silently disable filtering and
+    // expose all rows. Deny instead.
+    if (!ctx) {
+      return false
+    }
+
+    const provider = ctx.getProvider(key)
 
     if (!provider || !provider.toWhere || !req.user) {
       return true

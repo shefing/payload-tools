@@ -13,7 +13,13 @@ export const testUser = {
 }
 
 async function getAdminToken(): Promise<string> {
-  const apiKey = process.env.AUTOMATION_SEED_API_KEY || '3dbb49cb-ce8f-4032-a3df-4ed088d4234c'
+  const apiKey = process.env.AUTOMATION_SEED_API_KEY
+  if (!apiKey) {
+    throw new Error(
+      'AUTOMATION_SEED_API_KEY is not set. E2E helpers (seedTestUser/cleanupTestUser) require this env var to authenticate as the seeded admin user. ' +
+        'Set it locally and ensure the same value is configured as a CI secret.',
+    )
+  }
   return `users API-Key ${apiKey}`
 }
 

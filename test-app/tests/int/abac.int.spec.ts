@@ -4,6 +4,7 @@ import config from '@/payload.config'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 import { adminUser, tenantUsers } from '@/seed'
+import type { User, Role, Tenant } from '@/payload-types'
 
 let payload: Payload
 let payloadConfig: Awaited<typeof config>
@@ -34,17 +35,25 @@ const getArticlesCollection = () => {
   return payloadConfig.collections?.find((collection) => collection.slug === 'articles')
 }
 
-const createReqForUser = async (user: Record<string, any>, urlSuffix = '') => {
+const createReqForUser = async (user: User, urlSuffix = '') => {
   const req = await createLocalReq({ user, urlSuffix }, payload)
 
   req.user = user
   req.payload = payload
 
   if (req.url) {
-    req.searchParams = new URL(req.url).searchParams
+    Object.defineProperty(req, 'searchParams', {
+      value: new URL(req.url).searchParams,
+      writable: true,
+      configurable: true,
+    })
   }
 
   return req
+}
+
+const getPagesCollection = () => {
+  return payloadConfig.collections?.find((collection) => collection.slug === 'pages')
 }
 
 describe('ABAC integration', () => {
@@ -64,7 +73,9 @@ describe('ABAC integration', () => {
       collection: 'roles',
       where: {
         id: {
-          in: alice.userRoles.map((role: { id: string }) => role.id),
+          in: (alice.userRoles ?? []).map((role) =>
+            typeof role === 'string' ? role : (role as Role).id,
+          ),
         },
       },
       overrideAccess: true,
@@ -72,8 +83,12 @@ describe('ABAC integration', () => {
 
     expect(rolesCheck.docs.length).toBeGreaterThan(0)
 
+    const tenantId = alice.tenant && typeof alice.tenant !== 'string'
+      ? (alice.tenant as Tenant).id
+      : String(alice.tenant)
+
     await expect(articlesCollection!.access!.read!({ req })).resolves.toEqual({
-      tenant: { equals: String(alice.tenant.id) },
+      tenant: { equals: String(tenantId) },
     })
   })
 
@@ -85,14 +100,19 @@ describe('ABAC integration', () => {
 
     expect(articlesCollection).toBeDefined()
 
+    const articleTenantId =
+      tenantBArticle.tenant && typeof tenantBArticle.tenant !== 'string'
+        ? (tenantBArticle.tenant as Tenant).id
+        : String(tenantBArticle.tenant)
+
     await expect(
       articlesCollection!.access!.create!({
         req,
         data: {
           title: 'Cross Tenant Create',
-          tenant: tenantBArticle.tenant.id,
+          tenant: articleTenantId,
         },
-      }),
+      } as any),
     ).resolves.toBe(false)
   })
 
@@ -109,10 +129,14 @@ describe('ABAC integration', () => {
       data: {
         title: `Stamped Tenant Article ${Date.now()}`,
       },
-    })
+    } as any)
+
+    const tenantId = alice.tenant && typeof alice.tenant !== 'string'
+      ? (alice.tenant as Tenant).id
+      : String(alice.tenant)
 
     expect(beforeChangeResult).toMatchObject({
-      tenant: String(alice.tenant.id),
+      tenant: String(tenantId),
     })
   })
 
@@ -142,5 +166,32 @@ describe('ABAC integration', () => {
     expect(articlesCollection).toBeDefined()
 
     await expect(articlesCollection!.access!.read!({ req })).resolves.toBe(true)
+  })
+
+  it('handles multi-value attributes in Pages collection', async () => {
+    const tenants = await payload.find({
+      collection: 'tenants',
+      limit: 2,
+      overrideAccess: true,
+    })
+
+    const tenantIds = tenants.docs.map((t) => t.id)
+    expect(tenantIds.length).toBe(2)
+
+    const user = await findUserByEmail(tenantUsers.alice.email)
+    // Manually set multi-tenants for testing
+    const testUser = {
+      ...user,
+      tenants: tenantIds,
+    }
+
+    const req = await createReqForUser(testUser as any)
+    const pagesCollection = getPagesCollection()
+
+    expect(pagesCollection).toBeDefined()
+
+    await expect(pagesCollection!.access!.read!({ req })).resolves.toEqual({
+      tenant: { in: tenantIds },
+    })
   })
 })

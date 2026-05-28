@@ -30,15 +30,23 @@ test.describe('List-view plugins (quickfilter + reset-list-view)', () => {
   let token: string
   let pageIds: string[] = []
   let suffix: string
+  let tenantId: string
 
   test.beforeEach(async ({ page, request }) => {
     token = await getToken(request)
     suffix = randomSuffix()
+    // Pages require a tenant; admin (API-Key) has none, so look one up.
+    const tenantsRes = await request.get('/api/tenants?limit=1', {
+      headers: { Authorization: token },
+    })
+    const tenantsBody = await tenantsRes.json()
+    tenantId = tenantsBody?.docs?.[0]?.id
+    if (!tenantId) throw new Error(`No tenants seeded: ${JSON.stringify(tenantsBody)}`)
     pageIds = await Promise.all([
-      createPage(request, token, { title: `Home ${suffix}`, status: 'published' }),
-      createPage(request, token, { title: `About ${suffix}`, status: 'published' }),
-      createPage(request, token, { title: `Contact ${suffix}`, status: 'draft' }),
-      createPage(request, token, { title: `Blog ${suffix}`, status: 'archived' }),
+      createPage(request, token, { title: `Home ${suffix}`, status: 'published', tenant: tenantId }),
+      createPage(request, token, { title: `About ${suffix}`, status: 'published', tenant: tenantId }),
+      createPage(request, token, { title: `Contact ${suffix}`, status: 'draft', tenant: tenantId }),
+      createPage(request, token, { title: `Blog ${suffix}`, status: 'archived', tenant: tenantId }),
     ])
     await login(page)
     await page.goto(`/admin/collections/pages?search=${encodeURIComponent(suffix)}`)

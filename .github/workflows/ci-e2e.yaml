@@ -40,6 +40,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.MONGODB_URI }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          AUTOMATION_SEED_API_KEY: ${{ secrets.AUTOMATION_SEED_API_KEY }}
 
       - name: Run Playwright E2E tests
         run: pnpm --filter @shefing/dev-app test:e2e
@@ -47,6 +48,7 @@ jobs:
           CI: true
           DATABASE_URL: ${{ secrets.MONGODB_URI }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          AUTOMATION_SEED_API_KEY: ${{ secrets.AUTOMATION_SEED_API_KEY }}
 
       - name: Upload Playwright report
         if: always()

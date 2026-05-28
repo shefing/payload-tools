@@ -12,7 +12,7 @@
  */
 export type RolePermissions =
   | {
-      entity: ('tenants' | 'users' | 'roles' | 'articles' | 'pages')[];
+      entity: ('roles' | 'articles' | 'posts' | 'pages')[];
       type: ('write' | 'read' | 'publish')[];
       /**
        * Restrict this permission to specific fields (leave empty for all fields)
@@ -83,9 +83,11 @@ export interface Config {
   blocks: {};
   collections: {
     tenants: Tenant;
+    geos: Geo;
     users: User;
     roles: Role;
     articles: Article;
+    posts: Post;
     media: Media;
     pages: Page;
     'payload-kv': PayloadKv;
@@ -96,9 +98,11 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     tenants: TenantsSelect<false> | TenantsSelect<true>;
+    geos: GeosSelect<false> | GeosSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     roles: RolesSelect<false> | RolesSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -155,6 +159,19 @@ export interface Tenant {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "geos".
+ */
+export interface Geo {
+  id: string;
+  name: string;
+  creator?: string | null;
+  updator?: string | null;
+  process?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -163,6 +180,8 @@ export interface User {
   isGeneratorUser?: boolean | null;
   userRoles?: (string | Role)[] | null;
   tenant?: (string | null) | Tenant;
+  tenants?: (string | Tenant)[] | null;
+  geos?: (string | Geo)[] | null;
   creator?: string | null;
   updator?: string | null;
   process?: string | null;
@@ -224,6 +243,21 @@ export interface Article {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: string;
+  title: string;
+  geo: string | Geo;
+  content?: string | null;
+  creator?: string | null;
+  updator?: string | null;
+  process?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
@@ -262,6 +296,7 @@ export interface Page {
         id?: string | null;
       }[]
     | null;
+  tenant: string | Tenant;
   creator?: string | null;
   updator?: string | null;
   process?: string | null;
@@ -297,6 +332,10 @@ export interface PayloadLockedDocument {
         value: string | Tenant;
       } | null)
     | ({
+        relationTo: 'geos';
+        value: string | Geo;
+      } | null)
+    | ({
         relationTo: 'users';
         value: string | User;
       } | null)
@@ -307,6 +346,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'articles';
         value: string | Article;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: string | Post;
       } | null)
     | ({
         relationTo: 'media';
@@ -372,6 +415,18 @@ export interface TenantsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "geos_select".
+ */
+export interface GeosSelect<T extends boolean = true> {
+  name?: T;
+  creator?: T;
+  updator?: T;
+  process?: T;
+  createdAt?: T;
+  updatedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -379,6 +434,8 @@ export interface UsersSelect<T extends boolean = true> {
   isGeneratorUser?: T;
   userRoles?: T;
   tenant?: T;
+  tenants?: T;
+  geos?: T;
   creator?: T;
   updator?: T;
   process?: T;
@@ -446,6 +503,20 @@ export interface ArticlesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  geo?: T;
+  content?: T;
+  creator?: T;
+  updator?: T;
+  process?: T;
+  createdAt?: T;
+  updatedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -484,6 +555,7 @@ export interface PagesSelect<T extends boolean = true> {
         label?: T;
         id?: T;
       };
+  tenant?: T;
   creator?: T;
   updator?: T;
   process?: T;
