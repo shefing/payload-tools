@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload';
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -6,7 +6,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
   },
   custom: {
-    filterList: [['status']],
+    filterList: [['status', 'meta.category', 'tags.label']],
     abac: {
       tenants: {
         docField: 'tenant',
@@ -25,10 +25,44 @@ export const Pages: CollectionConfig = {
       options: ['draft', 'published', 'archived'],
     },
     {
+      name: 'meta',
+      type: 'group',
+      fields: [
+        {
+          name: 'category',
+          type: 'select',
+          options: [
+            { label: 'Blog', value: 'blog' },
+            { label: 'Landing', value: 'landing' },
+            { label: 'Documentation', value: 'docs' },
+          ],
+        },
+        {
+          name: 'publishedDate',
+          type: 'date',
+        },
+      ],
+    },
+    {
+      name: 'tags',
+      type: 'array',
+      fields: [
+        {
+          name: 'label',
+          type: 'select',
+          options: [
+            { label: 'Featured', value: 'featured' },
+            { label: 'New', value: 'new' },
+            { label: 'Popular', value: 'popular' },
+          ],
+        },
+      ],
+    },
+    {
       name: 'tenant',
       type: 'relationship',
       relationTo: 'tenants',
       required: true,
     },
   ],
-}
+};
