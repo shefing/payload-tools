@@ -119,6 +119,8 @@ export type FilterDetaild = {
   row?: number | undefined;
   width?: string;
   virtual?: string | boolean;
+  /** Full dotted path for where clause key generation. Falls back to name if not set. */
+  path?: string;
 };
 
 export interface FilterRow {

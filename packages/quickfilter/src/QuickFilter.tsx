@@ -28,6 +28,7 @@ import {
   parseWhereClauseToFilterValues,
   splitDualDateConditions,
 } from './lib/utils';
+import { resolveFilterFields } from './lib/resolveFilterFields';
 
 // Helper function to get localized label
 const getLocalizedLabel = (label: any, locale: SupportedLocale): string => {
@@ -137,43 +138,17 @@ const QuickFilter = ({
         fieldIndex,
       })),
     );
-    const fieldNames = flattenedFieldConfigs.map(({ field }) =>
-      typeof field === 'string' ? field : field.virtualName ? field.virtualName : field.name,
+
+    const collectionFields = collection?.fields || [];
+    const translateLabel = (label: any) => getTranslation(label as string, i18n) as string;
+
+    const sortedFields = resolveFilterFields(
+      flattenedFieldConfigs,
+      collectionFields,
+      translateLabel,
+      findFieldsByName,
     );
 
-    const matchedFields = findFieldsByName(collection?.fields || [], fieldNames);
-    const simplifiedFields: FilterDetaild[] = matchedFields.map((field) => {
-      const label = (field as FieldAffectingData).label;
-      const translatedLabel = getTranslation(label as string, i18n);
-      const fieldName = (field as FieldAffectingData).name as string;
-      const fieldConfig = flattenedFieldConfigs.find(({ field: f }) =>
-        typeof f === 'string' ? f === fieldName : f.name === fieldName,
-      );
-      const virtualFieldName = 'virtual' in field ? (field.virtual as string | boolean) : undefined;
-      return {
-        name: fieldName || (virtualFieldName as string),
-        label: translatedLabel as string,
-        type: field.type,
-        options: (field as SelectField).options as OptionObject[],
-        row: fieldConfig ? fieldConfig.rowIndex : 0,
-        virtual: virtualFieldName,
-        width:
-          typeof fieldConfig?.field === 'object' && 'width' in fieldConfig.field
-            ? fieldConfig.field.width
-            : undefined,
-      };
-    });
-    const sortedFields = flattenedFieldConfigs
-      .map(({ field }) => {
-        const fieldName = typeof field === 'string' ? field : field.name;
-        return simplifiedFields.find((f) => {
-          if (typeof f.virtual === 'string') {
-            return f.virtual === fieldName;
-          }
-          return f.name === fieldName;
-        });
-      })
-      .filter((f): f is FilterDetaild => !!f);
     setFields(sortedFields);
     setFilterRows(groupFiltersByRow(sortedFields));
   }, [slug, filterList, getEntityConfig, i18n]);
@@ -212,12 +187,14 @@ const QuickFilter = ({
     const quickFilterConditions = buildQuickFilterConditions(filterValues, fields, locale);
 
     const quickFilterFieldNames = new Set(
-      fields.map((f) => {
-        let name = f.name;
+      fields.flatMap((f) => {
+        const names: string[] = [];
+        if (f.path) names.push(f.path);
         if (typeof f.virtual === 'string') {
-          name = f.virtual;
+          names.push(f.virtual);
         }
-        return name;
+        names.push(f.name);
+        return names;
       }),
     );
     const otherFilters = cleanWhereClause(query.where, quickFilterFieldNames);
@@ -277,6 +254,7 @@ const QuickFilter = ({
     const locale = i18n.language as SupportedLocale;
     Object.entries(filterValues).forEach(([fieldName, value]) => {
       const field = fields.find((f) => {
+        if (f.path) return f.path === fieldName;
         let name = f.name;
         if (typeof f.virtual === 'string') {
           name = f.virtual;
@@ -354,8 +332,8 @@ const QuickFilter = ({
       <div key={row.rowNumber}>
         <div className='flex flex-wrap gap-6 mb-4'>
           {row.filters.map((field) => {
-            let fieldName = field.name;
-            if (typeof field.virtual === 'string') {
+            let fieldName = field.path || field.name;
+            if (!field.path && typeof field.virtual === 'string') {
               fieldName = field.virtual;
             }
             return (

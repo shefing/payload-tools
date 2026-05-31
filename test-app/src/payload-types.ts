@@ -286,6 +286,16 @@ export interface Page {
   id: string;
   title: string;
   status?: ('draft' | 'published' | 'archived') | null;
+  meta?: {
+    category?: ('blog' | 'landing' | 'docs') | null;
+    publishedDate?: string | null;
+  };
+  tags?:
+    | {
+        label?: ('featured' | 'new' | 'popular') | null;
+        id?: string | null;
+      }[]
+    | null;
   tenant: string | Tenant;
   creator?: string | null;
   updator?: string | null;
@@ -533,6 +543,18 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   status?: T;
+  meta?:
+    | T
+    | {
+        category?: T;
+        publishedDate?: T;
+      };
+  tags?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
   tenant?: T;
   creator?: T;
   updator?: T;

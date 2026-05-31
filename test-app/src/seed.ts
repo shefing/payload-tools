@@ -1,11 +1,11 @@
-import type { Payload } from 'payload'
+import type { Payload } from 'payload';
 
-import type { RolePermissions } from './payload-types'
+import type { RolePermissions } from './payload-types';
 
 export const adminUser = {
   email: 'admin@payload-tools.dev',
   password: 'Password1!',
-}
+};
 
 export const tenantUsers = {
   alice: {
@@ -18,7 +18,7 @@ export const tenantUsers = {
     password: 'Password1!',
     apiKey: 'tenant-b-api-key',
   },
-}
+};
 
 export const geoUsers = {
   rangerA: {
@@ -36,7 +36,7 @@ export const geoUsers = {
     password: 'Password1!',
     apiKey: 'geo-viewer-api-key',
   },
-}
+};
 
 export const seed = async (payload: Payload) => {
   // ── Env guard ───────────────────────────────────────────────────────────────
@@ -47,29 +47,34 @@ export const seed = async (payload: Payload) => {
     throw new Error(
       'AUTOMATION_SEED_API_KEY is not set. The seed step requires this env var to provision the admin API key. ' +
         'Set it locally (e.g. `AUTOMATION_SEED_API_KEY=admin-automation-key pnpm dev`) and configure it as a CI secret.',
-    )
+    );
   }
 
   // ── Roles ───────────────────────────────────────────────────────────────────
-  let adminRoleId: string | undefined
-  let editorRoleId: string | undefined
-  let rangerRoleId: string | undefined
-  let viewerRoleId: string | undefined
+  let adminRoleId: string | undefined;
+  let editorRoleId: string | undefined;
+  let rangerRoleId: string | undefined;
+  let viewerRoleId: string | undefined;
   const editorPermissions: RolePermissions = [
     { entity: ['articles', 'pages'], type: ['read', 'write', 'publish'] },
-  ]
-  const viewerPermissions: RolePermissions = [{ entity: ['articles', 'pages', 'posts'], type: ['read'] }]
+  ];
+  const viewerPermissions: RolePermissions = [
+    { entity: ['articles', 'pages', 'posts'], type: ['read'] },
+  ];
   const rangerPermissions: RolePermissions = [
     { entity: ['posts'], type: ['read', 'write', 'publish'] },
-  ]
-  const { totalDocs: roleCount } = await payload.count({ collection: 'roles', overrideAccess: true })
+  ];
+  const { totalDocs: roleCount } = await payload.count({
+    collection: 'roles',
+    overrideAccess: true,
+  });
   if (!roleCount) {
     const adminRole = await payload.create({
       collection: 'roles',
       data: { name: 'admin' },
       overrideAccess: true,
-    })
-    adminRoleId = String(adminRole.id)
+    });
+    adminRoleId = String(adminRole.id);
     const editorRole = await payload.create({
       collection: 'roles',
       overrideAccess: true,
@@ -77,8 +82,8 @@ export const seed = async (payload: Payload) => {
         name: 'editor',
         permissions: editorPermissions,
       },
-    })
-    editorRoleId = String(editorRole.id)
+    });
+    editorRoleId = String(editorRole.id);
     const viewerRole = await payload.create({
       collection: 'roles',
       overrideAccess: true,
@@ -86,8 +91,8 @@ export const seed = async (payload: Payload) => {
         name: 'viewer',
         permissions: viewerPermissions,
       },
-    })
-    viewerRoleId = String(viewerRole.id)
+    });
+    viewerRoleId = String(viewerRole.id);
     const rangerRole = await payload.create({
       collection: 'roles',
       overrideAccess: true,
@@ -95,24 +100,24 @@ export const seed = async (payload: Payload) => {
         name: 'ranger',
         permissions: rangerPermissions,
       },
-    })
-    rangerRoleId = String(rangerRole.id)
-    payload.logger.info('Seed: roles created')
+    });
+    rangerRoleId = String(rangerRole.id);
+    payload.logger.info('Seed: roles created');
   } else {
     const existing = await payload.find({
       collection: 'roles',
       where: { name: { in: ['admin', 'editor', 'viewer', 'ranger'] } },
       limit: 10,
       overrideAccess: true,
-    })
+    });
 
     for (const role of existing.docs) {
       if (role.name === 'admin') {
-        adminRoleId = String(role.id)
+        adminRoleId = String(role.id);
       }
 
       if (role.name === 'editor') {
-        editorRoleId = String(role.id)
+        editorRoleId = String(role.id);
 
         await payload.update({
           collection: 'roles',
@@ -121,11 +126,11 @@ export const seed = async (payload: Payload) => {
             permissions: editorPermissions,
           },
           overrideAccess: true,
-        })
+        });
       }
 
       if (role.name === 'viewer') {
-        viewerRoleId = String(role.id)
+        viewerRoleId = String(role.id);
         await payload.update({
           collection: 'roles',
           id: role.id,
@@ -133,11 +138,11 @@ export const seed = async (payload: Payload) => {
             permissions: viewerPermissions,
           },
           overrideAccess: true,
-        })
+        });
       }
 
       if (role.name === 'ranger') {
-        rangerRoleId = String(role.id)
+        rangerRoleId = String(role.id);
         await payload.update({
           collection: 'roles',
           id: role.id,
@@ -145,7 +150,7 @@ export const seed = async (payload: Payload) => {
             permissions: rangerPermissions,
           },
           overrideAccess: true,
-        })
+        });
       }
     }
 
@@ -154,13 +159,13 @@ export const seed = async (payload: Payload) => {
         collection: 'roles',
         overrideAccess: true,
         data: { name: 'ranger', permissions: rangerPermissions },
-      })
-      rangerRoleId = String(rangerRole.id)
+      });
+      rangerRoleId = String(rangerRole.id);
     }
   }
 
   // ── Tenants ─────────────────────────────────────────────────────────────────
-  const tenantIds: Record<string, string> = {}
+  const tenantIds: Record<string, string> = {};
 
   for (const name of ['tenant-a', 'tenant-b']) {
     const existingTenant = await payload.find({
@@ -168,20 +173,20 @@ export const seed = async (payload: Payload) => {
       where: { name: { equals: name } },
       limit: 1,
       overrideAccess: true,
-    })
+    });
 
     if (existingTenant.docs.length) {
-      tenantIds[name] = String(existingTenant.docs[0].id)
-      continue
+      tenantIds[name] = String(existingTenant.docs[0].id);
+      continue;
     }
 
     const tenant = await payload.create({
       collection: 'tenants',
       data: { name },
       overrideAccess: true,
-    })
+    });
 
-    tenantIds[name] = String(tenant.id)
+    tenantIds[name] = String(tenant.id);
   }
 
   // ── Admin user ──────────────────────────────────────────────────────────────
@@ -189,7 +194,7 @@ export const seed = async (payload: Payload) => {
     collection: 'users',
     where: { email: { equals: adminUser.email } },
     overrideAccess: true,
-  })
+  });
   if (!userCount) {
     await payload.create({
       collection: 'users',
@@ -201,8 +206,8 @@ export const seed = async (payload: Payload) => {
         apiKey: process.env.AUTOMATION_SEED_API_KEY,
       },
       overrideAccess: true,
-    })
-    payload.logger.info('Seed: admin user created')
+    });
+    payload.logger.info('Seed: admin user created');
   } else {
     await payload.update({
       collection: 'users',
@@ -214,7 +219,7 @@ export const seed = async (payload: Payload) => {
       },
       where: { email: { equals: adminUser.email } },
       overrideAccess: true,
-    })
+    });
   }
 
   // ── Tenant users ────────────────────────────────────────────────────────────
@@ -227,7 +232,7 @@ export const seed = async (payload: Payload) => {
       where: { email: { equals: user.email } },
       limit: 1,
       overrideAccess: true,
-    })
+    });
 
     const userData = {
       email: user.email,
@@ -237,29 +242,41 @@ export const seed = async (payload: Payload) => {
       isAdmin: false,
       userRoles: editorRoleId ? [editorRoleId] : [],
       tenant: tenantIds[tenantName],
-    }
+    };
 
     if (!existing.docs.length) {
       await payload.create({
         collection: 'users',
         data: userData,
         overrideAccess: true,
-      })
+      });
     } else {
       await payload.update({
         collection: 'users',
         data: userData,
         where: { email: { equals: user.email } },
         overrideAccess: true,
-      })
+      });
     }
   }
 
   // ── Sample articles (exercises color-picker, icon-select) ───────────────────
   // Only create seed articles if they don't already exist (avoid wiping E2E test data)
   const seedArticles = [
-    { title: 'Hello World', textColor: 'blue-500', bgColor: 'gray-100', icon: 'star', _status: 'published' as const },
-    { title: 'Second Article', textColor: 'red-600', bgColor: 'white', icon: 'heart', _status: 'draft' as const },
+    {
+      title: 'Hello World',
+      textColor: 'blue-500',
+      bgColor: 'gray-100',
+      icon: 'star',
+      _status: 'published' as const,
+    },
+    {
+      title: 'Second Article',
+      textColor: 'red-600',
+      bgColor: 'white',
+      icon: 'heart',
+      _status: 'draft' as const,
+    },
     {
       title: 'Tenant A Article',
       textColor: 'green-500',
@@ -276,42 +293,42 @@ export const seed = async (payload: Payload) => {
       tenant: tenantIds['tenant-b'],
       _status: 'published' as const,
     },
-  ]
+  ];
   for (const articleData of seedArticles) {
     const existing = await payload.find({
       collection: 'articles',
       where: { title: { equals: articleData.title } },
       limit: 1,
       overrideAccess: true,
-    })
+    });
     if (!existing.totalDocs) {
-      await payload.create({ collection: 'articles', overrideAccess: true, data: articleData })
-      payload.logger.info(`Seed: created article "${articleData.title}"`)
+      await payload.create({ collection: 'articles', overrideAccess: true, data: articleData });
+      payload.logger.info(`Seed: created article "${articleData.title}"`);
     }
   }
-  payload.logger.info('Seed: sample articles checked')
+  payload.logger.info('Seed: sample articles checked');
 
   // ── Geos ─────────────────────────────────────────────────────────────────────
-  const geoIds: Record<string, string> = {}
+  const geoIds: Record<string, string> = {};
   for (const name of ['geo-a', 'geo-b']) {
     const existingGeo = await payload.find({
       collection: 'geos',
       where: { name: { equals: name } },
       limit: 1,
       overrideAccess: true,
-    })
+    });
 
     if (existingGeo.docs.length) {
-      geoIds[name] = String(existingGeo.docs[0].id)
-      continue
+      geoIds[name] = String(existingGeo.docs[0].id);
+      continue;
     }
 
     const geo = await payload.create({
       collection: 'geos',
       data: { name },
       overrideAccess: true,
-    })
-    geoIds[name] = String(geo.id)
+    });
+    geoIds[name] = String(geo.id);
   }
 
   // ── Geo users (ranger / viewer) ───────────────────────────────────────────
@@ -331,7 +348,7 @@ export const seed = async (payload: Payload) => {
       roleId: viewerRoleId,
       geos: [geoIds['geo-a'], geoIds['geo-b']],
     },
-  ] as const
+  ] as const;
 
   for (const spec of geoUserSpecs) {
     const existing = await payload.find({
@@ -339,7 +356,7 @@ export const seed = async (payload: Payload) => {
       where: { email: { equals: spec.user.email } },
       limit: 1,
       overrideAccess: true,
-    })
+    });
 
     const userData = {
       email: spec.user.email,
@@ -349,59 +366,78 @@ export const seed = async (payload: Payload) => {
       isAdmin: false,
       userRoles: spec.roleId ? [spec.roleId] : [],
       geos: [...spec.geos],
-    }
+    };
 
     if (!existing.docs.length) {
       await payload.create({
         collection: 'users',
         data: userData,
         overrideAccess: true,
-      })
+      });
     } else {
       await payload.update({
         collection: 'users',
         data: userData,
         where: { email: { equals: spec.user.email } },
         overrideAccess: true,
-      })
+      });
     }
   }
 
   // ── Sample posts (one per geo) ───────────────────────────────────────────────
   const seedPosts = [
-    { title: 'Geo A Post', geo: geoIds['geo-a'], content: 'Post visible to everyone, editable by geo-a rangers.' },
-    { title: 'Geo B Post', geo: geoIds['geo-b'], content: 'Post visible to everyone, editable by geo-b rangers.' },
-  ]
+    {
+      title: 'Geo A Post',
+      geo: geoIds['geo-a'],
+      content: 'Post visible to everyone, editable by geo-a rangers.',
+    },
+    {
+      title: 'Geo B Post',
+      geo: geoIds['geo-b'],
+      content: 'Post visible to everyone, editable by geo-b rangers.',
+    },
+  ];
   for (const postData of seedPosts) {
     const existing = await payload.find({
       collection: 'posts',
       where: { title: { equals: postData.title } },
       limit: 1,
       overrideAccess: true,
-    })
+    });
     if (!existing.totalDocs) {
-      await payload.create({ collection: 'posts', overrideAccess: true, data: postData })
-      payload.logger.info(`Seed: created post "${postData.title}"`)
+      await payload.create({ collection: 'posts', overrideAccess: true, data: postData });
+      payload.logger.info(`Seed: created post "${postData.title}"`);
+    } else {
+      // Ensure the geo reference is up-to-date (geo IDs may change across DB resets)
+      await payload.update({
+        collection: 'posts',
+        id: existing.docs[0].id,
+        data: { geo: postData.geo },
+        overrideAccess: true,
+      });
     }
   }
-  payload.logger.info('Seed: sample posts checked')
+  payload.logger.info('Seed: sample posts checked');
 
   // ── Sample pages (exercises quickfilter, reset-list-view, right-panel) ──────
-  const { totalDocs: pageCount } = await payload.count({ collection: 'pages', overrideAccess: true })
+  const { totalDocs: pageCount } = await payload.count({
+    collection: 'pages',
+    overrideAccess: true,
+  });
   if (!pageCount) {
     const pageSeeds: Array<{ title: string; status: 'draft' | 'published' | 'archived' }> = [
       { title: 'Home', status: 'published' },
       { title: 'About', status: 'published' },
       { title: 'Contact', status: 'draft' },
       { title: 'Blog', status: 'archived' },
-    ]
+    ];
     for (const { title, status } of pageSeeds) {
       await payload.create({
         collection: 'pages',
         data: { title, status, tenant: tenantIds['tenant-a'] },
         overrideAccess: true,
-      })
+      });
     }
-    payload.logger.info('Seed: sample pages created')
+    payload.logger.info('Seed: sample pages created');
   }
-}
+};
