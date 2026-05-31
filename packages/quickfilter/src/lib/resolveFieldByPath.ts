@@ -11,6 +11,12 @@ export interface ResolvedField {
  * Resolves a dotted-path string against a field tree, walking through
  * group, array, and blocks containers. Skips numeric path segments.
  * Returns null if any segment cannot be resolved or if the path is empty.
+ *
+ * **Blocks ambiguity:** When a blocks field contains multiple block definitions
+ * with the same field name, the resolver returns the first match found
+ * (iterating blocks in declaration order). This is intentional — the filter
+ * widget only needs the leaf field's type and options, which should be
+ * consistent across blocks sharing the same field name.
  */
 export function resolveFieldByPath(
   fields: ClientField[],
