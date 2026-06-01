@@ -67,6 +67,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.MONGODB_URI }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          AUTOMATION_SEED_API_KEY: ${{ secrets.AUTOMATION_SEED_API_KEY }}
       - name: Run Playwright E2E
         if: ${{ !inputs.manualE2E }}
         run: pnpm --filter @shefing/dev-app test:e2e
@@ -74,6 +75,7 @@ jobs:
           CI: true
           DATABASE_URL: ${{ secrets.MONGODB_URI }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          AUTOMATION_SEED_API_KEY: ${{ secrets.AUTOMATION_SEED_API_KEY }}
       - name: Skipping E2E (manualE2E enabled)
         if: ${{ inputs.manualE2E }}
         run: echo "manualE2E=true — skipping automated E2E. Confirm manual E2E was performed before publishing."
