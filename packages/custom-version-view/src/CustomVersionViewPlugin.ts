@@ -16,8 +16,23 @@ const defaultConfig: Required<versionsPluginPConfig> = {
   processField: 'process',
 };
 
+// Segments that would walk out of `obj` and into `Object.prototype`, turning a
+// nested-object helper into a prototype-pollution primitive (CWE-1321).
+const UNSAFE_PATH_SEGMENTS = new Set(['__proto__', 'constructor', 'prototype']);
+
 function ensurePath(obj: any, path: string[]): any {
-  return path.reduce((acc, key) => (acc[key] ??= {}), obj);
+  return path.reduce((acc, key) => {
+    if (UNSAFE_PATH_SEGMENTS.has(key)) {
+      throw new Error(`ensurePath: refusing unsafe path segment "${key}"`);
+    }
+
+    // Own properties only — an inherited value must not be traversed or mutated.
+    if (!Object.prototype.hasOwnProperty.call(acc, key) || acc[key] == null) {
+      acc[key] = {};
+    }
+
+    return acc[key];
+  }, obj);
 }
 const versionsPlugin =
   (pluginConfig: versionsPluginPConfig = {}) =>
